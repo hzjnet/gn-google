@@ -10,6 +10,7 @@
 #include <map>
 #include <set>
 #include <sstream>
+#include <string>
 
 #include "base/command_line.h"
 #include "base/files/file_util.h"
@@ -48,6 +49,18 @@ struct Counts {
   // The last one we encountered.
   const Target* last_seen;
 };
+
+// Rebase absolute paths to be relative to the build directory.
+std::string MaybeRebasePath(const BuildSettings* build_settings,
+                            const std::string& option,
+                            const std::string& value) {
+  if (option != switches::kRuntimeDepsListFile) {
+    return value;
+  }
+
+  return RebasePath(value, build_settings->build_dir(),
+                    build_settings->root_path_utf8());
+}
 
 }  // namespace
 
@@ -111,7 +124,8 @@ base::CommandLine GetSelfInvocationCommandLine(
         i->first != switches::kDotfile && i->first != switches::kArgs) {
       std::string escaped_value =
           EscapeString(FilePathToUTF8(i->second), escape_shell, nullptr);
-      cmdline.AppendSwitch(i->first, escaped_value);
+      cmdline.AppendSwitch(
+          i->first, MaybeRebasePath(build_settings, i->first, escaped_value));
     }
   }
 
