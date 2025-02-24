@@ -7047,7 +7047,8 @@
   file will not be updated. This will prevent unnecessary rebuilds of targets
   that depend on this file.
 
-  Path must be within the output directory.
+  Path must be within the output directory, and can be either absolute or
+  relative to it.
 
   See "gn help runtime_deps" for how the runtime dependencies are computed.
 

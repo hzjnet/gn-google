@@ -219,7 +219,8 @@ const char kRuntimeDepsListFile_Help[] =
   --runtime-deps-list-file=<filename>
 
   Where <filename> is a text file consisting of the labels, one per line, of
-  the targets for which runtime dependencies are desired.
+  the targets for which runtime dependencies are desired. The file path can be
+  either absolute or relative to the build directory.
 
   See "gn help runtime_deps" for a description of how runtime dependencies are
   computed.
