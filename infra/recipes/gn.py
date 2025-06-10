@@ -159,6 +159,11 @@ def RunSteps(api, repository):
           'targets': [api.target.host],
       },
       {
+          'name': 'debug-asan-ubsan',
+          'args': ['-d', '--use-asan', '--use-ubsan'],
+          'targets': [api.target.host],
+      },
+      {
           'name': 'release',
           'args': ['--use-lto', '--use-icf'],
           'targets': release_targets(),
