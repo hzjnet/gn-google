@@ -424,6 +424,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
   include_dirs = [
       os.path.relpath(os.path.join(REPO_ROOT, 'src'), os.path.dirname(path)),
       '.',
+      os.path.join(REPO_ROOT, 'src/third_party'),
   ]
   if platform.is_zos():
     include_dirs += [ options.zoslib_dir + '/include' ]
