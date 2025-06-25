@@ -1,0 +1,13 @@
+// To update this, run tools/update_flatbuffer_schemas.sh
+
+namespace binja;
+
+table Project {
+    // The version of the schema.
+    // FlatBuffers are backwards compatible(ish), but we may need to
+    // make backwards incompatible changes.
+    // Current version: 1
+    version: uint32;
+}
+
+root_type Project;
