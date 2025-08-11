@@ -1,0 +1,43 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+executable("hello") {
+  sources = [ "hello.cc" ]
+
+  deps = [
+    ":first",
+    ":second",
+  ]
+}
+
+static_library("first") {
+  sources = [
+    "first.cc",
+    "module.modulemap",
+  ]
+  public_deps = [ ":third" ]
+  public = [
+    "hello_clang_module.h",
+  ]
+}
+
+static_library("second") {
+  sources = [
+    "second.cc",
+    "module.modulemap",
+  ]
+  public = [
+    "second.h",
+  ]
+}
+
+static_library("third") {
+  sources = [
+    "third.cc",
+    "module.modulemap",
+  ]
+  public = [
+    "third.h",
+  ]
+}

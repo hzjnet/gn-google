@@ -1,0 +1,11 @@
+module first {
+    header "first.h"
+}
+
+module second {
+    header "second.h"
+}
+
+module third {
+    header "third.h"
+}
