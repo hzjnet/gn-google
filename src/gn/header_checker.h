@@ -104,6 +104,11 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
   // will be populate on failure.
   void RunCheckOverFiles(const FileMap& flies, bool force_check);
 
+  // AHA_BEGIN
+  // 检测没有使用到的deps项，并输出到errors_
+  void RunCheckUnusedDeps(const std::vector<const Target*>& to_checks);
+  // AHA_END
+
   void DoWork(const Target* target, const SourceFile& file);
 
   // Adds the sources and public files from the given target to the given map.

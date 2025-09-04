@@ -22,6 +22,11 @@
 #include "gn/trace.h"
 #include "util/worker_pool.h"
 
+// AHA_BEGIN
+#include "base/command_line.h"
+#include "target.h"
+// AHA_END
+
 namespace {
 
 struct PublicGeneratedPair {
@@ -143,11 +148,128 @@ bool HeaderChecker::Run(const std::vector<const Target*>& to_check,
   }
   RunCheckOverFiles(files_to_check, force_check);
 
+  // AHA_BEGIN
+  const base::CommandLine* cmdline = base::CommandLine::ForCurrentProcess();
+  if (cmdline->HasSwitch("aha-only-check-unused-deps")) {
+    errors_.clear();  // 其他的错误清理掉
+    RunCheckUnusedDeps(to_check);
+  }
+  // AHA_END
+
   if (errors_.empty())
     return true;
   *errors = errors_;
   return false;
 }
+
+// AHA_BEGIN
+bool IsAhaTarget(const Target* target) {
+  return target->label().dir().value().find("/aha/") != std::string::npos;
+}
+
+void HeaderChecker::RunCheckUnusedDeps(
+    const std::vector<const Target*>& to_checks) {
+  const base::CommandLine* cmdline = base::CommandLine::ForCurrentProcess();
+  Pattern pattern1(
+      cmdline->GetSwitchValueString("aha-original-target-pattern"));
+  Pattern pattern2(
+      cmdline->GetSwitchValueString("aha-dependency-target-pattern"));
+
+  for (auto* to_check : to_checks) {
+    if (to_check->aha_really_used_deps_.empty()) {
+      continue;
+    }
+    // 待校验的deps，校验通过后会将其清理掉
+    Target::LabelTargetSet really_used_deps = to_check->aha_really_used_deps_;
+    LabelTargetVector unused_deps;
+    bool to_check_matched =
+        pattern1.MatchesString(to_check->label().GetUserVisibleName(false));
+    for (auto& private_dep : to_check->private_deps()) {
+      // 下面的这几个排除列表可能有问题，先清理完成已有的，然后逐步放开看看啥情况
+      //
+      // 如果不是cpp相关的，先忽略掉
+      if (!private_dep.ptr->IsBinary()) {
+        continue;
+      }
+      // 依赖的目标本身是test工程，这种是靠link将UT的工程引入最终二进制的，本身没有
+      // #include的 所以这种也得忽略，否则有些TEST_F就不会编译到最终exe中。
+      // 例如： base_unittests 依赖 path_service_unittest
+      if (private_dep.ptr->testonly()) {
+        continue;
+      }
+      // 依赖的是rc文件，也忽略掉，主要是win的version之类的
+      if (private_dep.ptr->source_types_used().Get(SourceFile::SOURCE_RC) ||
+          private_dep.ptr->source_types_used().Get(SourceFile::SOURCE_DEF)) {
+        continue;
+      }
+      // 像是windows_manifest这种模板，内部只是用source_set做了一个跳板，不好检查
+      if (private_dep.ptr->sources().empty()) {
+        continue;
+      }
+
+      // 是否为直接依赖
+      bool is_direct_dep = really_used_deps.erase(private_dep) > 0;
+      if (is_direct_dep) {
+        continue;
+      }
+      // 只能逐个检查是否有间接依赖的情况
+      bool contain_aha_target_info = false;
+      if (to_check_matched) {
+        // 全都检查
+        contain_aha_target_info = true;
+      } else {
+        // 只检查匹配上的
+        if (pattern2.MatchesString(
+                private_dep.label.GetUserVisibleName(false))) {
+          contain_aha_target_info = true;
+        }
+      }
+
+      if (!contain_aha_target_info) {
+        continue;
+      }
+
+#if 1
+      // 可能是间接依赖，所以得遍历整个依赖关系
+      bool is_indirect_dep = false;
+      for (const auto& really_used_dep : really_used_deps) {
+        Chain ignored_chain;
+        bool is_permitted;
+        // 检测really_used_dep是否被private_dep依赖过（直接/间接都可能）
+        bool is_dependency =
+            IsDependencyOf(really_used_dep.ptr, private_dep.ptr, &ignored_chain,
+                           &is_permitted);
+        // 必须在允许的链路中，否则这条chain不是本次校验需要的
+        is_indirect_dep = is_dependency && is_permitted;
+        if (is_indirect_dep) {
+          break;
+        }
+      }
+      if (is_indirect_dep) {
+        continue;
+      }
+#endif
+      unused_deps.push_back(private_dep);
+    }
+
+    if (!unused_deps.empty()) {
+      std::stringstream ss;
+      ss << "# [aha] has unused_deps!\n"
+         << "  incorrect_target = \""
+         << to_check->label().GetUserVisibleName(false) << "\"\n"
+         << "  if (to_be_cleaned_unused_deps) {\n"
+         << "    deps += [\n";
+      for (const auto& unused_dep : unused_deps) {
+        ss << "      \"" << unused_dep.label.GetUserVisibleName(false)
+           << "\",\n";
+      }
+      ss << "    ]\n"
+         << "  }\n";
+      errors_.emplace_back(nullptr, ss.str(), "");
+    }
+  }
+}
+// AHA_END
 
 void HeaderChecker::RunCheckOverFiles(const FileMap& files, bool force_check) {
   WorkerPool pool;
@@ -385,6 +507,20 @@ void HeaderChecker::CheckInclude(
 
   const TargetVector& targets = found->second;
   Chain chain;  // Prevent reallocating in the loop.
+
+  // AHA_BEGIN
+  {
+    // gn原始流程中，收集include_file这个实际所属的target，这个target也就是实际需要
+    // 用到的target （当然这里不会去管public_deps这种间接依赖）
+    std::lock_guard<std::mutex> lock(from_target->aha_lock_);
+    for (const auto& target : targets) {
+      if (target.target == from_target) {
+        continue;
+      }
+      from_target->aha_really_used_deps_.emplace(LabelPtrPair(target.target));
+    }
+  }
+  // AHA_END
 
   // If the file is unknown in the current toolchain (rather than being private
   // or in a target not visible to the current target), ignore it. This is a

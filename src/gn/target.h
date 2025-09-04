@@ -555,6 +555,17 @@ class Target : public Item {
 
   Target(const Target&) = delete;
   Target& operator=(const Target&) = delete;
+
+
+  // AHA_BEGIN
+ public:
+  using LabelTargetSet = std::set<LabelTargetPair>;
+  // 记录这个target的source最终#include的文件在哪些targets中。
+  // 这里记录的是直接的target，有些事通过public_deps依赖过来的，
+  // 所以最终计算的时候需要通过IsDependencyOf确认是否在这个依赖链上。
+  mutable LabelTargetSet aha_really_used_deps_;
+  mutable std::mutex aha_lock_;
+  // AHA_END
 };
 
 extern const char kExecution_Help[];
