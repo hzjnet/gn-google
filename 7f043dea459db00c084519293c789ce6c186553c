@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34a162cc_f93fd08f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2025-09-10T21:45:10Z",
+      "side": 1,
+      "message": "s/think/thing",
+      "range": {
+        "startLine": 12,
+        "startChar": 63,
+        "endLine": 12,
+        "endChar": 68
+      },
+      "revId": "7f043dea459db00c084519293c789ce6c186553c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
