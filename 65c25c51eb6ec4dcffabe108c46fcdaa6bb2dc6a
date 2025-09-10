@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6af8c80_e3a5db35",
+        "filename": "src/gn/rust_project_writer_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1002172
+      },
+      "writtenOn": "2025-09-10T07:23:06Z",
+      "side": 1,
+      "message": "Comment needs to be updated?",
+      "range": {
+        "startLine": 72,
+        "startChar": 5,
+        "endLine": 72,
+        "endChar": 41
+      },
+      "revId": "65c25c51eb6ec4dcffabe108c46fcdaa6bb2dc6a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}

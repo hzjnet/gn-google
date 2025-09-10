@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0399deb_143cf501",
+        "filename": "src/gn/rust_project_writer.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1002172
+      },
+      "writtenOn": "2025-09-10T07:23:06Z",
+      "side": 1,
+      "message": "Comment doesn\u0027t really explain the \"why do this\" very well, it seems more like something that belongs in the CL description\n\nIn isolation it doesn\u0027t really make sense as much?\n\nI think this might be a bit too long, but WDYT of something along the lines of\n\n```\n// Generated sources also need to be added to include dirs.\n// (Don\u0027t naively add the top-level build dir for this target as an include dir.\n// It\u0027s possible to define multiple crates in the same buildfile, and the default\n// build dir corresponds to the buildfile\u0027s containing directory. Hence they\n// would incorrectly share the same include dir, despite being \"separate\" crates.\n// Unfortunately this doesn\u0027t help if the buildfile author places unrelated\n// generated sources for multiple crates in the same directory.)\n```",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 200,
+        "endChar": 74
+      },
+      "revId": "d45fa5a0be4633fdd24888e2c3546fd8c4344294",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4414117_3ef08935",
+        "filename": "src/gn/rust_project_writer_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1002172
+      },
+      "writtenOn": "2025-09-10T07:23:06Z",
+      "side": 1,
+      "message": "Nit: Is `extra_include_dirs` a better name, because the source dir of the target is already an implicit include_dir?",
+      "range": {
+        "startLine": 73,
+        "startChar": 26,
+        "endLine": 73,
+        "endChar": 38
+      },
+      "revId": "d45fa5a0be4633fdd24888e2c3546fd8c4344294",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
