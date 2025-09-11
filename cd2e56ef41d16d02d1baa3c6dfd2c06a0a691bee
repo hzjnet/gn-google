@@ -50,6 +50,30 @@
       ],
       "revId": "cd2e56ef41d16d02d1baa3c6dfd2c06a0a691bee",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bcd94d86_6eca3c66",
+        "filename": "src/gn/rust_project_writer_helpers.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2025-09-11T04:33:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0c8c3ab_d85e080c",
+      "range": {
+        "startLine": 38,
+        "startChar": 28,
+        "endLine": 38,
+        "endChar": 46
+      },
+      "revId": "cd2e56ef41d16d02d1baa3c6dfd2c06a0a691bee",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
