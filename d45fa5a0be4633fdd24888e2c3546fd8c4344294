@@ -41,6 +41,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4653d767_9e1d6c79",
+        "filename": "src/gn/rust_project_writer.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2025-09-11T00:11:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0399deb_143cf501",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 200,
+        "endChar": 74
+      },
+      "revId": "d45fa5a0be4633fdd24888e2c3546fd8c4344294",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4414117_3ef08935",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-09-10T07:23:06Z",
       "side": 1,
       "message": "Nit: Is `extra_include_dirs` a better name, because the source dir of the target is already an implicit include_dir?",
+      "range": {
+        "startLine": 73,
+        "startChar": 26,
+        "endLine": 73,
+        "endChar": 38
+      },
+      "revId": "d45fa5a0be4633fdd24888e2c3546fd8c4344294",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e51a4f8d_ddd29ca6",
+        "filename": "src/gn/rust_project_writer_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2025-09-11T00:11:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4414117_3ef08935",
       "range": {
         "startLine": 73,
         "startChar": 26,
