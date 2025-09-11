@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0c8c3ab_d85e080c",
+        "filename": "src/gn/rust_project_writer_helpers.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-09-11T03:14:22Z",
+      "side": 1,
+      "message": "use std::move for extra_include_dirs.",
+      "range": {
+        "startLine": 38,
+        "startChar": 28,
+        "endLine": 38,
+        "endChar": 46
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "46d941b4_b27c3cdc",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/rust_project_writer_helpers.h",
+              "range": {
+                "startLine": 10,
+                "startChar": 0,
+                "endLine": 10,
+                "endChar": 0
+              },
+              "replacement": "#include \u003cutility\u003e\n"
+            },
+            {
+              "path": "src/gn/rust_project_writer_helpers.h",
+              "range": {
+                "startLine": 38,
+                "startChar": 0,
+                "endLine": 39,
+                "endChar": 0
+              },
+              "replacement": "        extra_include_dirs_(std::move(extra_include_dirs)),\n"
+            }
+          ]
+        }
+      ],
+      "revId": "cd2e56ef41d16d02d1baa3c6dfd2c06a0a691bee",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
