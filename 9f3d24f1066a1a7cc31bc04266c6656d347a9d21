@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "173dbdad_21f97c95",
+        "filename": "navbar.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-09-16T07:09:38Z",
+      "side": 1,
+      "message": "I think this go link doesn\u0027t point to the page using this navbar.md.\n\ne.g. https://gn.googlesource.com/gn/+/refs/changes/60/19860/3/docs/\n\nMaybe, just GN is sufficient?",
+      "range": {
+        "startLine": 1,
+        "startChar": 11,
+        "endLine": 1,
+        "endChar": 21
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "215a2a4d_bc0d0f17",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "navbar.md",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 2,
+                "endChar": 0
+              },
+              "replacement": "# GN\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9f3d24f1066a1a7cc31bc04266c6656d347a9d21",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
