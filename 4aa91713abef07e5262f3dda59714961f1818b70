@@ -1,0 +1,69 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f91e6d44_7af0e7e9",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-09-16T09:53:35Z",
+      "side": 1,
+      "message": "nit: use `clang_module_deps` for clarity here.",
+      "fixSuggestions": [
+        {
+          "fixId": "db2bfc0c_e119d2f0",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 56,
+                "startChar": 0,
+                "endLine": 57,
+                "endChar": 0
+              },
+              "replacement": "  std::string clang_module_deps_no_self;\n"
+            },
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 116,
+                "startChar": 0,
+                "endLine": 117,
+                "endChar": 0
+              },
+              "replacement": "        module_deps_no_self_out \u003c\u003c \" -fmodule-file\u003d\";\n"
+            },
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 121,
+                "startChar": 0,
+                "endLine": 122,
+                "endChar": 0
+              },
+              "replacement": "                           \u0026flags.clang_module_deps_no_self);\n"
+            },
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 210,
+                "startChar": 0,
+                "endLine": 211,
+                "endChar": 0
+              },
+              "replacement": "      out \u003c\u003c flags.clang_module_deps_no_self;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "4aa91713abef07e5262f3dda59714961f1818b70",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
