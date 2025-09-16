@@ -19,6 +19,7 @@
 #include "gn/escape.h"
 #include "gn/filesystem_utils.h"
 #include "gn/general_tool.h"
+#include "gn/ninja_module_writer_util.h"
 #include "gn/ninja_target_command_util.h"
 #include "gn/ninja_utils.h"
 #include "gn/pool.h"
@@ -27,29 +28,6 @@
 #include "gn/string_utils.h"
 #include "gn/substitution_writer.h"
 #include "gn/target.h"
-
-struct ModuleDep {
-  ModuleDep(const SourceFile* modulemap,
-            const std::string& module_name,
-            const OutputFile& pcm,
-            bool is_self)
-      : modulemap(modulemap),
-        module_name(module_name),
-        pcm(pcm),
-        is_self(is_self) {}
-
-  // The input module.modulemap source file.
-  const SourceFile* modulemap;
-
-  // The internal module name, in GN this is the target's label.
-  std::string module_name;
-
-  // The compiled version of the module.
-  OutputFile pcm;
-
-  // Is this the module for the current target.
-  bool is_self;
-};
 
 namespace {
 
@@ -73,63 +51,6 @@ const char* GetPCHLangForToolType(const char* name) {
     return "objective-c++-header";
   NOTREACHED() << "Not a valid PCH tool type: " << name;
   return "";
-}
-
-const SourceFile* GetModuleMapFromTargetSources(const Target* target) {
-  for (const SourceFile& sf : target->sources()) {
-    if (sf.IsModuleMapType())
-      return &sf;
-  }
-  return nullptr;
-}
-
-std::vector<ModuleDep> GetModuleDepsInformation(
-    const Target* target,
-    const ResolvedTargetData& resolved) {
-  std::vector<ModuleDep> ret;
-  // Use a set to keep track of added PCM files to ensure uniqueness.
-  std::set<OutputFile> added_pcms;
-
-  auto add_if_new = [&added_pcms, &ret](const Target* t, bool is_self) {
-    const SourceFile* modulemap = GetModuleMapFromTargetSources(t);
-    if (!modulemap)  // Not a module or no .modulemap file.
-      return;
-
-    std::string label;
-    CHECK(SubstitutionWriter::GetTargetSubstitution(
-        t, &SubstitutionLabelNoToolchain, &label));
-
-    const char* tool_type;
-    std::vector<OutputFile> modulemap_outputs;
-    CHECK(
-        t->GetOutputFilesForSource(*modulemap, &tool_type, &modulemap_outputs));
-    // Must be only one .pcm from .modulemap.
-    CHECK(modulemap_outputs.size() == 1u);
-    const OutputFile& pcm_file = modulemap_outputs[0];
-
-    if (added_pcms.insert(pcm_file).second) {
-      ret.emplace_back(modulemap, label, pcm_file, is_self);
-    }
-  };
-
-  if (target->source_types_used().Get(SourceFile::SOURCE_MODULEMAP)) {
-    add_if_new(target, true);
-  }
-
-  // Process direct dependencies and their publicly inherited modules.
-  for (const auto& pairs : resolved.GetModuleDepsInformation(target)) {
-    const Target* dep = pairs.target();
-    if (dep->source_types_used().Get(SourceFile::SOURCE_MODULEMAP)) {
-      add_if_new(dep, false);
-    }
-  }
-
-  // Sort by pcm path for deterministic output.
-  std::sort(ret.begin(), ret.end(), [](const ModuleDep& a, const ModuleDep& b) {
-    return a.pcm < b.pcm;
-  });
-
-  return ret;
 }
 
 }  // namespace
