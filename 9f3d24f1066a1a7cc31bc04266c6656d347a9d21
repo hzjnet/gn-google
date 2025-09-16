@@ -40,6 +40,30 @@
       ],
       "revId": "9f3d24f1066a1a7cc31bc04266c6656d347a9d21",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23950fa8_8fe0583c",
+        "filename": "navbar.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002172
+      },
+      "writtenOn": "2025-09-16T07:11:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "173dbdad_21f97c95",
+      "range": {
+        "startLine": 1,
+        "startChar": 11,
+        "endLine": 1,
+        "endChar": 21
+      },
+      "revId": "9f3d24f1066a1a7cc31bc04266c6656d347a9d21",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
