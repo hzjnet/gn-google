@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d0a689c_cde908d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-09-16T12:27:04Z",
+      "side": 1,
+      "message": "lgtm",
+      "revId": "f429728d3d95276eaa0c32bf7dc1c037c8b5b418",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "301b6f22_5011f917",
+        "filename": "src/gn/ninja_module_writer_util.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-09-16T12:27:04Z",
+      "side": 1,
+      "message": "nit: can this anonymous namespace go before `ClangModuleDep` constructor?",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 0
+      },
+      "revId": "f429728d3d95276eaa0c32bf7dc1c037c8b5b418",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
