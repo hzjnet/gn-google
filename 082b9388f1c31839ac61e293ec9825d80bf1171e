@@ -1,0 +1,49 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61ae6707_1e5bd62f",
+        "filename": "src/gn/ninja_module_writer_util.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-09-16T09:51:38Z",
+      "side": 1,
+      "message": "nit: The term \"module\" is very ambiguous these days. Even the documentation mentions Swift modules and \"loadable modules\". Can we rename this to `ClangModuleDep` instead, since it seems GN only supports Clang modules (and not standard C++20 ones as far as I understand)",
+      "fixSuggestions": [
+        {
+          "fixId": "8afbd102_3fb8416b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/ninja_module_writer_util.h",
+              "range": {
+                "startLine": 17,
+                "startChar": 0,
+                "endLine": 22,
+                "endChar": 0
+              },
+              "replacement": "struct ClangModuleDep {\n  ClangModuleDep(const SourceFile* modulemap,\n                 const std::string\u0026 module_name,\n                 const OutputFile\u0026 pcm,\n                 bool is_self);\n"
+            },
+            {
+              "path": "src/gn/ninja_module_writer_util.h",
+              "range": {
+                "startLine": 37,
+                "startChar": 0,
+                "endLine": 38,
+                "endChar": 0
+              },
+              "replacement": "std::vector\u003cClangModuleDep\u003e GetModuleDepsInformation(\n"
+            }
+          ]
+        }
+      ],
+      "revId": "082b9388f1c31839ac61e293ec9825d80bf1171e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
