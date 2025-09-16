@@ -44,6 +44,24 @@
       ],
       "revId": "568175ad5b10d0d8c92682553ee6c7c9bac2ec30",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2415a70b_beac76b5",
+        "filename": "navbar.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002172
+      },
+      "writtenOn": "2025-09-16T07:14:31Z",
+      "side": 1,
+      "message": "Seems better to have standalone? https://gerrit.googlesource.com/gitiles/+/HEAD/Documentation/markdown.md#home-link\n\nIt can even support a logo, but unfortunately it seems like svg can\u0027t be resized e.g. https://gn.googlesource.com/gn/+/refs/changes/60/19860/1/README.md",
+      "parentUuid": "21aab149_c40f8b83",
+      "revId": "568175ad5b10d0d8c92682553ee6c7c9bac2ec30",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
