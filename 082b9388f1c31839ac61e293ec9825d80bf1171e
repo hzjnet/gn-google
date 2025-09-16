@@ -44,6 +44,24 @@
       ],
       "revId": "082b9388f1c31839ac61e293ec9825d80bf1171e",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82acbe37_11278cea",
+        "filename": "src/gn/ninja_module_writer_util.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-09-16T10:38:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61ae6707_1e5bd62f",
+      "revId": "082b9388f1c31839ac61e293ec9825d80bf1171e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
