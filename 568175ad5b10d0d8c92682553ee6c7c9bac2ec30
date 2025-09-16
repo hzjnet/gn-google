@@ -1,0 +1,49 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21aab149_c40f8b83",
+        "filename": "navbar.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-09-16T07:12:16Z",
+      "side": 1,
+      "message": "It might be fine to inline this?",
+      "fixSuggestions": [
+        {
+          "fixId": "d64cb87f_74831c80",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "navbar.md",
+              "range": {
+                "startLine": 3,
+                "startChar": 0,
+                "endLine": 4,
+                "endChar": 0
+              },
+              "replacement": "* [Home](/README.md)\n"
+            },
+            {
+              "path": "navbar.md",
+              "range": {
+                "startLine": 8,
+                "startChar": 0,
+                "endLine": 10,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "568175ad5b10d0d8c92682553ee6c7c9bac2ec30",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
