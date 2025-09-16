@@ -62,6 +62,24 @@
       "parentUuid": "21aab149_c40f8b83",
       "revId": "568175ad5b10d0d8c92682553ee6c7c9bac2ec30",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e97d629_f8f10b25",
+        "filename": "navbar.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-09-16T07:16:12Z",
+      "side": 1,
+      "message": "Ah, I see.",
+      "parentUuid": "2415a70b_beac76b5",
+      "revId": "568175ad5b10d0d8c92682553ee6c7c9bac2ec30",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
