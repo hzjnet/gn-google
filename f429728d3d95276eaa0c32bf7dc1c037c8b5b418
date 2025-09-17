@@ -39,6 +39,58 @@
       },
       "revId": "f429728d3d95276eaa0c32bf7dc1c037c8b5b418",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7104fd25_f5e26fc2",
+        "filename": "src/gn/ninja_module_writer_util.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-09-17T02:37:08Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "301b6f22_5011f917",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 0
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "cb29b4dc_33779208",
+          "description": "GET_AI_FIX_FOR_COMMENT prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/ninja_module_writer_util.cc",
+              "range": {
+                "startLine": 13,
+                "startChar": 0,
+                "endLine": 22,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "src/gn/ninja_module_writer_util.cc",
+              "range": {
+                "startLine": 36,
+                "startChar": 0,
+                "endLine": 36,
+                "endChar": 0
+              },
+              "replacement": "\nClangModuleDep::ClangModuleDep(const SourceFile* modulemap,\n                               const std::string\u0026 module_name,\n                               const OutputFile\u0026 pcm,\n                               bool is_self)\n    : modulemap(modulemap),\n      module_name(module_name),\n      pcm(pcm),\n      is_self(is_self) {}\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f429728d3d95276eaa0c32bf7dc1c037c8b5b418",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
