@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8999b74_62f1a86e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4366028
+      },
+      "writtenOn": "2025-09-20T13:46:50Z",
+      "side": 1,
+      "message": "19940: Edit .editorconfig | https://gn-review.googlesource.com/c/gn/+/19940",
+      "revId": "aecd20987ba85b1c517d237500ce9e671e771b79",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
