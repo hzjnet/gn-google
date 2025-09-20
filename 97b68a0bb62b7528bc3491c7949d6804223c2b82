@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "767a8294_f0866514",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4366028
+      },
+      "writtenOn": "2025-09-20T13:29:30Z",
+      "side": 1,
+      "message": "You are a highly experienced code reviewer specializing in Git patches. Your\ntask is to analyze the provided Git patch (`patch`) and provide comprehensive\nfeedback.  Focus on identifying potential bugs, inconsistencies, security\nvulnerabilities, and areas for improvement in code style and readability.\nYour response should be detailed and constructive, offering specific suggestions\nfor remediation where applicable. Prioritize clarity and conciseness in your\nfeedback.\n\n# Step by Step Instructions\n\n1.  Read the provided `patch` carefully.  Understand the changes it introduces to the codebase.\n\n2.  Analyze the `patch` for potential issues:\n    * **Functionality:** Does the code work as intended? Are there any bugs or unexpected behavior?\n    * **Security:** Are there any security vulnerabilities introduced by the patch?\n    * **Style:** Does the code adhere to the project\u0027s coding style guidelines? Is it readable and maintainable?\n    * **Consistency:** Are there any inconsistencies with existing code or design patterns?\n    * **Testing:** Does the patch include sufficient tests to cover the changes?\n\n3.  Formulate concise and constructive feedback for each identified issue.  Provide specific suggestions for remediation where possible.\n\n4.  Summarize your findings in a clear and organized manner.  Prioritize critical issues over minor ones.\n\n5.  Review the feedback written so far. Is the feedback comprehensive and sufficiently detailed?\nIf not, go back to step 2, focusing on any areas that require further analysis or clarification.\n If yes, proceed to step 6.\n\n6.  Output the complete review.\n\n\nPatch: \n\"\"\"\nFrom 81b24e01531ecf0eff12ec9359a555ec3944ec4e Mon Sep 17 00:00:00 2001\nFrom: Takuto Ikuta \u003ctikuta@google.com\u003e\nDate: Thu, 18 Sep 2025 13:55:06 +0900\nSubject: [PATCH] update reference.md\n\nThis is followup of https://gn-review.googlesource.com/c/gn/+/19820\n\nChange-Id: I11aa2becececdb4561c7eec81edf5a6f8491f5cd\nReviewed-on: https://gn-review.googlesource.com/c/gn/+/19900\nReviewed-by: Sylvain Defresne \u003csdefresne@chromium.org\u003e\nCommit-Queue: Takuto Ikuta \u003ctikuta@google.com\u003e\n---\n\ndiff --git a/docs/reference.md b/docs/reference.md\nindex 6e99270..81be9b3 100644\n--- a/docs/reference.md\n+++ b/docs/reference.md\n@@ -3048,24 +3048,19 @@\n   result \u003d label_matches(\"//baz:bar\", [ \"//foo/bar/*\", \"//baz:*\" ])\n   # result will be true\n ```\n-\n ### \u003ca name\u003d\"func_len\"\u003e\u003c/a\u003e**len**: Returns the length of a string or a list.\u0026nbsp;[Back to Top](#gn-reference)\n \n ```\n   len(item)\n-```\n-\n-#### **Argument**\n \n   The argument can be a string or a list.\n+```\n \n-#### **Examples**\n-\n+#### **Examples**:\n ```\n   len(\"foo\")  # 3\n   len([ \"a\", \"b\", \"c\" ])  # 3\n ```\n-\n ### \u003ca name\u003d\"func_not_needed\"\u003e\u003c/a\u003e**not_needed**: Mark variables from scope as not needed.\u0026nbsp;[Back to Top](#gn-reference)\n \n ```\n\n\"\"\"\nIMPORTANT NOTE: Start directly with the output, do not output any delimiters.\nTake a Deep Breath, read the instructions again, read the inputs again. Each instruction is crucial and must be executed with utmost care and attention to detail.\n\nReview:",
+      "revId": "97b68a0bb62b7528bc3491c7949d6804223c2b82",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
