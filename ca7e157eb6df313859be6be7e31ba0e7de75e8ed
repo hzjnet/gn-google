@@ -1,0 +1,62 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "352f3723_7f604950",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-10-06T15:13:09Z",
+      "side": 1,
+      "message": "Can we write a test in `src/gn/setup_unittest.cc?`",
+      "revId": "ca7e157eb6df313859be6be7e31ba0e7de75e8ed",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd5c1780_cf0ff2ef",
+        "filename": "src/gn/setup.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-10-06T15:13:09Z",
+      "side": 1,
+      "message": "Can you fix this typo? `soure` -\u003e `source`.",
+      "range": {
+        "startLine": 628,
+        "startChar": 9,
+        "endLine": 628,
+        "endChar": 14
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "8fc2d63b_4b507620",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/setup.cc",
+              "range": {
+                "startLine": 628,
+                "startChar": 0,
+                "endLine": 629,
+                "endChar": 0
+              },
+              "replacement": "  // Set source dir so relative imports in args work.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ca7e157eb6df313859be6be7e31ba0e7de75e8ed",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
