@@ -74,7 +74,10 @@ DWORD DeleteFileRecursive(const FilePath& path,
     DWORD this_result = ERROR_SUCCESS;
     if (info.IsDirectory()) {
       if (recursive) {
-        this_result = DeleteFileRecursive(current, pattern, true);
+        if (!(info.find_data().dwFileAttributes &
+              FILE_ATTRIBUTE_REPARSE_POINT)) {
+          this_result = DeleteFileRecursive(current, pattern, true);
+        }
         if (this_result == ERROR_SUCCESS &&
             !::RemoveDirectory(ToWCharT(&current.value()))) {
           this_result = ::GetLastError();
@@ -135,7 +138,7 @@ DWORD DoDeleteFile(const FilePath& path, bool recursive) {
                                                  : ::GetLastError();
   }
 
-  if (recursive) {
+  if (recursive && !(attr & FILE_ATTRIBUTE_REPARSE_POINT)) {
     const DWORD error_code = DeleteFileRecursive(path, u"*", true);
     if (error_code != ERROR_SUCCESS)
       return error_code;
