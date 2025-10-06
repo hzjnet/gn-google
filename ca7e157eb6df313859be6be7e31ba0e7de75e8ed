@@ -18,6 +18,23 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5bb62d3_923336f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-10-06T15:15:54Z",
+      "side": 1,
+      "message": "lgtm when we have tests that\n1. fix relative paths imports\n2. does not break absolute paths imports",
+      "revId": "ca7e157eb6df313859be6be7e31ba0e7de75e8ed",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd5c1780_cf0ff2ef",
