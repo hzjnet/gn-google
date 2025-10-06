@@ -360,3 +360,44 @@ toolchain("toolchain") {
   EXPECT_FALSE(qux_record->should_generate());
   EXPECT_FALSE(zoo_record->should_generate());
 }
+
+TEST_F(SetupTest, ArgsGnRelativeImport) {
+  base::CommandLine cmdline(base::CommandLine::NO_PROGRAM);
+
+  const char kDotfileContents[] = R"(
+buildconfig = "//BUILDCONFIG.gn"
+script_executable = ""
+)";
+
+  // Create a temp directory containing a .gn file and a BUILDCONFIG.gn file,
+  // pass it as --root.
+  base::ScopedTempDir in_temp_dir;
+  ASSERT_TRUE(in_temp_dir.CreateUniqueTempDir());
+  base::FilePath in_path = in_temp_dir.GetPath();
+  base::FilePath dot_gn_name = in_path.Append(FILE_PATH_LITERAL(".gn"));
+  WriteFile(dot_gn_name, kDotfileContents);
+
+  WriteFile(in_path.Append(FILE_PATH_LITERAL("BUILDCONFIG.gn")), "");
+  cmdline.AppendSwitchPath(switches::kRoot, in_path);
+
+  // Create another temp dir and write the args.gn with relatively imported
+  // parameters.gni file.
+  base::ScopedTempDir build_temp_dir;
+  ASSERT_TRUE(build_temp_dir.CreateUniqueTempDir());
+  base::FilePath args_gn_name =
+      build_temp_dir.GetPath().Append(FILE_PATH_LITERAL("args.gn"));
+  WriteFile(args_gn_name, R"(import("parameters.gni"))");
+  base::FilePath parameters_gni_name =
+      build_temp_dir.GetPath().Append(FILE_PATH_LITERAL("parameters.gni"));
+  WriteFile(parameters_gni_name, R"(variable = true)");
+
+  // Run setup and check that the parameters.gni file is in dependency files.
+  Setup setup;
+  Err err;
+  EXPECT_TRUE(setup.DoSetupWithErr(FilePathToUTF8(build_temp_dir.GetPath()),
+                                   true, cmdline, &err));
+  const auto& dependency_files =
+      setup.build_settings().build_args().build_args_dependency_files();
+  ASSERT_EQ(1u, dependency_files.size());
+  EXPECT_EQ(dependency_files.begin()->GetName(), "parameters.gni");
+}
