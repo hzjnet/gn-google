@@ -16,6 +16,23 @@
       "message": "Should be gtg. PTAL once more.",
       "revId": "1c4e9a3cafb85aa5614d0b012718b4895aacd6e1",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b4886df_20f36ba5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-10-07T11:44:07Z",
+      "side": 1,
+      "message": "lgtm\n\nThank you for the unittests.",
+      "revId": "1c4e9a3cafb85aa5614d0b012718b4895aacd6e1",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
