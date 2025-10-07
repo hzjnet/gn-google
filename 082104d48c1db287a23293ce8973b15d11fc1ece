@@ -51,6 +51,24 @@
       ],
       "revId": "082104d48c1db287a23293ce8973b15d11fc1ece",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12035df6_605bd13f",
+        "filename": "src/base/files/file_util_win.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1001502
+      },
+      "writtenOn": "2025-10-07T14:34:40Z",
+      "side": 1,
+      "message": "Yes, I ran clang-format. Added a comment.",
+      "parentUuid": "af8e597c_ccaab843",
+      "revId": "082104d48c1db287a23293ce8973b15d11fc1ece",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
