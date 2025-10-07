@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "017ba9f1_4dd32c6d",
+        "filename": "src/gn/setup_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-10-07T05:09:20Z",
+      "side": 1,
+      "message": "Can we use std::string_view here?",
+      "range": {
+        "startLine": 409,
+        "startChar": 55,
+        "endLine": 409,
+        "endChar": 61
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0bf5a4b8_658035d4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/setup_unittest.cc",
+              "range": {
+                "startLine": 409,
+                "startChar": 0,
+                "endLine": 410,
+                "endChar": 0
+              },
+              "replacement": "  const auto dependency_includes_file \u003d [\u0026](std::string_view file_name) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "afd0d8135e94a0697c1f28e4b333239a92953879",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3514222_77ce13c2",
+        "filename": "src/gn/setup_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-10-07T05:09:20Z",
+      "side": 1,
+      "message": "This can be simplified a bit by using any_of?",
+      "range": {
+        "startLine": 410,
+        "startChar": 16,
+        "endLine": 410,
+        "endChar": 23
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "9ddca379_3300335a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/setup_unittest.cc",
+              "range": {
+                "startLine": 7,
+                "startChar": 0,
+                "endLine": 7,
+                "endChar": 0
+              },
+              "replacement": "#include \u003calgorithm\u003e\n"
+            },
+            {
+              "path": "src/gn/setup_unittest.cc",
+              "range": {
+                "startLine": 410,
+                "startChar": 0,
+                "endLine": 414,
+                "endChar": 0
+              },
+              "replacement": "    return std::any_of(dependency_files.begin(), dependency_files.end(),\n                       [\u0026](const SourceFile\u0026 file) {\n                         return file.GetName() \u003d\u003d file_name;\n                       });\n"
+            }
+          ]
+        }
+      ],
+      "revId": "afd0d8135e94a0697c1f28e4b333239a92953879",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
