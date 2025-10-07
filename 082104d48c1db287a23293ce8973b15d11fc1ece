@@ -16,6 +16,41 @@
       "message": "lgtm",
       "revId": "082104d48c1db287a23293ce8973b15d11fc1ece",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af8e597c_ccaab843",
+        "filename": "src/base/files/file_util_win.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-10-07T12:11:48Z",
+      "side": 1,
+      "message": "nit: can you add a comment about this line explaining why this check is important.\nAlso, indentation is a bit surprising. Did you run `git clang-format` here?",
+      "fixSuggestions": [
+        {
+          "fixId": "5e8466b1_d6db8912",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/base/files/file_util_win.cc",
+              "range": {
+                "startLine": 77,
+                "startChar": 0,
+                "endLine": 79,
+                "endChar": 0
+              },
+              "replacement": "        // Do not recurse into reparse points (like symbolic links or junctions)\n        // to avoid deleting their targets.\n        if (!(info.find_data().dwFileAttributes \u0026 FILE_ATTRIBUTE_REPARSE_POINT)) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "082104d48c1db287a23293ce8973b15d11fc1ece",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
