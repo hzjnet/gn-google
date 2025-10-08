@@ -50,6 +50,23 @@
       "message": "@sdefresne@chromium.org kindly ping to approve+submit this. Thank you! :)",
       "revId": "778bcc45fd5d53b9dd08654276915f9bc6ddb8cc",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b24b50e_22b81b55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-10-08T11:44:18Z",
+      "side": 1,
+      "message": "lgtm",
+      "revId": "778bcc45fd5d53b9dd08654276915f9bc6ddb8cc",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
