@@ -33,6 +33,23 @@
       "message": "Thank you very much :-)",
       "revId": "778bcc45fd5d53b9dd08654276915f9bc6ddb8cc",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30c57142_f421c33c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001502
+      },
+      "writtenOn": "2025-10-08T06:04:32Z",
+      "side": 1,
+      "message": "@sdefresne@chromium.org kindly ping to approve+submit this. Thank you! :)",
+      "revId": "778bcc45fd5d53b9dd08654276915f9bc6ddb8cc",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
