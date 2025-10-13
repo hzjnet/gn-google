@@ -375,9 +375,11 @@ Value ExecutePlus(const BinaryOpNode* op_node,
   if (left.type() == Value::LIST && right.type() == Value::LIST) {
     // Since left was passed by copy, avoid realloc by destructively appending
     // to it and using that as the result.
-    for (Value& value : right.list_value())
-      left.list_value().push_back(std::move(value));
-    return left;  // FIXME(brettw) does this copy?
+    auto& right_list = right.list_value();
+    left.list_value().insert(left.list_value().end(),
+                             std::make_move_iterator(right_list.begin()),
+                             std::make_move_iterator(right_list.end()));
+    return left;
   }
 
   *err = MakeIncompatibleTypeError(op_node, left, right);
