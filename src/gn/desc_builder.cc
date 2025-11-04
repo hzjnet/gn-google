@@ -653,9 +653,8 @@ class TargetDescBuilder : public BaseDescBuilder {
                           TargetSet* seen_targets,
                           int indent_level) {
     // Combine all deps into one sorted list.
-    std::vector<LabelTargetPair> sorted_deps;
-    for (const auto& pair : target->GetDeps(Target::DEPS_ALL))
-      sorted_deps.push_back(pair);
+    auto deps = target->GetDeps(Target::DEPS_ALL);
+    std::vector<LabelTargetPair> sorted_deps = {deps.begin(), deps.end()};
     std::sort(sorted_deps.begin(), sorted_deps.end());
 
     std::string indent(indent_level * 2, ' ');
@@ -722,8 +721,10 @@ class TargetDescBuilder : public BaseDescBuilder {
   ValuePtr RenderGenDeps() {
     auto res = std::make_unique<base::ListValue>();
     Label default_tc = target_->settings()->default_toolchain_label();
+    auto gen_deps_pairs = target_->gen_deps();
     std::vector<std::string> gen_deps;
-    for (const auto& pair : target_->gen_deps())
+    gen_deps.reserve(gen_deps_pairs.size());
+    for (const auto& pair : gen_deps_pairs)
       gen_deps.push_back(pair.label.GetUserVisibleName(default_tc));
     std::sort(gen_deps.begin(), gen_deps.end());
     for (const auto& dep : gen_deps)
