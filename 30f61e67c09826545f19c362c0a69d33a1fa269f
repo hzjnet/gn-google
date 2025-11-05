@@ -1,0 +1,109 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd376f7a_ec1dc316",
+        "filename": "src/gn/desc_builder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-05T09:54:06Z",
+      "side": 1,
+      "message": "nit: In general use `const auto\u0026` in definitions such as this one to ensure that no unwanted memory copy is performed, when the result of the function call is a reference and should not be mutated.\n\nAlternatively, you can be explicit here and use `DepsIteratorRange deps \u003d ...` if you don\u0027t want to use a reference.",
+      "fixSuggestions": [
+        {
+          "fixId": "2a3cbed7_17319d6c",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/desc_builder.cc",
+              "range": {
+                "startLine": 656,
+                "startChar": 0,
+                "endLine": 657,
+                "endChar": 0
+              },
+              "replacement": "    const auto\u0026 deps \u003d target-\u003eGetDeps(Target::DEPS_ALL);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "30f61e67c09826545f19c362c0a69d33a1fa269f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c48822b_e4807d3e",
+        "filename": "src/gn/desc_builder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-05T09:54:06Z",
+      "side": 1,
+      "message": "This cannot work because DepsIterator::operator*() returns a reference, not a value, and these cannot be constructed as required by the templated std::vector constructor. It\u0027s simpler to stick to the range-based loop here. If you want to reserve the size, add a size() method to DepsIteratorRange() instead and use that to call std::vector\u003c\u003e::reserve() before the loop.",
+      "fixSuggestions": [
+        {
+          "fixId": "887a912d_20ffa6ef",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/desc_builder.cc",
+              "range": {
+                "startLine": 656,
+                "startChar": 0,
+                "endLine": 658,
+                "endChar": 0
+              },
+              "replacement": "    std::vector\u003cLabelTargetPair\u003e sorted_deps;\n    for (const auto\u0026 pair : target-\u003eGetDeps(Target::DEPS_ALL)) {\n      sorted_deps.push_back(pair);\n    }\n"
+            }
+          ]
+        }
+      ],
+      "revId": "30f61e67c09826545f19c362c0a69d33a1fa269f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5234f60_6012eb26",
+        "filename": "src/gn/desc_builder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-05T09:54:06Z",
+      "side": 1,
+      "message": "this performs a vector copy! use `const auto\u0026` instead.",
+      "fixSuggestions": [
+        {
+          "fixId": "e5fe70fe_0d38127b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/desc_builder.cc",
+              "range": {
+                "startLine": 724,
+                "startChar": 0,
+                "endLine": 725,
+                "endChar": 0
+              },
+              "replacement": "    const auto\u0026 gen_deps_pairs \u003d target_-\u003egen_deps();\n"
+            }
+          ]
+        }
+      ],
+      "revId": "30f61e67c09826545f19c362c0a69d33a1fa269f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
