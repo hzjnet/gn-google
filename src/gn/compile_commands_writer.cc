@@ -4,6 +4,7 @@
 
 #include "gn/compile_commands_writer.h"
 
+#include <iterator>
 #include <sstream>
 
 #include "base/json/string_escape.h"
@@ -428,25 +429,21 @@ std::vector<const Target*> CompileCommandsWriter::CollectDepsOfMatches(
   }
 
   // Convert to vector for output.
-  std::vector<const Target*> output;
-  output.reserve(collected.size());
-  for (const Target* target : collected) {
-    output.push_back(target);
-  }
-  return output;
+  return {collected.begin(), collected.end()};
 }
 
 std::vector<const Target*> CompileCommandsWriter::FilterLegacyTargets(
     const std::vector<const Target*>& all_targets,
     const std::string& target_filter_string) {
-  std::set<std::string> target_filters_set;
-  for (auto& target :
-       base::SplitString(target_filter_string, ",", base::TRIM_WHITESPACE,
-                         base::SPLIT_WANT_NONEMPTY)) {
-    target_filters_set.insert(target);
-  }
+  std::vector<std::string> target_filters =
+      base::SplitString(target_filter_string, ",", base::TRIM_WHITESPACE,
+                        base::SPLIT_WANT_NONEMPTY);
+  std::set<std::string> target_filters_set = {
+      std::make_move_iterator(target_filters.begin()),
+      std::make_move_iterator(target_filters.end())};
 
   std::vector<const Target*> result;
+  result.reserve(all_targets.size());
   for (auto& target : all_targets) {
     if (target_filters_set.count(target->label().name()))
       result.push_back(target);
