@@ -428,12 +428,7 @@ std::vector<const Target*> CompileCommandsWriter::CollectDepsOfMatches(
   }
 
   // Convert to vector for output.
-  std::vector<const Target*> output;
-  output.reserve(collected.size());
-  for (const Target* target : collected) {
-    output.push_back(target);
-  }
-  return output;
+  return {collected.begin(), collected.end()};
 }
 
 std::vector<const Target*> CompileCommandsWriter::FilterLegacyTargets(
