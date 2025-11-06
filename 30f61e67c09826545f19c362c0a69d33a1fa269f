@@ -36,6 +36,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a9df782_fe1ca020",
+        "filename": "src/gn/desc_builder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 4410212
+      },
+      "writtenOn": "2025-11-06T18:43:47Z",
+      "side": 1,
+      "message": "Reverted this change.",
+      "parentUuid": "cd376f7a_ec1dc316",
+      "revId": "30f61e67c09826545f19c362c0a69d33a1fa269f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2c48822b_e4807d3e",
@@ -71,6 +89,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c2aafd9_c473dc03",
+        "filename": "src/gn/desc_builder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 4410212
+      },
+      "writtenOn": "2025-11-06T18:43:47Z",
+      "side": 1,
+      "message": "Reverted this change.",
+      "parentUuid": "2c48822b_e4807d3e",
+      "revId": "30f61e67c09826545f19c362c0a69d33a1fa269f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c5234f60_6012eb26",
@@ -102,6 +138,24 @@
           ]
         }
       ],
+      "revId": "30f61e67c09826545f19c362c0a69d33a1fa269f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23a04ca7_abc2afee",
+        "filename": "src/gn/desc_builder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 4410212
+      },
+      "writtenOn": "2025-11-06T18:43:47Z",
+      "side": 1,
+      "message": "Reverted this change.",
+      "parentUuid": "c5234f60_6012eb26",
       "revId": "30f61e67c09826545f19c362c0a69d33a1fa269f",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
