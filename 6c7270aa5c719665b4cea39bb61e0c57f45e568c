@@ -1,0 +1,94 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de5ddcab_2780a932",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-07T08:47:13Z",
+      "side": 1,
+      "message": "Can you explain why you are doing this? This removes the reserve() call entirely from the generated code.",
+      "fixSuggestions": [
+        {
+          "fixId": "e9e817d8_767de3bf",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 431,
+                "startChar": 0,
+                "endLine": 432,
+                "endChar": 0
+              },
+              "replacement": "  // Convert the set of collected unique targets to a vector for the return\n  // value.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "6c7270aa5c719665b4cea39bb61e0c57f45e568c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7de7a37_5d3a718f",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-07T08:47:13Z",
+      "side": 1,
+      "message": "ProTip: Use a UniqueVector\u003c\u003e instance to simplify this and use its reserve() method while preserving string move operations and O(1) lookups, as in:\n\n```\nUniqueVector\u003cstd::string\u003e target_filters_set;\ntarget_filters_set.reserve(target_filters.size());\ntarget_filters_set.Append(std::move(target_filters));\n\n...\n  if (target_filters_set.Contains(target-\u003elabel().named()) {\n    ...\n  }\n```",
+      "fixSuggestions": [
+        {
+          "fixId": "a8ae1d71_1ca7bae0",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 26,
+                "startChar": 0,
+                "endLine": 26,
+                "endChar": 0
+              },
+              "replacement": "#include \"gn/unique_vector.h\"\n"
+            },
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 441,
+                "startChar": 0,
+                "endLine": 444,
+                "endChar": 0
+              },
+              "replacement": "  UniqueVector\u003cstd::string\u003e target_filters_set;\n  target_filters_set.reserve(target_filters.size());\n  target_filters_set.append(std::move(target_filters));\n"
+            },
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 448,
+                "startChar": 0,
+                "endLine": 449,
+                "endChar": 0
+              },
+              "replacement": "    if (target_filters_set.Contains(target-\u003elabel().name()))\n"
+            }
+          ]
+        }
+      ],
+      "revId": "6c7270aa5c719665b4cea39bb61e0c57f45e568c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
