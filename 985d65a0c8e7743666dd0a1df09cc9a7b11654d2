@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "102ecda9_4e61ce74",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000055
+      },
+      "writtenOn": "2025-11-07T20:14:16Z",
+      "side": 1,
+      "message": "nit: GN uses - rather than _ in arg names.\n\nCould also just call it \"--relation\" to skirt the issue :P",
+      "range": {
+        "startLine": 7,
+        "startChar": 6,
+        "endLine": 7,
+        "endChar": 19
+      },
+      "revId": "985d65a0c8e7743666dd0a1df09cc9a7b11654d2",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
