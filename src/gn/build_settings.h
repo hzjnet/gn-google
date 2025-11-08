@@ -87,6 +87,15 @@ class BuildSettings {
     async_non_linkable_deps_ = async_non_linkable_deps;
   }
 
+  // The 'headers_as_ninja_inputs' boolean flag can be set to ensure that
+  // C and C++ headers appear as implicit Ninja inputs for C/C++ compilation
+  // actions in the Ninja build plan. While this makes the Ninja build plan
+  // larger, it will turn incorrect header paths to turn into Ninja errors.
+  bool headers_as_ninja_inputs() const { return headers_as_ninja_inputs_; }
+  void set_headers_as_ninja_inputs(bool headers_as_ninja_inputs) {
+    headers_as_ninja_inputs_ = headers_as_ninja_inputs;
+  }
+
   const SourceFile& build_config_file() const { return build_config_file_; }
   void set_build_config_file(const SourceFile& f) { build_config_file_ = f; }
 
@@ -164,6 +173,7 @@ class BuildSettings {
   Version ninja_required_version_{1, 7, 2};
   bool no_stamp_files_ = true;
   bool async_non_linkable_deps_ = false;
+  bool headers_as_ninja_inputs_ = false;
 
   SourceFile build_config_file_;
   SourceFile arg_file_template_path_;

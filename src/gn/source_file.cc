@@ -29,7 +29,7 @@ bool EndsWithExtension(std::string_view str, std::string_view ext) {
                    ext.size());
 }
 
-SourceFile::Type GetSourceFileType(const std::string& file) {
+SourceFile::Type GetSourceFileType(std::string_view file) {
   size_t size = file.size();
   const char* str = file.data();
 

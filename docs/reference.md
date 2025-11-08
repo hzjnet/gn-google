@@ -7332,6 +7332,12 @@
       A boolean flag that can be set to generate Ninja files that use phony
       rules instead of stamp files whenever possible. This results in smaller
       Ninja build plans, but requires at least Ninja 1.11.
+
+  headers_as_ninja_inputs [optional]
+      A boolean flag that can be set to ensure that C++ compilation actions
+      in the generated Ninja build plan use C and C++ headers as implicit
+      inputs. This results in a larger Ninja build plan, but also helps
+      catch invalid header paths in GN targets.
 ```
 
 #### **Example .gn file contents**

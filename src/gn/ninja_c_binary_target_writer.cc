@@ -73,6 +73,18 @@ void NinjaCBinaryTargetWriter::Run() {
   std::vector<OutputFile> input_deps =
       WriteInputsStampOrPhonyAndGetDep(num_output_uses);
 
+  // Append headers as Ninja implicit dependencies if needed.
+  if (settings_->build_settings()->headers_as_ninja_inputs()) {
+    for (const SourceFile& source : target_->sources()) {
+      if (source.GetType() == SourceFile::SOURCE_H) {
+        input_deps.push_back(OutputFile(settings_->build_settings(), source));
+      }
+    }
+    for (const SourceFile& header : target_->public_headers()) {
+      input_deps.push_back(OutputFile(settings_->build_settings(), header));
+    }
+  }
+
   // The input dependencies will be an order-only dependency. This will cause
   // Ninja to make sure the inputs are up to date before compiling this source,
   // but changes in the inputs deps won't cause the file to be recompiled.
