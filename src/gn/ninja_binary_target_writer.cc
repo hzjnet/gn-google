@@ -80,6 +80,7 @@ NinjaBinaryTargetWriter::WriteInputsStampOrPhonyAndGetDep(
   }
 
   std::vector<OutputFile> outs;
+  outs.reserve(inputs.size());
   for (const SourceFile* source : inputs)
     outs.push_back(OutputFile(settings_->build_settings(), *source));
 

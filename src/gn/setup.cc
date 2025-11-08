@@ -218,6 +218,12 @@ Variables
       rules instead of stamp files whenever possible. This results in smaller
       Ninja build plans, but requires at least Ninja 1.11.
 
+  headers_as_ninja_inputs [optional]
+      A boolean flag that can be set to ensure that C++ compilation actions
+      in the generated Ninja build plan use C and C++ headers as implicit
+      inputs. This results in a larger Ninja build plan, but also helps
+      catch invalid header paths in GN targets.
+
 Example .gn file contents
 
   buildconfig = "//build/config/BUILDCONFIG.gn"
@@ -1156,6 +1162,17 @@ bool Setup::FillOtherConfig(const base::CommandLine& cmdline, Err* err) {
       return false;
     }
     build_settings_.set_no_stamp_files(no_stamp_files_value->boolean_value());
+  }
+
+  // Headers as ninja inputs
+  const Value* headers_as_ninja_inputs_value =
+      dotfile_scope_.GetValue("headers_as_ninja_inputs", true);
+  if (headers_as_ninja_inputs_value) {
+    if (!headers_as_ninja_inputs_value->VerifyTypeIs(Value::BOOLEAN, err)) {
+      return false;
+    }
+    build_settings_.set_headers_as_ninja_inputs(
+        headers_as_ninja_inputs_value->boolean_value());
   }
 
   // Export compile commands.
