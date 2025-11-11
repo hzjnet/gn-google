@@ -17,6 +17,7 @@ BuildSettings::BuildSettings(const BuildSettings& other)
       root_path_utf8_(other.root_path_utf8_),
       secondary_source_path_(other.secondary_source_path_),
       python_path_(other.python_path_),
+      python_path_for_ninja_(other.python_path_for_ninja_),
       ninja_required_version_(other.ninja_required_version_),
       build_config_file_(other.build_config_file_),
       arg_file_template_path_(other.arg_file_template_path_),
@@ -39,6 +40,20 @@ void BuildSettings::SetRootPath(const base::FilePath& r) {
 
 void BuildSettings::SetSecondarySourcePath(const SourceDir& d) {
   secondary_source_path_ = GetFullPath(d).NormalizePathSeparatorsTo('/');
+}
+
+void BuildSettings::SetPythonPath(const base::FilePath& p) {
+  python_path_ = p;
+#if defined(OS_WIN)
+  if (root_path_.IsParent(p)) {
+    python_path_for_ninja_ = UTF8ToFilePath(
+        RebasePath(FilePathToUTF8(p), build_dir_, root_path_utf8_));
+  } else {
+    python_path_for_ninja_ = p;
+  }
+#else
+  python_path_for_ninja_ = p;
+#endif
 }
 
 void BuildSettings::SetBuildDir(const SourceDir& d) {
