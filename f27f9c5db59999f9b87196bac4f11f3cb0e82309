@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "296e159b_5d04d181",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-11T05:32:46Z",
+      "side": 1,
+      "message": "Hmm, even on Windows, it is better to use python path found from $PATH by default as I assume that most users installed their python via recommended way from their organization. And they still get the same absolute path like `/usr/bin/python` on POSIX?\n\nIf you want to use relative path, is it possible to use \nhttps://gn.googlesource.com/gn/+/refs/heads/main/docs/reference.md#var_python_path:~:text\u003dhelp%20%2D%2Droot%2Dpattern%22)-,script_executable,-%5Boptional%5D%0A%20%20%20%20%20%20By%20default\nin your `.gn` file?",
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "33d936ad_b3da9650",
@@ -14,6 +31,67 @@
       "writtenOn": "2025-11-11T05:14:44Z",
       "side": 1,
       "message": "Hi, this is my first cl for GN, please let me know if I missed any process.  Thanks!",
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "baef1936_dd105574",
+        "filename": "src/gn/build_settings.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-11T05:32:46Z",
+      "side": 1,
+      "message": "Better to use pass by value and move?",
+      "range": {
+        "startLine": 45,
+        "startChar": 34,
+        "endLine": 45,
+        "endChar": 57
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "21c02594_14b8a189",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/build_settings.cc",
+              "range": {
+                "startLine": 45,
+                "startChar": 0,
+                "endLine": 46,
+                "endChar": 0
+              },
+              "replacement": "void BuildSettings::SetPythonPath(base::FilePath p) {\n"
+            },
+            {
+              "path": "src/gn/build_settings.cc",
+              "range": {
+                "startLine": 52,
+                "startChar": 0,
+                "endLine": 53,
+                "endChar": 0
+              },
+              "replacement": "    python_path_for_ninja_ \u003d std::move(p);\n"
+            },
+            {
+              "path": "src/gn/build_settings.cc",
+              "range": {
+                "startLine": 55,
+                "startChar": 0,
+                "endLine": 56,
+                "endChar": 0
+              },
+              "replacement": "  python_path_for_ninja_ \u003d std::move(p);\n"
+            }
+          ]
+        }
+      ],
       "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
