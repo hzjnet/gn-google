@@ -18,6 +18,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "603355fa_b4739cce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-11T06:36:20Z",
+      "side": 1,
+      "message": "Even when setting relative path using `python_path` in `.gn`, the python path stored inside `BuildSettings` will always be an absolute path due to this:\nhttps://gn.googlesource.com/gn/+/refs/heads/main/src/gn/setup.cc#353\n\nRegarding using the python path in $PATH, there are a few issues with this:\n\n1) it will not work with remote execution because the user may have python in any  arbitrary $PATH that does not match what\u0027s available on the remote worker.  Note that because GN *always* makes `python_path` absolute on Windows (see link above), we are unable to simply use `\"python.exe\"` and let $PATH figure it out.\n\n2) organizations that work on many different projects will have multiple versions of python being used, so it becomes much easier to place the appropriate python inside each project.  For example, chromium can do this in `src/third_party/depot_tools`",
+      "parentUuid": "296e159b_5d04d181",
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "33d936ad_b3da9650",
@@ -92,6 +110,30 @@
           ]
         }
       ],
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f570565_afd874c3",
+        "filename": "src/gn/build_settings.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-11T06:36:20Z",
+      "side": 1,
+      "message": "This looks like a good change, but would you mind if I did it in a separate CL?  The `BuildSettings::SetPythonPath` method is actually a replacement of the `BuildSettings::set_python_path` from the header file, which already used `const base::FilePath\u0026`, and there are many places that currently call it, so some of those places may need to be updated with `std::move` as well.  If possible, I\u0027d prefer to do that as a separate change since it is not directly related to this CL",
+      "parentUuid": "baef1936_dd105574",
+      "range": {
+        "startLine": 45,
+        "startChar": 34,
+        "endLine": 45,
+        "endChar": 57
+      },
       "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
