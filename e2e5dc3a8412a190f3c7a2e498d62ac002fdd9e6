@@ -16,6 +16,23 @@
       "message": "Replace reviewer.",
       "revId": "e2e5dc3a8412a190f3c7a2e498d62ac002fdd9e6",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43fff785_7ab4ba8f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2025-11-12T10:22:04Z",
+      "side": 1,
+      "message": "lgtm\n\nCan we add an unittest in `src/gn/ninja_build_writer_unittest.cc`?",
+      "revId": "e2e5dc3a8412a190f3c7a2e498d62ac002fdd9e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
