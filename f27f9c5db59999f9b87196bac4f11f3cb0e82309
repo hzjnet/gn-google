@@ -72,6 +72,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "acd2b2a8_070ff805",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-13T14:13:39Z",
+      "side": 1,
+      "message": "I believe `FindWindowsPython` **must** return an absolute path because the `BuildSettings::python_path` is used in places which require an absolute path on Windows, for example:\nhttps://gn.googlesource.com/gn/+/refs/heads/main/src/gn/function_exec_script.cc#188\nhttps://gn.googlesource.com/gn/+/refs/heads/main/src/gn/invoke_python.cc#23\n\nThis is the reason why my CL creates a separate variable called `python_path_for_ninja`, which will hold the python path that will be used *only* inside the ninja-generated files.\n\nNote that in almost all cases, `python_path` and `python_path_for_ninja` will be identical.  So this CL is effectively a no-op except for the case where:\n\n1) We are using Windows, *and*\n2) `python_path` happens to be within the `root_path`\n\nIf the above two conditions are true, then `python_path_for_ninja` will contain the relative path from the `build_dir` to `python_path`, which effectively makes the ninja files portable to other drives/machines/etc.",
+      "parentUuid": "4f0a0eca_3a51d583",
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "33d936ad_b3da9650",
@@ -188,6 +206,30 @@
       "side": 1,
       "message": "Separating CL to use `std::move` in caller side sounds good. But using pass by value can still be done in this CL without any disadvantage?",
       "parentUuid": "5f570565_afd874c3",
+      "range": {
+        "startLine": 45,
+        "startChar": 34,
+        "endLine": 45,
+        "endChar": 57
+      },
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a0e4411_9e2d2530",
+        "filename": "src/gn/build_settings.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-13T14:13:39Z",
+      "side": 1,
+      "message": "If I change to use pass by value, then it will change the semantics in every place where `BuildSetttings::set_python_path` was used.  One disadvantage would be in places like this, where an additional copy would be introduced:\nhttps://gn.googlesource.com/gn/+/refs/heads/main/src/gn/setup.cc#849\n\nAlso, it doesn\u0027t seem to be the convention in this source file to use pass-by-value.  For example, `SetRootPath` is not passing by value:\nhttps://gn.googlesource.com/gn/+/refs/heads/main/src/gn/build_settings.cc#34\n\nSo if we change `SetPythonPath` to pass by value, then we should do it for all the other functions as well for consistency.  Therefore, I think it would be better to make this kind of change in a separate CL since it could affect a lot of places in the codebase if we want to do it consistently.",
+      "parentUuid": "9ec404ae_a089314e",
       "range": {
         "startLine": 45,
         "startChar": 34,
