@@ -16,6 +16,24 @@
       "message": "Keeping this thread open to prevent submission until all CLs are ready",
       "revId": "f430fbee3d777db7207d425c1786f2c2bae85ef5",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2aa0245_2572447e",
+        "filename": "infra/config/main.star",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001283
+      },
+      "writtenOn": "2025-11-13T01:34:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffab86a2_d4fe1ab8",
+      "revId": "f430fbee3d777db7207d425c1786f2c2bae85ef5",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
