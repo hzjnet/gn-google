@@ -628,6 +628,16 @@ class TargetDescBuilder : public BaseDescBuilder {
                                      std::move(frameworks));
       }
     }
+    if (what(variables::kWeakLibraries)) {
+      const auto& weak_libraries = resolved.GetLinkedWeakLibraries(target_);
+      if (!weak_libraries.empty()) {
+        auto libraries = std::make_unique<base::ListValue>();
+        for (size_t i = 0; i < weak_libraries.size(); i++)
+          libraries->AppendString(weak_libraries[i]);
+        res->SetWithoutPathExpansion(variables::kWeakLibraries,
+                                     std::move(libraries));
+      }
+    }
 
     if (what(variables::kFrameworkDirs)) {
       const auto& all_framework_dirs = resolved.GetLinkedFrameworkDirs(target_);
