@@ -67,6 +67,23 @@ struct FrameworksWriter {
   std::string tool_switch_;
 };
 
+struct WeakLibrariesWriter {
+  explicit WeakLibrariesWriter(const std::string& tool_switch)
+      : WeakLibrariesWriter(ESCAPE_NINJA_COMMAND, tool_switch) {}
+  WeakLibrariesWriter(EscapingMode mode, const std::string& tool_switch)
+      : tool_switch_(tool_switch) {
+    options_.mode = mode;
+  }
+
+  void operator()(const std::string& s, std::ostream& out) const {
+    out << " " << tool_switch_;
+    EscapeStringToStream(out, s, options_);
+  }
+
+  EscapeOptions options_;
+  std::string tool_switch_;
+};
+
 struct IncludeWriter {
   explicit IncludeWriter(PathOutput& path_output) : path_output_(path_output) {}
   ~IncludeWriter() = default;
