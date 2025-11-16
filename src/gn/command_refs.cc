@@ -4,9 +4,6 @@
 
 #include <stddef.h>
 
-#include <map>
-#include <set>
-
 #include "base/command_line.h"
 #include "base/files/file_util.h"
 #include "base/strings/string_split.h"
@@ -31,14 +28,27 @@ using TargetSet = TargetSet;
 using TargetVector = std::vector<const Target*>;
 
 // Maps targets to the list of targets that depend on them.
-using DepMap = std::multimap<const Target*, const Target*>;
+using DepMap = std::vector<std::pair<const Target*, const Target*>>;
 
 // Populates the reverse dependency map for the targets in the Setup.
-void FillDepMap(Setup* setup, DepMap* dep_map) {
-  for (auto* target : setup->builder().GetAllResolvedTargets()) {
-    for (const auto& dep_pair : target->GetDeps(Target::DEPS_ALL))
-      dep_map->insert(std::make_pair(dep_pair.ptr, target));
+DepMap MakeDepMap(const std::vector<const Target*>& all_targets) {
+  std::vector<std::pair<const Target*, const Target*>> entries;
+  for (auto* target : all_targets) {
+    for (const auto& dep_pair : target->GetDeps(Target::DEPS_ALL)) {
+      entries.push_back(std::make_pair(dep_pair.ptr, target));
+    }
   }
+  return entries;
+}
+
+DepMap::const_iterator LowerBound(const DepMap& dep_map, const Target* target) {
+  return std::lower_bound(dep_map.begin(), dep_map.end(),
+                          DepMap::value_type(target, nullptr));
+}
+
+DepMap::const_iterator UpperBound(const DepMap& dep_map, const Target* target) {
+  return std::upper_bound(dep_map.begin(), dep_map.end(),
+                          DepMap::value_type(target + 1, nullptr));
 }
 
 // Forward declaration for function below.
@@ -71,7 +81,7 @@ size_t RecursivePrintTarget(const DepMap& dep_map,
       print_children = false;
       // Only print "..." if something is actually elided, which means that
       // the current target has children.
-      if (dep_map.lower_bound(target) != dep_map.upper_bound(target))
+      if (LowerBound(dep_map, target) != UpperBound(dep_map, target))
         OutputString("...");
     }
   }
@@ -90,8 +100,8 @@ size_t RecursivePrintTargetDeps(const DepMap& dep_map,
                                 const Target* target,
                                 TargetSet* seen_targets,
                                 int indent_level) {
-  DepMap::const_iterator dep_begin = dep_map.lower_bound(target);
-  DepMap::const_iterator dep_end = dep_map.upper_bound(target);
+  DepMap::const_iterator dep_begin = LowerBound(dep_map, target);
+  DepMap::const_iterator dep_end = UpperBound(dep_map, target);
   size_t count = 0;
   for (DepMap::const_iterator cur_dep = dep_begin; cur_dep != dep_end;
        cur_dep++) {
@@ -119,8 +129,8 @@ void RecursiveCollectRefs(const DepMap& dep_map,
 void RecursiveCollectChildRefs(const DepMap& dep_map,
                                const Target* target,
                                TargetSet* results) {
-  DepMap::const_iterator dep_begin = dep_map.lower_bound(target);
-  DepMap::const_iterator dep_end = dep_map.upper_bound(target);
+  DepMap::const_iterator dep_begin = LowerBound(dep_map, target);
+  DepMap::const_iterator dep_end = UpperBound(dep_map, target);
   for (DepMap::const_iterator cur_dep = dep_begin; cur_dep != dep_end;
        cur_dep++)
     RecursiveCollectRefs(dep_map, cur_dep->second, results);
@@ -211,8 +221,8 @@ size_t DoDirectListOutput(
 
   // Output everything that refers to the implicit ones.
   for (const Target* target : implicit_target_matches) {
-    DepMap::const_iterator dep_begin = dep_map.lower_bound(target);
-    DepMap::const_iterator dep_end = dep_map.upper_bound(target);
+    DepMap::const_iterator dep_begin = LowerBound(dep_map, target);
+    DepMap::const_iterator dep_end = UpperBound(dep_map, target);
     for (DepMap::const_iterator cur_dep = dep_begin; cur_dep != dep_end;
          cur_dep++)
       results.insert(cur_dep->second);
@@ -357,24 +367,28 @@ int RunRefs(const std::vector<std::string>& args) {
   const base::CommandLine* cmdline = base::CommandLine::ForCurrentProcess();
   bool tree = cmdline->HasSwitch("tree");
   bool all = cmdline->HasSwitch("all");
-  UniqueVector<HowTargetContainsFile> include_relations;
-  for (const std::string& relation : cmdline->GetSwitchValueStrings("relation")){
-    if (relation == "source"){
-      include_relations.push_back(HowTargetContainsFile::kSources);
-    } else if (relation == "public"){
-      include_relations.push_back(HowTargetContainsFile::kPublic);
-    } else if (relation == "input"){
-      include_relations.push_back(HowTargetContainsFile::kInputs);
-    } else if (relation == "data"){
-      include_relations.push_back(HowTargetContainsFile::kData);
-    } else if (relation == "script"){
-      include_relations.push_back(HowTargetContainsFile::kScript);
-    } else if (relation == "output"){
-      include_relations.push_back(HowTargetContainsFile::kOutput);
+  HowTargetContainsFileSet include_relations;
+  for (const std::string& relation :
+       cmdline->GetSwitchValueStrings("relation")) {
+    if (relation == "source") {
+      include_relations.Add(HowTargetContainsFile::kSources);
+    } else if (relation == "public") {
+      include_relations.Add(HowTargetContainsFile::kPublic);
+    } else if (relation == "input") {
+      include_relations.Add(HowTargetContainsFile::kInputs);
+    } else if (relation == "data") {
+      include_relations.Add(HowTargetContainsFile::kData);
+    } else if (relation == "script") {
+      include_relations.Add(HowTargetContainsFile::kScript);
+    } else if (relation == "output") {
+      include_relations.Add(HowTargetContainsFile::kOutput);
     } else {
       Err(Location(), "Unknown relation: " + relation).PrintToStdout();
       return 1;
     }
+  }
+  if (include_relations.empty()) {
+    include_relations = HowTargetContainsFileSet::All();
   }
   bool default_toolchain_only = cmdline->HasSwitch(switches::kDefaultToolchain);
 
@@ -424,21 +438,29 @@ int RunRefs(const std::vector<std::string>& args) {
   // only what refers to them.
   std::vector<const Target*> all_targets =
       setup->builder().GetAllResolvedTargets();
-  UniqueVector<const Target*> explicit_target_matches;
-  for (const auto& file : file_matches) {
-    std::vector<TargetContainingFile> target_containing;
-    GetTargetsContainingFile(setup, all_targets, file, default_toolchain_only,
-                             &target_containing);
 
-    // Extract just the Target*.
-    for (const TargetContainingFile& pair : target_containing) {
-      if (!include_relations.empty() &&
-          !include_relations.Contains(pair.second)) {
-        continue;
+  // Filter all targets by default toolchain, if requested.
+  std::vector<const Target*> filtered_targets_obj;
+  std::vector<const Target*>* filtered_targets;
+  if (default_toolchain_only) {
+    for (auto* target : all_targets) {
+      if (target->label().GetToolchainLabel() ==
+          setup->loader()->default_toolchain_label()) {
+        filtered_targets_obj.push_back(target);
       }
-      explicit_target_matches.push_back(pair.first);
     }
+    filtered_targets = &filtered_targets_obj;
+  } else {
+    filtered_targets = &all_targets;
   }
+
+  // Extract just the Target*.
+  UniqueVector<const Target*> explicit_target_matches;
+  for (const SourceTargetRelation& match : GetTargetsContainingFiles(
+           *filtered_targets, include_relations, file_matches)) {
+    explicit_target_matches.push_back(std::get<1>(match));
+  }
+
   for (auto* config : config_matches) {
     GetTargetsReferencingConfig(setup, all_targets, config,
                                 default_toolchain_only,
@@ -459,8 +481,7 @@ int RunRefs(const std::vector<std::string>& args) {
   }
 
   // Construct the reverse dependency tree.
-  DepMap dep_map;
-  FillDepMap(setup, &dep_map);
+  DepMap dep_map = MakeDepMap(all_targets);
 
   size_t cnt = 0;
   if (tree)

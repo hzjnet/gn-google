@@ -104,10 +104,24 @@ int RunOutputs(const std::vector<std::string>& args) {
   // Files. This must go first because it may add to the "targets" list.
   std::vector<const Target*> all_targets =
       setup->builder().GetAllResolvedTargets();
+
+  // Find all source-target matches, and sort by source.
+  HowTargetContainsFileSet how_filter;
+  how_filter.Add(HowTargetContainsFile::kInputs);
+  how_filter.Add(HowTargetContainsFile::kSources);
+  std::vector<SourceTargetRelation> file_target_relations =
+      GetTargetsContainingFiles(all_targets, how_filter, file_matches);
+  std::sort(file_target_relations.begin(), file_target_relations.end());
+
   for (const SourceFile& file : file_matches) {
-    std::vector<TargetContainingFile> targets;
-    GetTargetsContainingFile(setup, all_targets, file, false, &targets);
-    if (targets.empty()) {
+    auto iter = std::lower_bound(
+        file_target_relations.begin(), file_target_relations.end(),
+        // Lookup key, only file is used.
+        SourceTargetRelation(file, nullptr, HowTargetContainsFile::kSources),
+        [](const auto& a, const auto& b) {
+          return std::get<0>(a) < std::get<0>(b);
+        });
+    if (iter == file_target_relations.end() || std::get<0>(*iter) != file) {
       Err(Location(), base::StringPrintf("No targets reference the file '%s'.",
                                          file.value().c_str()))
           .PrintToStdout();
@@ -116,16 +130,17 @@ int RunOutputs(const std::vector<std::string>& args) {
 
     // There can be more than one target that references this file, evaluate the
     // output name in all of them.
-    for (const TargetContainingFile& pair : targets) {
-      if (pair.second == HowTargetContainsFile::kInputs) {
+    for (; iter != file_target_relations.end() && std::get<0>(*iter) == file;
+         ++iter) {
+      auto [file, target, how] = *iter;
+      if (how == HowTargetContainsFile::kInputs) {
         // Inputs maps to the target itself. This will be evaluated below.
-        target_matches.push_back(pair.first);
-      } else if (pair.second == HowTargetContainsFile::kSources) {
+        target_matches.push_back(target);
+      } else if (how == HowTargetContainsFile::kSources) {
         // Source file, check it.
         const char* computed_tool = nullptr;
         std::vector<OutputFile> file_outputs;
-        pair.first->GetOutputFilesForSource(file, &computed_tool,
-                                            &file_outputs);
+        target->GetOutputFilesForSource(file, &computed_tool, &file_outputs);
         outputs.insert(outputs.end(), file_outputs.begin(), file_outputs.end());
       }
     }
