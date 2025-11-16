@@ -9,9 +9,11 @@
 #include <set>
 #include <string>
 #include <string_view>
+#include <tuple>
 #include <vector>
 
 #include "base/values.h"
+#include "gn/settings.h"
 #include "gn/target.h"
 #include "gn/unique_vector.h"
 
@@ -362,12 +364,32 @@ enum class HowTargetContainsFile {
   kScript,
   kOutput,
 };
-using TargetContainingFile = std::pair<const Target*, HowTargetContainsFile>;
-void GetTargetsContainingFile(Setup* setup,
-                              const std::vector<const Target*>& all_targets,
-                              const SourceFile& file,
-                              bool default_toolchain_only,
-                              std::vector<TargetContainingFile>* matches);
+
+// A bit set of `HowTargetContainsFile` values.
+class HowTargetContainsFileSet {
+ public:
+  static HowTargetContainsFileSet All() {
+    HowTargetContainsFileSet result;
+    result.bits_ = 0xFFFFFFFF;
+    return result;
+  }
+
+  bool Contains(HowTargetContainsFile f) const {
+    return 0 != (bits_ & (1 << static_cast<int>(f)));
+  }
+  void Add(HowTargetContainsFile f) { bits_ |= 1 << static_cast<int>(f); }
+  bool empty() const { return bits_ == 0; }
+
+ private:
+  unsigned int bits_ = 0;
+};
+
+using SourceTargetRelation =
+    std::tuple<SourceFile, const Target*, HowTargetContainsFile>;
+std::vector<SourceTargetRelation> GetTargetsContainingFiles(
+    const std::vector<const Target*>& all_targets,
+    HowTargetContainsFileSet how_filter,
+    UniqueVector<SourceFile> files);
 
 // Extra help from command_check.cc
 extern const char kNoGnCheck_Help[];

@@ -22,9 +22,11 @@
 #include "gn/label_pattern.h"
 #include "gn/ninja_build_writer.h"
 #include "gn/setup.h"
+#include "gn/source_file.h"
 #include "gn/standard_out.h"
 #include "gn/switches.h"
 #include "gn/target.h"
+#include "gn/unique_vector.h"
 #include "util/atomic_write.h"
 #include "util/build_config.h"
 
@@ -312,45 +314,86 @@ inline std::string FixGitBashLabelEdit(const std::string& label) {
 }
 #endif
 
-std::optional<HowTargetContainsFile> TargetContainsFile(
-    const Target* target,
-    const SourceFile& file) {
-  for (const auto& cur_file : target->sources()) {
-    if (cur_file == file)
-      return HowTargetContainsFile::kSources;
-  }
-  for (const auto& cur_file : target->public_headers()) {
-    if (cur_file == file)
-      return HowTargetContainsFile::kPublic;
-  }
-  for (ConfigValuesIterator iter(target); !iter.done(); iter.Next()) {
-    for (const auto& cur_file : iter.cur().inputs()) {
-      if (cur_file == file)
-        return HowTargetContainsFile::kInputs;
+// Finds references for multiple sources.
+class SourceTargetMatcher {
+ public:
+  SourceTargetMatcher(UniqueVector<SourceFile> look_for)
+      : look_for_(look_for) {}
+  virtual ~SourceTargetMatcher() {}
+  void MatchSource(const Target* target,
+                   HowTargetContainsFile how,
+                   const SourceFile& file) {
+    if (look_for_.Contains(file)) {
+      matches_.emplace_back(file, target, how);
     }
   }
-  for (const auto& cur_file : target->data()) {
-    if (cur_file == file.value())
-      return HowTargetContainsFile::kData;
-    if (cur_file.back() == '/' && file.value().starts_with(cur_file))
-      return HowTargetContainsFile::kData;
+
+  void MatchString(const Target* target,
+                   HowTargetContainsFile how,
+                   const std::string& file) {
+    if (how == HowTargetContainsFile::kData && file.ends_with('/')) {
+      for (const auto& source : look_for_) {
+        if (source.value().starts_with(file)) {
+          matches_.emplace_back(file, target, how);
+          return;
+        }
+      }
+    } else {
+      MatchSource(target, how, SourceFile(file));
+    }
   }
 
-  if (target->action_values().script().value() == file.value())
-    return HowTargetContainsFile::kScript;
+  std::vector<SourceTargetRelation>& matches() { return matches_; }
 
-  std::vector<SourceFile> output_sources;
-  target->action_values().GetOutputsAsSourceFiles(target, &output_sources);
-  for (const auto& cur_file : output_sources) {
-    if (cur_file == file)
-      return HowTargetContainsFile::kOutput;
-  }
+ private:
+  UniqueVector<SourceFile> look_for_;
+  std::vector<SourceTargetRelation> matches_;
+};
 
-  for (const auto& cur_file : target->computed_outputs()) {
-    if (cur_file.AsSourceFile(target->settings()->build_settings()) == file)
-      return HowTargetContainsFile::kOutput;
+void MatchTargetFiles(const Target* target,
+                      const HowTargetContainsFileSet& how_filter,
+                      SourceTargetMatcher& matcher) {
+  if (how_filter.Contains(HowTargetContainsFile::kSources)) {
+    for (const auto& cur_file : target->sources()) {
+      matcher.MatchSource(target, HowTargetContainsFile::kSources, cur_file);
+    }
   }
-  return std::nullopt;
+  if (how_filter.Contains(HowTargetContainsFile::kPublic)) {
+    for (const auto& cur_file : target->public_headers()) {
+      matcher.MatchSource(target, HowTargetContainsFile::kPublic, cur_file);
+    }
+  }
+  if (how_filter.Contains(HowTargetContainsFile::kInputs)) {
+    for (ConfigValuesIterator iter(target); !iter.done(); iter.Next()) {
+      for (const auto& cur_file : iter.cur().inputs()) {
+        matcher.MatchSource(target, HowTargetContainsFile::kInputs, cur_file);
+      }
+    }
+  }
+  if (how_filter.Contains(HowTargetContainsFile::kData)) {
+    for (const std::basic_string<char>& cur_file : target->data()) {
+      matcher.MatchString(target, HowTargetContainsFile::kData, cur_file);
+    }
+  }
+  if (how_filter.Contains(HowTargetContainsFile::kScript)) {
+    const SourceFile& script = target->action_values().script();
+    if (!script.is_null()) {
+      matcher.MatchSource(target, HowTargetContainsFile::kScript, script);
+    }
+  }
+  if (how_filter.Contains(HowTargetContainsFile::kOutput)) {
+    std::vector<SourceFile> output_sources;
+    target->action_values().GetOutputsAsSourceFiles(target, &output_sources);
+    for (const SourceFile& cur_file : output_sources) {
+      matcher.MatchSource(target, HowTargetContainsFile::kOutput, cur_file);
+    }
+
+    for (const OutputFile& cur_file : target->computed_outputs()) {
+      SourceFile file =
+          cur_file.AsSourceFile(target->settings()->build_settings());
+      matcher.MatchSource(target, HowTargetContainsFile::kOutput, file);
+    }
+  }
 }
 
 std::string ToUTF8(base::FilePath::StringType in) {
@@ -734,21 +777,15 @@ void FilterAndPrintTargetSet(const TargetSet& targets, base::ListValue* out) {
   FilterAndPrintTargets(&target_vector, out);
 }
 
-void GetTargetsContainingFile(Setup* setup,
-                              const std::vector<const Target*>& all_targets,
-                              const SourceFile& file,
-                              bool default_toolchain_only,
-                              std::vector<TargetContainingFile>* matches) {
-  Label default_toolchain = setup->loader()->default_toolchain_label();
+std::vector<SourceTargetRelation> GetTargetsContainingFiles(
+    const std::vector<const Target*>& all_targets,
+    HowTargetContainsFileSet how_filter,
+    UniqueVector<SourceFile> files) {
+  SourceTargetMatcher matcher(std::move(files));
   for (auto* target : all_targets) {
-    if (default_toolchain_only) {
-      // Only check targets in the default toolchain.
-      if (target->label().GetToolchainLabel() != default_toolchain)
-        continue;
-    }
-    if (auto how = TargetContainsFile(target, file))
-      matches->emplace_back(target, *how);
+    MatchTargetFiles(target, how_filter, matcher);
   }
+  return std::move(matcher.matches());
 }
 
 }  // namespace commands
