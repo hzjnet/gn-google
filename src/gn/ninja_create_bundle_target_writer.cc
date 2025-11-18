@@ -128,7 +128,8 @@ std::string NinjaCreateBundleTargetWriter::WritePostProcessingRuleDefinition() {
 
   out_ << "rule " << custom_rule_name << std::endl;
   out_ << "  command = ";
-  path_output_.WriteFile(out_, settings_->build_settings()->python_path());
+  path_output_.WriteFile(out_,
+                         settings_->build_settings()->python_path_for_ninja());
   out_ << " ";
   path_output_.WriteFile(out_, target_->bundle_data().post_processing_script());
 

@@ -86,7 +86,8 @@ const Value* ScopePerFileProvider::GetPythonPath() {
   if (!python_path_) {
     python_path_ = std::make_unique<Value>(
         nullptr,
-        FilePathToUTF8(scope_->settings()->build_settings()->python_path()));
+        FilePathToUTF8(
+            scope_->settings()->build_settings()->python_path_for_ninja()));
   }
   return python_path_.get();
 }
