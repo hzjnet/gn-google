@@ -108,6 +108,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "25a0b995_48f994d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-18T14:05:50Z",
+      "side": 1,
+      "message": "It turns out we still need the absolute path of python for things like exec_script, even though we use build dir as the \"startup_dir\".\n\nThe reason is because \"startup_dir\" is only used to set the current working directory **inside** the child process.  It is not used as the starting point from which to look for the executable, which happens *before* the child process is started.",
+      "parentUuid": "3a198437_37530188",
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "33d936ad_b3da9650",
@@ -307,6 +325,30 @@
       "side": 1,
       "message": "\u003e One disadvantage would be in places like this, where an additional copy would be introduced:\nhttps://gn.googlesource.com/gn/+/refs/heads/main/src/gn/setup.cc#849\n\nNo, even if you recieve by value, you can remove one copy by using `std::move` when setting `python_path_` inside this function.\n\n\n\u003e Also, it doesn\u0027t seem to be the convention in this source file to use pass-by-value.\n\nThat\u0027s true, but I feel it is not straightforward if you have implementation without pass by value then change implementation and caller to use pass by value.\n\n\nAnd pass by value in this CL rather intends to leave optimize opportunify for future usage of this function rather than existing one.",
       "parentUuid": "4a0e4411_9e2d2530",
+      "range": {
+        "startLine": 45,
+        "startChar": 34,
+        "endLine": 45,
+        "endChar": 57
+      },
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7448bdaa_45943881",
+        "filename": "src/gn/build_settings.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-18T14:05:50Z",
+      "side": 1,
+      "message": "Makes sense, I changed it to use pass by value",
+      "parentUuid": "47d35ed4_2a64e550",
       "range": {
         "startLine": 45,
         "startChar": 34,

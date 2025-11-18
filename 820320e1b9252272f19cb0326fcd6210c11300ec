@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cdbae70_c57d1721",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-18T14:05:50Z",
+      "side": 1,
+      "message": "Thanks for the review Takuto.  I changed it to pass by value as requested.  I also changed it so that the extra variable is present only in Windows builds so that it will totally be a no-op for non-Windows builds.",
+      "revId": "820320e1b9252272f19cb0326fcd6210c11300ec",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
