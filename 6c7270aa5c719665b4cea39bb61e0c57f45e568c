@@ -36,6 +36,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "36526cbf_49dfcfb7",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 4410212
+      },
+      "writtenOn": "2025-11-19T21:58:23Z",
+      "side": 1,
+      "message": "When using the range constructor for a vector, the constructor is able to calculate the size of the vector from the range (by calculating the size of (end - begin)), so there\u0027s no need for a separate reserve statement.\n\nIf doing `.push_back()` in a loop, every `.push_back()` call does a capacity check, to ensure the vector has sufficient memory to store the element, whereas using the range constructor does only a single allocation, and is generally able to more efficiently copy by using memcopy to copy the whole block rather than piecemeal.",
+      "parentUuid": "de5ddcab_2780a932",
+      "revId": "6c7270aa5c719665b4cea39bb61e0c57f45e568c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e7de7a37_5d3a718f",
@@ -87,6 +105,24 @@
           ]
         }
       ],
+      "revId": "6c7270aa5c719665b4cea39bb61e0c57f45e568c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56cf8bef_ededd4da",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 4410212
+      },
+      "writtenOn": "2025-11-19T21:58:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7de7a37_5d3a718f",
       "revId": "6c7270aa5c719665b4cea39bb61e0c57f45e568c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
