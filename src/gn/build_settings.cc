@@ -41,6 +41,16 @@ void BuildSettings::SetSecondarySourcePath(const SourceDir& d) {
   secondary_source_path_ = GetFullPath(d).NormalizePathSeparatorsTo('/');
 }
 
+void BuildSettings::SetPythonPath(base::FilePath p) {
+  python_path_ = std::move(p);
+#if defined(OS_WIN)
+  if (root_path_.IsParent(python_path_)) {
+    python_path_ = UTF8ToFilePath(
+        RebasePath(FilePathToUTF8(python_path_), build_dir_, root_path_utf8_));
+  }
+#endif
+}
+
 void BuildSettings::SetBuildDir(const SourceDir& d) {
   build_dir_ = d;
 }
