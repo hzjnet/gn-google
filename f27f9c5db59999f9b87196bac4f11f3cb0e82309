@@ -126,6 +126,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "92ec4646_e5335b5d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-19T05:38:26Z",
+      "side": 1,
+      "message": "Oh, I see. Then can we convert the path to absolute path in exec_script if `python_path` is relative?\n\nI still feel having two members for python path in BuildSettings is not good design and want to make it configurable by .gn.",
+      "parentUuid": "25a0b995_48f994d0",
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "33d936ad_b3da9650",
