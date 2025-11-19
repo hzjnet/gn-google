@@ -144,6 +144,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa4a9f01_df50430e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-19T14:31:10Z",
+      "side": 1,
+      "message": "Sounds good.  I removed the extra variable and converted the path to absolute path in exec_script",
+      "parentUuid": "92ec4646_e5335b5d",
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "33d936ad_b3da9650",
