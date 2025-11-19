@@ -20,7 +20,14 @@ bool InvokePython(const BuildSettings* build_settings,
                   const base::FilePath& output_path,
                   bool quiet,
                   Err* err) {
-  const base::FilePath& python_path = build_settings->python_path();
+  base::FilePath startup_dir =
+      build_settings->GetFullPath(build_settings->build_dir());
+  base::FilePath python_path = build_settings->python_path();
+#if defined(OS_WIN)
+  if (!python_path.IsAbsolute()) {
+    python_path = startup_dir.Append(python_path);
+  }
+#endif
   base::CommandLine cmdline(python_path);
   cmdline.AppendArg("--");
   cmdline.AppendArgPath(python_script_path);
@@ -28,8 +35,6 @@ bool InvokePython(const BuildSettings* build_settings,
   if (!python_script_extra_args.empty()) {
     cmdline.AppendArg(python_script_extra_args);
   }
-  base::FilePath startup_dir =
-      build_settings->GetFullPath(build_settings->build_dir());
 
   std::string output;
   std::string stderr_output;
