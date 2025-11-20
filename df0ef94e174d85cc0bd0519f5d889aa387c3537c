@@ -1,0 +1,75 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af62e116_5e0b2c5a",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-20T04:15:05Z",
+      "side": 1,
+      "message": "Why not use unordered_set instead of UniqueVector\u003cstd::string\u003e?",
+      "range": {
+        "startLine": 441,
+        "startChar": 2,
+        "endLine": 441,
+        "endChar": 14
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2dd7ed92_0dce38a1",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 8,
+                "startChar": 0,
+                "endLine": 8,
+                "endChar": 0
+              },
+              "replacement": "#include \u003cunordered_set\u003e\n"
+            },
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 25,
+                "startChar": 0,
+                "endLine": 26,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 441,
+                "startChar": 0,
+                "endLine": 444,
+                "endChar": 0
+              },
+              "replacement": "  std::unordered_set\u003cstd::string\u003e target_filters_set(target_filters.begin(),\n                                                     target_filters.end());\n"
+            },
+            {
+              "path": "src/gn/compile_commands_writer.cc",
+              "range": {
+                "startLine": 448,
+                "startChar": 0,
+                "endLine": 449,
+                "endChar": 0
+              },
+              "replacement": "    if (target_filters_set.count(target-\u003elabel().name()))\n"
+            }
+          ]
+        }
+      ],
+      "revId": "df0ef94e174d85cc0bd0519f5d889aa387c3537c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
