@@ -94,6 +94,30 @@
       },
       "revId": "df0ef94e174d85cc0bd0519f5d889aa387c3537c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94d77543_1004ec5f",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-20T13:02:44Z",
+      "side": 1,
+      "message": "unoredered_map also has reserve()?\nhttps://en.cppreference.com/w/cpp/container/unordered_map/reserve.html",
+      "parentUuid": "233d8bf0_274b105a",
+      "range": {
+        "startLine": 441,
+        "startChar": 2,
+        "endLine": 441,
+        "endChar": 14
+      },
+      "revId": "df0ef94e174d85cc0bd0519f5d889aa387c3537c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
