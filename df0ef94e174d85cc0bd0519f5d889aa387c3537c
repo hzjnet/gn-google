@@ -118,6 +118,30 @@
       },
       "revId": "df0ef94e174d85cc0bd0519f5d889aa387c3537c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6c34e141_a2b10910",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-20T14:34:01Z",
+      "side": 1,
+      "message": "I don\u0027t think it does what you think due to the \"without exceeding maximum load factor\" constraint.",
+      "parentUuid": "94d77543_1004ec5f",
+      "range": {
+        "startLine": 441,
+        "startChar": 2,
+        "endLine": 441,
+        "endChar": 14
+      },
+      "revId": "df0ef94e174d85cc0bd0519f5d889aa387c3537c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
