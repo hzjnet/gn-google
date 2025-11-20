@@ -54,6 +54,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9de670b2_6bb0c34c",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-20T07:22:08Z",
+      "side": 1,
+      "message": "\u003e When using the range constructor for a vector, the constructor is able to\n\u003e calculate the size of the vector from the range (by calculating the size\n\u003e of (end - begin)), so there\u0027s no need for a separate reserve statement.\n\nI am sorry but I don\u0027t think this is true at all.\n\nAs far as I undertand, the specification for this constructor only states that each iterator will be derefenced exactly once. There is no mention of computing any size so what you describe is left to the C++ library implementation and thus is never guaranteed, even when the iterators are trivially differentiable.\n\n(let me know if I am wrong)\n\nIn this specific case, |collected| is a set, and computing its size from its begin() and end() iterators requires a full walk over all items, which will be slow and would break the constructor\u0027s requirement. Just use an |reserve(collected.size())| call, then perform push backs in a loop instead.",
+      "parentUuid": "36526cbf_49dfcfb7",
+      "revId": "6c7270aa5c719665b4cea39bb61e0c57f45e568c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e7de7a37_5d3a718f",

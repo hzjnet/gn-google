@@ -70,6 +70,30 @@
       ],
       "revId": "df0ef94e174d85cc0bd0519f5d889aa387c3537c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "233d8bf0_274b105a",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-20T07:22:08Z",
+      "side": 1,
+      "message": "See my previous comment, UniqueVector\u003c\u003e has a reserve() method that comes handy here.",
+      "parentUuid": "af62e116_5e0b2c5a",
+      "range": {
+        "startLine": 441,
+        "startChar": 2,
+        "endLine": 441,
+        "endChar": 14
+      },
+      "revId": "df0ef94e174d85cc0bd0519f5d889aa387c3537c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
