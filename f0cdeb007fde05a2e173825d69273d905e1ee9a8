@@ -44,6 +44,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "454c0dee_e7e34fbf",
+        "filename": "src/gn/build_settings.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-20T06:25:55Z",
+      "side": 1,
+      "message": "I don\u0027t think we can use `.gn` because its interpretation might be ambigious.  For example, Chromium\u0027s `.gn` sets it to \"python3\":\nhttps://source.chromium.org/chromium/chromium/src/+/main:.gn;l\u003d13;drc\u003dad4bc5ad2582b4bfd7c5ec2c7f6f6bc98077dadd\n\nThis is currently interpreted as \"look for python3 in the PATH\", *not* \"look for python3 inside the root dir\".  I think it\u0027s probably not feasible to change the interpretation in `.gn`.\n\nIn order to build chromium using python inside the root_dir, we need to instead use the `--script-executable` command-line switch, which is processed here:\nhttps://gn.googlesource.com/gn/+/refs/heads/main/src/gn/setup.cc#832\n\nUsing this switch, you can unambiguously specify the path to the python executable (whether inside or outside the root dir), and on Windows, the `ProcessFileExtensions` function will make it an absolute path.",
+      "parentUuid": "b0798ee8_ee050d9e",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 3
+      },
+      "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ac897d76_fb29583e",
         "filename": "src/gn/function_exec_script.cc",
         "patchSetId": 5
@@ -83,6 +107,24 @@
           ]
         }
       ],
+      "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5adffa0_a8c9de30",
+        "filename": "src/gn/function_exec_script.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-20T06:25:55Z",
+      "side": 1,
+      "message": "I don\u0027t think this will work for other platforms, because the logic that makes `python_path` an absolute path is *only performed on Windows*, see:\nhttps://gn.googlesource.com/gn/+/refs/heads/main/src/gn/setup.cc#793\n\nOn other platforms, python path is simply \"python3\" (e.g. in a non-Windows Chromium build).  So if we remove the `#if` here, then the `interpreter_path` in non-Windows builds would become `\u003cstartup_dir\u003e/python3`",
+      "parentUuid": "ac897d76_fb29583e",
       "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
