@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8483f7c_53049db3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-20T04:59:17Z",
+      "side": 1,
+      "message": "What about for other files? I think empty files is somewhat exceptional and want to know whether this reduces 30ms from other compiles or proportional decrease like 50%.",
+      "revId": "aab5ac1a27290a1aea8136acb65148ae8454e138",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
