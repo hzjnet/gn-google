@@ -16,6 +16,24 @@
       "message": "What about for other files? I think empty files is somewhat exceptional and want to know whether this reduces 30ms from other compiles or proportional decrease like 50%.",
       "revId": "aab5ac1a27290a1aea8136acb65148ae8454e138",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5d1c639_93faddac",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2025-11-20T05:04:30Z",
+      "side": 1,
+      "message": "There\u0027s 30ms of work to read headers. For a file that includes no standard library headers, we get the optimal case of 30ms saved.\n\nThe cost savings is, roughly speaking, `30ms * (1 - percentage of standard library included)`",
+      "parentUuid": "a8483f7c_53049db3",
+      "revId": "aab5ac1a27290a1aea8136acb65148ae8454e138",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
