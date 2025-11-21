@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fe721f1_8ac2e541",
+        "filename": "infra/recipes/gn.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-21T02:46:45Z",
+      "side": 1,
+      "message": "Could you leave TODO to remove this when autoconf is installed on bot?",
+      "revId": "72c3c4f2987c0cebd2287d0038b0b832938ab0d4",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
