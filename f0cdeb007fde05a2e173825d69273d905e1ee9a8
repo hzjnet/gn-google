@@ -68,6 +68,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8066407d_399bc84c",
+        "filename": "src/gn/build_settings.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-21T08:35:49Z",
+      "side": 1,
+      "message": "OK, could you leave a comment why we do this for Windows here?",
+      "parentUuid": "454c0dee_e7e34fbf",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 3
+      },
+      "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ac897d76_fb29583e",
         "filename": "src/gn/function_exec_script.cc",
         "patchSetId": 5
@@ -125,6 +149,24 @@
       "side": 1,
       "message": "I don\u0027t think this will work for other platforms, because the logic that makes `python_path` an absolute path is *only performed on Windows*, see:\nhttps://gn.googlesource.com/gn/+/refs/heads/main/src/gn/setup.cc#793\n\nOn other platforms, python path is simply \"python3\" (e.g. in a non-Windows Chromium build).  So if we remove the `#if` here, then the `interpreter_path` in non-Windows builds would become `\u003cstartup_dir\u003e/python3`",
       "parentUuid": "ac897d76_fb29583e",
+      "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec702f40_04a3f63b",
+        "filename": "src/gn/function_exec_script.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-21T08:35:49Z",
+      "side": 1,
+      "message": "Ah, I see. Could you leave an explanation comment why we have this only on Windows?",
+      "parentUuid": "c5adffa0_a8c9de30",
       "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },

@@ -164,6 +164,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "4fe61248_98270f77",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-21T08:35:49Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "aa4a9f01_df50430e",
+      "revId": "f27f9c5db59999f9b87196bac4f11f3cb0e82309",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "33d936ad_b3da9650",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
