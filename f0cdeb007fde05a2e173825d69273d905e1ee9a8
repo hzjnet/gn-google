@@ -90,6 +90,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d364fd9_1b736d7b",
+        "filename": "src/gn/build_settings.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-21T12:58:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8066407d_399bc84c",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 3
+      },
+      "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac897d76_fb29583e",
@@ -171,6 +195,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c2d4686_6fe39307",
+        "filename": "src/gn/function_exec_script.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-21T12:58:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec702f40_04a3f63b",
+      "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "38fab8a0_9fdb1572",
@@ -212,6 +254,24 @@
           ]
         }
       ],
+      "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aab75566_7f408a7a",
+        "filename": "src/gn/invoke_python.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-21T12:58:41Z",
+      "side": 1,
+      "message": "Added a comment why it is windows-only",
+      "parentUuid": "38fab8a0_9fdb1572",
       "revId": "f0cdeb007fde05a2e173825d69273d905e1ee9a8",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
