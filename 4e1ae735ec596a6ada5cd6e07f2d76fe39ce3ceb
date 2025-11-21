@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1625ca6d_e80766f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003017
+      },
+      "writtenOn": "2025-11-21T07:35:55Z",
+      "side": 1,
+      "message": "Ping? I think this keeps Linux bots broken even after the new image rollout.",
+      "revId": "4e1ae735ec596a6ada5cd6e07f2d76fe39ce3ceb",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
