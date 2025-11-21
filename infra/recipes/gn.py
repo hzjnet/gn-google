@@ -204,8 +204,10 @@ def RunSteps(api, repository):
           # TODO: We can rely on pre-installed autoconf after the following
           # change gets rolled out.
           # https://gn-review.git.corp.google.com/c/gn/+/20200
-          autoconf_path = api.cipd.ensure_tool('infra/3pp/tools/autoconf/${platform}',
-                               "version:3@2.71.chromium.1")
+          autoconf_path = api.cipd.ensure_tool(
+              'infra/3pp/tools/autoconf/${platform}',
+              "version:3@2.71.chromium.1",
+              executable_path='bin/autoconf')
           api.step('autoconf', [autoconf_path])
 
         for platform in all_config_platforms:
