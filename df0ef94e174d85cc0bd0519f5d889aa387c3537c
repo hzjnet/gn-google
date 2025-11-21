@@ -142,6 +142,30 @@
       },
       "revId": "df0ef94e174d85cc0bd0519f5d889aa387c3537c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3af994f0_091513ff",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-21T03:55:16Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "6c34e141_a2b10910",
+      "range": {
+        "startLine": 441,
+        "startChar": 2,
+        "endLine": 441,
+        "endChar": 14
+      },
+      "revId": "df0ef94e174d85cc0bd0519f5d889aa387c3537c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
