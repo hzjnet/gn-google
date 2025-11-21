@@ -60,7 +60,7 @@ class BuildSettings {
 
   // Path of the python executable to run scripts with.
   base::FilePath python_path() const { return python_path_; }
-  void set_python_path(const base::FilePath& p) { python_path_ = p; }
+  void SetPythonPath(base::FilePath p);
 
   // Required Ninja version.
   const Version& ninja_required_version() const {
