@@ -16,6 +16,24 @@
       "message": "Could you leave TODO to remove this when autoconf is installed on bot?",
       "revId": "72c3c4f2987c0cebd2287d0038b0b832938ab0d4",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04f47218_0560b449",
+        "filename": "infra/recipes/gn.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1003017
+      },
+      "writtenOn": "2025-11-21T03:40:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fe721f1_8ac2e541",
+      "revId": "72c3c4f2987c0cebd2287d0038b0b832938ab0d4",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
