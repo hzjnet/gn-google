@@ -5,12 +5,15 @@
 #include "gn/functions.h"
 
 #include <stddef.h>
+#include <algorithm>
 #include <cctype>
 #include <memory>
 #include <utility>
 
 #include "base/environment.h"
+#include "base/sha1.h"
 #include "base/strings/string_util.h"
+#include "base/strings/string_number_conversions.h"
 #include "gn/build_settings.h"
 #include "gn/config.h"
 #include "gn/config_values_generator.h"
@@ -1134,6 +1137,66 @@ Value RunSplitList(Scope* scope,
   return result;
 }
 
+// string_hash -----------------------------------------------------------------
+
+const char kStringHash[] = "string_hash";
+const char kStringHash_HelpShort[] =
+    "string_hash: Calculates an implementation-defined hash of a string.";
+const char kStringHash_Help[] =
+    R"(string_hash: Calculates an implementation-defined hash of a string.
+
+  short_hash = string_hash(long_string)
+
+  The resulting hash is a short string which only contains lower-case ASCII
+  letters and digits.  Example usage scenario is for generating short,
+  globally-unique filenames based on full target paths and labels.
+
+  Caveats:
+
+  * Hashing is not cryptographically strong.  Unique inputs can be assumed to
+    result in unique hashes if the inputs are trustworthy, but malicious inputs
+    may be able to trigger collisions.
+  * The exact hashing algorithm is implementation-defined and may change in
+    future GN versions.
+
+Examples
+
+    string_hash("abc")  -->  "a9993e364706816a"
+)";
+
+Value RunStringHash(Scope* scope,
+                    const FunctionCallNode* function,
+                    const std::vector<Value>& args,
+                    Err* err) {
+  // Check usage: Number of arguments.
+  if (args.size() != 1) {
+    *err = Err(function, "Wrong number of arguments to string_hash().",
+               "Expecting exactly one. usage: string_hash(string)");
+    return Value();
+  }
+
+  // Check usage: argument is a string.
+  if (!args[0].VerifyTypeIs(Value::STRING, err)) {
+    *err = Err(function,
+               "argument of string_join is not a string",
+               "Expecting argument to be a string.");
+    return Value();
+  }
+  const std::string& arg = args[0].string_value();
+
+  // Arguments looks good; do the hash.
+  std::string hash_bytes = base::SHA1HashString(arg);
+
+  // Represent the hash as a short hexadecimal string.  Shortening by ignoring
+  // some bits of the hash increases the chance of collisions, but improves
+  // legibility of hash-based filenames.
+  size_t size = std::min<size_t>(hash_bytes.size(), 8u);
+  std::string hex_str = base::HexEncode(hash_bytes.data(), size);
+  std::string lowercase_str = base::ToLowerASCII(hex_str);
+
+  return Value(function, lowercase_str);
+}
+
 // string_join -----------------------------------------------------------------
 
 const char kStringJoin[] = "string_join";
@@ -1487,6 +1550,7 @@ struct FunctionInfoInitializer {
     INSERT_FUNCTION(SetDefaults, false)
     INSERT_FUNCTION(SetDefaultToolchain, false)
     INSERT_FUNCTION(SplitList, false)
+    INSERT_FUNCTION(StringHash, false)
     INSERT_FUNCTION(StringJoin, false)
     INSERT_FUNCTION(StringReplace, false)
     INSERT_FUNCTION(StringSplit, false)

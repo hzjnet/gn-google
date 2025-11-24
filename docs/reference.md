@@ -65,6 +65,7 @@
     *   [set_default_toolchain: Sets the default toolchain name.](#func_set_default_toolchain)
     *   [set_defaults: Set default values for a target type.](#func_set_defaults)
     *   [split_list: Splits a list into N different sub-lists.](#func_split_list)
+    *   [string_hash: Calculates an implementation-defined hash of a string.](#func_string_hash)
     *   [string_join: Concatenates a list of strings with a separator.](#func_string_join)
     *   [string_replace: Replaces substring in the given string.](#func_string_replace)
     *   [string_split: Split string into a list of strings.](#func_string_split)
@@ -3453,6 +3454,29 @@
 
   Will print:
     [[1, 2], [3, 4], [5, 6]
+```
+### <a name="func_string_hash"></a>**string_hash**: Calculates an implementation-defined hash of a string.&nbsp;[Back to Top](#gn-reference)
+
+```
+  short_hash = string_hash(long_string)
+
+  The resulting hash is a short string which only contains lower-case ASCII
+  letters and digits.  Example usage scenario is for generating short,
+  globally-unique filenames based on full target paths and labels.
+
+  Caveats:
+
+  * Hashing is not cryptographically strong.  Unique inputs can be assumed to
+    result in unique hashes if the inputs are trustworthy, but malicious inputs
+    may be able to trigger collisions.
+  * The exact hashing algorithm is implementation-defined and may change in
+    future GN versions.
+```
+
+#### **Examples**
+
+```
+    string_hash("abc")  -->  "a9993e364706816a"
 ```
 ### <a name="func_string_join"></a>**string_join**: Concatenates a list of strings with a separator.&nbsp;[Back to Top](#gn-reference)
 
