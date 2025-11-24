@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "base/environment.h"
+#include "base/md5.h"
 #include "base/strings/string_util.h"
 #include "gn/build_settings.h"
 #include "gn/config.h"
@@ -1134,6 +1135,56 @@ Value RunSplitList(Scope* scope,
   return result;
 }
 
+// string_hash -----------------------------------------------------------------
+
+const char kStringHash[] = "string_hash";
+const char kStringHash_HelpShort[] =
+    "string_hash: Calculates MD5 hash of a string.";
+const char kStringHash_Help[] =
+    R"(string_hash: Calculates MD5 hash of a string.
+
+  md5_hash = string_hash(long_string)
+
+  `string_hash` is intended to be used when it is desirable to translate,
+  globally unique strings (such as GN labels) into short filenames that
+  are still globally unique.  This is useful when supporting filesystems
+  and build systems which impose limits on the length of the supported
+  filenames and/or on the total path length.
+
+  Warning: MD5 hash should never be used for cryptographic purposes.
+  Unique inputs can be assumed to result in unique hashes if the inputs
+  are trustworthy, but malicious inputs may be able to trigger collisions.
+  Directories and names of GN labels are usually considered trustworthy.
+
+Examples:
+
+    string_hash("abc")  -->  "900150983cd24fb0d6963f7d28e17f72"
+)";
+
+Value RunStringHash(Scope* scope,
+                    const FunctionCallNode* function,
+                    const std::vector<Value>& args,
+                    Err* err) {
+  // Check usage: Number of arguments.
+  if (args.size() != 1) {
+    *err = Err(function, "Wrong number of arguments to string_hash().",
+               "Expecting exactly one. usage: string_hash(string)");
+    return Value();
+  }
+
+  // Check usage: argument is a string.
+  if (!args[0].VerifyTypeIs(Value::STRING, err)) {
+    *err = Err(function,
+               "argument of string_join is not a string",
+               "Expecting argument to be a string.");
+    return Value();
+  }
+  const std::string& arg = args[0].string_value();
+
+  // Arguments looks good; do the hash.
+  return Value(function, base::MD5String(arg));
+}
+
 // string_join -----------------------------------------------------------------
 
 const char kStringJoin[] = "string_join";
@@ -1487,6 +1538,7 @@ struct FunctionInfoInitializer {
     INSERT_FUNCTION(SetDefaults, false)
     INSERT_FUNCTION(SetDefaultToolchain, false)
     INSERT_FUNCTION(SplitList, false)
+    INSERT_FUNCTION(StringHash, false)
     INSERT_FUNCTION(StringJoin, false)
     INSERT_FUNCTION(StringReplace, false)
     INSERT_FUNCTION(StringSplit, false)
