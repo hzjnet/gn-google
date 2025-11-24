@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8196e229_562f4117",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-11-24T23:20:21Z",
+      "side": 1,
+      "message": "@agrieve, can you PTAL?",
+      "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e742fcf3_27a88248",
+        "filename": "src/gn/functions.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1154,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-11-24T23:20:21Z",
+      "side": 1,
+      "message": "If we are concerned about this, then we can limit the applicability/usefulness of the new function by exposing it as `get_label_info(..., \u0027dir_hash\u0027)` rather than as the more generic `string_hash(...)`.  But I think that `string_hash` is fine:\n\n* I think that most GN scenarios implicitly trust all the GN inputs.\n* At least in https://crbug.com/463302946 collisions will lead to acceptable build errors (e.g. see https://crbug.com/463302946#comment4)",
+      "range": {
+        "startLine": 1154,
+        "startChar": 0,
+        "endLine": 1154,
+        "endChar": 68
+      },
+      "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "528b908e_7c4c9fd5",
+        "filename": "src/gn/functions.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1195,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-11-24T23:20:21Z",
+      "side": 1,
+      "message": "FWIW I note that `md5.h` and `sha1.h` are already depended on in other parts of GN (despite their cryptographic weaknesses).  This seems ok.\n\n`sha1.h` is used in `src/gn/xcode_writer.cc`.  `md5.h` is used in `src/gn/visual_studio_utils.cc`.",
+      "range": {
+        "startLine": 1195,
+        "startChar": 54,
+        "endLine": 1195,
+        "endChar": 55
+      },
+      "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
