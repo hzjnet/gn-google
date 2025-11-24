@@ -410,3 +410,80 @@ TEST_F(SetupTest, ArgsGnRelativeAndAbsoluteImports) {
   EXPECT_TRUE(dependency_includes_file("build_defines.gni"));
   EXPECT_TRUE(dependency_includes_file("params.gni"));
 }
+
+TEST_F(SetupTest, AllowBuildDirSymlinks) {
+  base::CommandLine cmdline(base::CommandLine::NO_PROGRAM);
+
+  const char kDotfileContents[] = R"(
+    buildconfig = "//BUILDCONFIG.gn"
+    script_executable = ""
+    allow_build_dir_symlinks = true
+  )";
+
+  // Create a temp directory with the following layout:
+  //
+  //   TMPDIR/
+  //      source_root/
+  //        .gn
+  //        BUILDCONFIG.gn
+  //        build_defines.gni
+  //        out/ ----symlink---> TMPDIR/artifacts
+  //      artifacts/
+  //
+  // TMPDIR/source_root will be passed as --root.
+  //
+  base::ScopedTempDir in_temp_dir;
+  ASSERT_TRUE(in_temp_dir.CreateUniqueTempDir());
+  base::FilePath in_path = in_temp_dir.GetPath();
+  base::FilePath source_root = in_path.AppendASCII("source_root");
+  CreateDirectory(source_root);
+  base::FilePath dot_gn_name = source_root.AppendASCII(".gn");
+  WriteFile(dot_gn_name, kDotfileContents);
+
+  WriteFile(source_root.AppendASCII("BUILDCONFIG.gn"), "");
+  cmdline.AppendSwitchPath(switches::kRoot, source_root);
+
+  WriteFile(source_root.AppendASCII("build_defines.gni"), "variable1 = true");
+
+  base::FilePath artifacts_dir = in_path.AppendASCII("artifacts");
+  CreateDirectory(artifacts_dir);
+
+  CreateSymbolicLink(artifacts_dir, source_root.AppendASCII("out"));
+
+  base::FilePath build_dir = artifacts_dir.AppendASCII("build");
+
+  // Create another temp dir and write the args.gn with imports.
+  base::ScopedTempDir build_temp_dir;
+  ASSERT_TRUE(build_temp_dir.CreateUniqueTempDir());
+  WriteFile(build_temp_dir.GetPath().AppendASCII("args.gn"), R"(
+    import("//build_defines.gni")
+    import("params.gni")
+  )");
+  WriteFile(build_temp_dir.GetPath().AppendASCII("params.gni"),
+            "variable2 = true");
+
+  // Run setup and check that the args.gn imports are in dependency files.
+  {
+    Setup setup;
+    Err err;
+    // Use a relative build directory path.
+    EXPECT_TRUE(setup.DoSetupWithErr("out/build", true, cmdline, &err));
+
+    // DEBUG: fprintf(stderr, "\n\nBUILD_DIR %s\n\n",
+    // setup.build_settings().build_dir().value().c_str());
+    EXPECT_EQ(setup.build_settings().build_dir().value(), "//out/build/");
+  }
+
+  {
+    Setup setup;
+    Err err;
+    // Use an absolute directory path, which is still under the source root.
+    EXPECT_TRUE(setup.DoSetupWithErr(
+        FilePathToUTF8(source_root.AppendASCII("out/build")), true, cmdline,
+        &err));
+
+    // DEBUG: fprintf(stderr, "\n\nBUILD_DIR %s\n\n",
+    // setup.build_settings().build_dir().value().c_str());
+    EXPECT_EQ(setup.build_settings().build_dir().value(), "//out/build/");
+  }
+}

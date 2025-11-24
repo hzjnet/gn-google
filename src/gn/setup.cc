@@ -218,6 +218,31 @@ Variables
       rules instead of stamp files whenever possible. This results in smaller
       Ninja build plans, but requires at least Ninja 1.11.
 
+  allow_build_dir_symlinks [optional]
+      A boolean flag that can be set to allow the build directory path used
+      when running GN commands to contain symlinks to directories outside
+      of the source root. By default, the build directory's real absolute path
+      is first computed, then the result is relativized, if it is under the source root, or kept as an absolute path. When this flag is set, a relative
+      build dir will stay relative.
+
+      For example, consider the following project:
+
+         /work/source is the source root
+         /work/source/out is a symlink to /work/artifacts
+
+         Running the following command in /work/source:
+
+                gn gen out/default
+
+         Results with the default behavior with:
+
+           root_build_dir = "/work/artifacts/default"
+
+         while when the flag is set:
+
+               root_build_dir = "//out/default"
+
+
 Example .gn file contents
 
   buildconfig = "//build/config/BUILDCONFIG.gn"
@@ -741,30 +766,63 @@ bool Setup::FillSourceDir(const base::CommandLine& cmdline, Err* err) {
 bool Setup::FillBuildDir(const std::string& build_dir,
                          bool require_exists,
                          Err* err) {
-  SourceDir resolved =
-      SourceDirForCurrentDirectory(build_settings_.root_path())
-          .ResolveRelativeDir(Value(nullptr, build_dir), err,
-                              build_settings_.root_path_utf8());
-  if (err->has_error()) {
-    return false;
-  }
+  SourceDir resolved;
+  base::FilePath build_dir_path;
 
-  base::FilePath build_dir_path = build_settings_.GetFullPath(resolved);
-  if (!base::CreateDirectory(build_dir_path)) {
-    *err = Err(Location(), "Can't create the build dir.",
-               "I could not create the build dir \"" +
-                   FilePathToUTF8(build_dir_path) + "\".");
-    return false;
+  if (build_settings_.allow_build_dir_symlinks()) {
+    std::string source_root = FilePathToUTF8(build_settings_.root_path()) + "/";
+
+    build_dir_path =
+        UTF8ToFilePath(ResolveRelative(build_dir, source_root, false, ""));
+
+    // DEBUG: fprintf(stderr, "\n\nBUILD DIR PATH %s\n\n",
+    // build_dir_path.As8Bit().c_str());
+
+    if (!base::CreateDirectory(build_dir_path)) {
+      *err = Err(Location(), "Can't create the build dir.",
+                 "I could not create the build dir \"" +
+                     FilePathToUTF8(build_dir_path) + "\".");
+      return false;
+    }
+
+    resolved = SourceDirForPath(build_settings_.root_path(), build_dir_path);
+
+  } else {
+    resolved = SourceDirForCurrentDirectory(build_settings_.root_path())
+                   .ResolveRelativeDir(Value(nullptr, build_dir), err,
+                                       build_settings_.root_path_utf8());
+    if (err->has_error()) {
+      return false;
+    }
+
+    // DEBUG: fprintf(stderr, "\n\nRESOLVED1 %s\n\n", resolved.value().c_str());
+
+    build_dir_path = build_settings_.GetFullPath(resolved);
+    if (!base::CreateDirectory(build_dir_path)) {
+      *err = Err(Location(), "Can't create the build dir.",
+                 "I could not create the build dir \"" +
+                     FilePathToUTF8(build_dir_path) + "\".");
+      return false;
+    }
+
+    // DEBUG: fprintf(stderr, "\n\nBUILD DIR PATH %s\n\n",
+    // build_dir_path.As8Bit().c_str());
+
+    base::FilePath build_dir_realpath =
+        base::MakeAbsoluteFilePath(build_dir_path);
+    if (build_dir_realpath.empty()) {
+      *err = Err(Location(), "Can't get the real build dir path.",
+                 "I could not get the real path of \"" +
+                     FilePathToUTF8(build_dir_path) + "\".");
+      return false;
+    }
+    // DEBUG: fprintf(stderr, "\n\nBUILD DIR REAL PATH %s\n\n",
+    // build_dir_realpath.As8Bit().c_str());
+
+    resolved =
+        SourceDirForPath(build_settings_.root_path(), build_dir_realpath);
   }
-  base::FilePath build_dir_realpath =
-      base::MakeAbsoluteFilePath(build_dir_path);
-  if (build_dir_realpath.empty()) {
-    *err = Err(Location(), "Can't get the real build dir path.",
-               "I could not get the real path of \"" +
-                   FilePathToUTF8(build_dir_path) + "\".");
-    return false;
-  }
-  resolved = SourceDirForPath(build_settings_.root_path(), build_dir_realpath);
+  // DEBUG: fprintf(stderr, "\n\nRESOLVED2 %s\n\n", resolved.value().c_str());
 
   if (scheduler_.verbose_logging())
     scheduler_.Log("Using build dir", resolved.value());
@@ -1156,6 +1214,17 @@ bool Setup::FillOtherConfig(const base::CommandLine& cmdline, Err* err) {
       return false;
     }
     build_settings_.set_no_stamp_files(no_stamp_files_value->boolean_value());
+  }
+
+  // Allow output dir symlinks.
+  const Value* allow_build_dir_symlinks =
+      dotfile_scope_.GetValue("allow_build_dir_symlinks", true);
+  if (allow_build_dir_symlinks) {
+    if (!allow_build_dir_symlinks->VerifyTypeIs(Value::BOOLEAN, err)) {
+      return false;
+    }
+    build_settings_.set_allow_build_dir_symlinks(
+        allow_build_dir_symlinks->boolean_value());
   }
 
   // Export compile commands.
