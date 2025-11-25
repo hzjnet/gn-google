@@ -70,6 +70,30 @@
       ],
       "revId": "ab6f8b2124b02000f5ffcabb904622f17de6a1e5",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54eebfdf_e7c081ed",
+        "filename": "src/gn/functions.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-11-25T21:44:44Z",
+      "side": 1,
+      "message": "I defer to @agrieve and other GN owners.  I am happy to implement `string_hash(input_string, hash_length_in_characters)` if this is what we decide to do.\n\nFWIW it seems okay to me to just settle on the current solution, and only tweak it later if actually needed (e.g. in another CR comment above @agrieve was wondering whether a 2nd argument could control the kind of hash).  One advantage of implementing it sooner would be that GN users can start using shorter or longer hashes without having to wait for additional GN changes.  But this seems like a relatively small advantage (e.g. given that GN is auto-rolled into Chromium).\n\nI also want to point out that an even more general/versatile solution would be to 1) return full hash from `string_hash` and 2) have a separate `string_substr(s, start, length)`.",
+      "parentUuid": "c5c9ce44_e9465070",
+      "range": {
+        "startLine": 1174,
+        "startChar": 11,
+        "endLine": 1174,
+        "endChar": 15
+      },
+      "revId": "ab6f8b2124b02000f5ffcabb904622f17de6a1e5",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
