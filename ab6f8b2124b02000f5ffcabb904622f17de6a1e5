@@ -1,0 +1,75 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5c9ce44_e9465070",
+        "filename": "src/gn/functions.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1003477
+      },
+      "writtenOn": "2025-11-25T20:44:28Z",
+      "side": 1,
+      "message": "I think the args should be two (string, bytes to return). This will allow flexible use by anyone who might want the full hashed string, or just a partial part of it.",
+      "range": {
+        "startLine": 1174,
+        "startChar": 11,
+        "endLine": 1174,
+        "endChar": 15
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0e5295f2_44b52021",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/functions.cc",
+              "range": {
+                "startLine": 1174,
+                "startChar": 0,
+                "endLine": 1175,
+                "endChar": 0
+              },
+              "replacement": "  if (args.size() \u003c 1 || args.size() \u003e 2) {\n"
+            },
+            {
+              "path": "src/gn/functions.cc",
+              "range": {
+                "startLine": 1176,
+                "startChar": 0,
+                "endLine": 1177,
+                "endChar": 0
+              },
+              "replacement": "               \"Expecting one or two arguments. usage: string_hash(string \"\n               \"[, bytes_to_return])\");\n"
+            },
+            {
+              "path": "src/gn/functions.cc",
+              "range": {
+                "startLine": 1188,
+                "startChar": 0,
+                "endLine": 1188,
+                "endChar": 0
+              },
+              "replacement": "\n  int64_t trim_len \u003d 8;  // Default to 8 bytes.\n  if (args.size() \u003d\u003d 2) {\n    // Check usage: second argument is an integer.\n    if (!args[1].VerifyTypeIs(Value::INTEGER, err)) {\n      *err \u003d Err(function,\n                 \"second argument of string_hash is not an integer\",\n                 \"Expecting second argument to be an integer.\");\n      return Value();\n    }\n    trim_len \u003d args[1].int_value();\n    if (trim_len \u003c\u003d 0) {\n      *err \u003d Err(function, \"bytes_to_return must be positive.\");\n      return Value();\n    }\n  }\n"
+            },
+            {
+              "path": "src/gn/functions.cc",
+              "range": {
+                "startLine": 1206,
+                "startChar": 0,
+                "endLine": 1207,
+                "endChar": 0
+              },
+              "replacement": "  // The MD5 hash is always 32 hex characters.\n  if (trim_len \u003e 32) {\n    *err \u003d Err(function, \"bytes_to_return cannot be greater than 32.\");\n    return Value();\n  }\n  std::string trimmed \u003d md5.substr(0, trim_len);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ab6f8b2124b02000f5ffcabb904622f17de6a1e5",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
