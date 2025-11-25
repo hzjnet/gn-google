@@ -41,6 +41,26 @@ void BuildSettings::SetSecondarySourcePath(const SourceDir& d) {
   secondary_source_path_ = GetFullPath(d).NormalizePathSeparatorsTo('/');
 }
 
+void BuildSettings::SetPythonPath(base::FilePath p) {
+  python_path_ = std::move(p);
+#if defined(OS_WIN)
+  // Change `python_path_` to a relative path from `build_dir_` if it is within
+  // the `root_dir_`, so that the generated ninja files will not contain
+  // absolute paths if possible.
+  //
+  // Note that we only do this on Windows because `SetPythonPath` is provided
+  // with an absolute path only on Windows.  See:
+  // https://gn.googlesource.com/gn/+/refs/heads/main/src/gn/setup.cc#793
+  //
+  // On other platforms, we typically get "python" or "python3", which is
+  // interpreted as coming from the `PATH` environment variable.
+  if (root_path_.IsParent(python_path_)) {
+    python_path_ = UTF8ToFilePath(
+        RebasePath(FilePathToUTF8(python_path_), build_dir_, root_path_utf8_));
+  }
+#endif
+}
+
 void BuildSettings::SetBuildDir(const SourceDir& d) {
   build_dir_ = d;
 }
