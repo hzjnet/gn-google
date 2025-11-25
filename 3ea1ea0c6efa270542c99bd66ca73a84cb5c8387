@@ -91,6 +91,24 @@
       ],
       "revId": "3ea1ea0c6efa270542c99bd66ca73a84cb5c8387",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b17e3810_63b5a55a",
+        "filename": "src/gn/build_settings.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1001787
+      },
+      "writtenOn": "2025-11-25T20:57:26Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "db90a6b9_741052ff",
+      "revId": "3ea1ea0c6efa270542c99bd66ca73a84cb5c8387",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
