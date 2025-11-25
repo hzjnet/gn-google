@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "076dcc0d_38ee8285",
+        "filename": "src/gn/ninja_target_command_util.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-25T08:37:46Z",
+      "side": 1,
+      "message": "pass by value and use std::move?",
+      "range": {
+        "startLine": 73,
+        "startChar": 41,
+        "endLine": 73,
+        "endChar": 60
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "61a8cc2a_3687c2fa",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/ninja_target_command_util.h",
+              "range": {
+                "startLine": 9,
+                "startChar": 0,
+                "endLine": 9,
+                "endChar": 0
+              },
+              "replacement": "#include \u003cutility\u003e\n"
+            },
+            {
+              "path": "src/gn/ninja_target_command_util.h",
+              "range": {
+                "startLine": 73,
+                "startChar": 0,
+                "endLine": 75,
+                "endChar": 0
+              },
+              "replacement": "  WeakLibrariesWriter(EscapingMode mode, std::string tool_switch)\n      : tool_switch_(std::move(tool_switch)) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0b88837a9f64bcdea5023f5a4ac32c4b2f6717c3",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8802c1fe_da686b8e",
+        "filename": "src/gn/ninja_target_command_util.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-11-25T08:37:46Z",
+      "side": 1,
+      "message": "Use string_view instead?",
+      "range": {
+        "startLine": 78,
+        "startChar": 29,
+        "endLine": 78,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "95a84fb3_60b4096e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/ninja_target_command_util.h",
+              "range": {
+                "startLine": 78,
+                "startChar": 0,
+                "endLine": 79,
+                "endChar": 0
+              },
+              "replacement": "  void operator()(std::string_view s, std::ostream\u0026 out) const {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0b88837a9f64bcdea5023f5a4ac32c4b2f6717c3",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
