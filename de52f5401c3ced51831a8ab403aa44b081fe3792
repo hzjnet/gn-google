@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "f80e6321_652ddd60",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4473133
+      },
+      "writtenOn": "2025-11-25T08:16:53Z",
+      "side": 1,
+      "message": "Yes, our application is based on Chromium. However, some of our dependent libraries do not support older versions of macOS, so weak linking is required. Since it is a single library, weak_frameworks cannot be used.",
+      "parentUuid": "01adbbab_8a4c83f8",
+      "revId": "de52f5401c3ced51831a8ab403aa44b081fe3792",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "87606f06_349d4505",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 4
@@ -48,6 +66,30 @@
       "writtenOn": "2025-11-25T05:58:43Z",
       "side": 1,
       "message": "Can we use range for with std::move?",
+      "range": {
+        "startLine": 635,
+        "startChar": 0,
+        "endLine": 636,
+        "endChar": 53
+      },
+      "revId": "de52f5401c3ced51831a8ab403aa44b081fe3792",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8b7be3f_61085277",
+        "filename": "src/gn/desc_builder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 4473133
+      },
+      "writtenOn": "2025-11-25T08:16:53Z",
+      "side": 1,
+      "message": "We can\u0027t do that, variable weak_libraries is a const reference.",
+      "parentUuid": "a90b3837_7b0edc81",
       "range": {
         "startLine": 635,
         "startChar": 0,
@@ -89,6 +131,24 @@
           ]
         }
       ],
+      "revId": "de52f5401c3ced51831a8ab403aa44b081fe3792",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84b95744_78b0a937",
+        "filename": "src/gn/ninja_binary_target_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 4473133
+      },
+      "writtenOn": "2025-11-25T08:16:53Z",
+      "side": 1,
+      "message": "That\u0027s great.",
+      "parentUuid": "3ff7988c_bbe74ef7",
       "revId": "de52f5401c3ced51831a8ab403aa44b081fe3792",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
