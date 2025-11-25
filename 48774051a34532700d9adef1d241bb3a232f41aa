@@ -16,6 +16,47 @@
       "message": "@agrieve, can you PTAL again?",
       "revId": "48774051a34532700d9adef1d241bb3a232f41aa",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6af1a06b_b145883e",
+        "filename": "docs/reference.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 3458,
+      "author": {
+        "id": 1000055
+      },
+      "writtenOn": "2025-11-25T18:50:59Z",
+      "side": 1,
+      "message": "maybe: \"Calculates a stable hash of the given string\"\n\nAnd then leave the MD5 prefix detail to below.",
+      "range": {
+        "startLine": 3458,
+        "startChar": 63,
+        "endLine": 3458,
+        "endChar": 71
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "443fafeb_e434620a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "docs/reference.md",
+              "range": {
+                "startLine": 3458,
+                "startChar": 0,
+                "endLine": 3459,
+                "endChar": 0
+              },
+              "replacement": "### \u003ca name\u003d\"func_string_hash\"\u003e\u003c/a\u003e**string_hash**: Calculates a stable hash of the given string.\u0026nbsp;[Back to Top](#gn-reference)\n"
+            }
+          ]
+        }
+      ],
+      "revId": "48774051a34532700d9adef1d241bb3a232f41aa",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }

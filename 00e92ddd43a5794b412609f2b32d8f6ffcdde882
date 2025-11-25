@@ -38,6 +38,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "f701f0d8_5092d935",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000055
+      },
+      "writtenOn": "2025-11-25T18:50:59Z",
+      "side": 1,
+      "message": "Yep, just mentioning for future self.",
+      "parentUuid": "e0c07890_be057074",
+      "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "8196e229_562f4117",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
