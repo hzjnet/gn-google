@@ -56,6 +56,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5479786e_c9a9c395",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4473133
+      },
+      "writtenOn": "2025-11-25T09:43:57Z",
+      "side": 1,
+      "message": "Ok.",
+      "parentUuid": "588d5a7b_a8b2e23d",
+      "revId": "de52f5401c3ced51831a8ab403aa44b081fe3792",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "87606f06_349d4505",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 4
@@ -132,6 +150,30 @@
       "side": 1,
       "message": "But you can make the variable mutable here?",
       "parentUuid": "d8b7be3f_61085277",
+      "range": {
+        "startLine": 635,
+        "startChar": 0,
+        "endLine": 636,
+        "endChar": 53
+      },
+      "revId": "de52f5401c3ced51831a8ab403aa44b081fe3792",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3178520_b8ecdb2c",
+        "filename": "src/gn/desc_builder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 4473133
+      },
+      "writtenOn": "2025-11-25T09:43:57Z",
+      "side": 1,
+      "message": "No, like other GetLinked*** methods, GetLinkedWeakLibraries returns a std::vector\u003cstd::string\u003e\u0026, and AppendString accepts a string_view parameter instead of ownership.",
+      "parentUuid": "bad63d23_7dfe5ab7",
       "range": {
         "startLine": 635,
         "startChar": 0,
