@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "e0c07890_be057074",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-11-25T18:29:39Z",
+      "side": 1,
+      "message": "Ack.  I haven\u0027t thought about this.  But yes - this indeed seems desirable.\n\nFWIW I think we don\u0027t need to document this (for a moment I wondered whether the docs should say \"When invoked with a single argument, then ...\", and also \"Currently errors out when invoked with a different number of arguments, but may support other hash formats in the future\").  Let\u0027s cross that bridge once we get there?",
+      "parentUuid": "73210731_9d1e58ad",
+      "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "8196e229_562f4117",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -52,6 +70,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86020ee1_d48eb40b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-11-25T18:29:39Z",
+      "side": 1,
+      "message": "Incomplete comment?  But I hope that the discussion on the linked bug as already covered all the open questions?",
+      "parentUuid": "b21d5277_6723caac",
+      "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cbb9ef3b_64d8b010",
@@ -65,6 +101,24 @@
       "writtenOn": "2025-11-25T14:51:27Z",
       "side": 1,
       "message": "nit: mention that the return value is a string",
+      "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54613fed_454f695c",
+        "filename": "docs/reference.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 3461,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-11-25T18:29:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbb9ef3b_64d8b010",
       "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
@@ -147,6 +201,24 @@
           ]
         }
       ],
+      "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80c5717d_ec7b01f4",
+        "filename": "src/gn/functions.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1161,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-11-25T18:29:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0c118cb_c49db111",
       "revId": "00e92ddd43a5794b412609f2b32d8f6ffcdde882",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
