@@ -16,6 +16,81 @@
       "message": "I added some comments, thanks for the review!",
       "revId": "3ea1ea0c6efa270542c99bd66ca73a84cb5c8387",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db90a6b9_741052ff",
+        "filename": "src/gn/build_settings.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-25T10:10:28Z",
+      "side": 1,
+      "message": "Can you instead use IsPathAbsolute() to check for this condition, and set a flag like like `python_path_is_relative_to_build_dir_` to true when this rebasing is performed.\n\nThis will make the code more portable, and avoid other fragile #ifdef checks in the rest of the code.\n\nAlso please add a setup_unittest.cc test that checks the value of python_path() after a call of SetPythonPath() with and without absolute paths.",
+      "fixSuggestions": [
+        {
+          "fixId": "87bc10b0_6868c895",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/build_settings.cc",
+              "range": {
+                "startLine": 12,
+                "startChar": 0,
+                "endLine": 13,
+                "endChar": 0
+              },
+              "replacement": "BuildSettings::BuildSettings() : python_path_is_relative_to_build_dir_(false) {}\n"
+            },
+            {
+              "path": "src/gn/build_settings.cc",
+              "range": {
+                "startLine": 20,
+                "startChar": 0,
+                "endLine": 20,
+                "endChar": 0
+              },
+              "replacement": "      python_path_is_relative_to_build_dir_(other.python_path_is_relative_to_build_dir_),\n"
+            },
+            {
+              "path": "src/gn/build_settings.cc",
+              "range": {
+                "startLine": 46,
+                "startChar": 0,
+                "endLine": 58,
+                "endChar": 0
+              },
+              "replacement": "  python_path_is_relative_to_build_dir_ \u003d false;\n\n  // If the provided python path is absolute and is within the root source tree,\n  // make it relative to the build directory. This helps keep generated ninja\n  // files free of absolute paths when possible.\n  if (python_path_.IsAbsolute() \u0026\u0026 root_path_.IsParent(python_path_)) {\n"
+            },
+            {
+              "path": "src/gn/build_settings.cc",
+              "range": {
+                "startLine": 60,
+                "startChar": 0,
+                "endLine": 60,
+                "endChar": 0
+              },
+              "replacement": "    python_path_is_relative_to_build_dir_ \u003d true;\n"
+            },
+            {
+              "path": "src/gn/build_settings.cc",
+              "range": {
+                "startLine": 61,
+                "startChar": 0,
+                "endLine": 62,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "3ea1ea0c6efa270542c99bd66ca73a84cb5c8387",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
