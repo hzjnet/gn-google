@@ -16,6 +16,23 @@
       "message": "Thanks for the review!  I applied your suggestion and also added some unit tests.  The `RelativePythonPath` test is a bit gnarly because of the Windows-specific code in `setup.cc`, which requires modifying the current working directory.\n\nPlease let me know if you would prefer me to add a test-only flag to disable that code in `setup.cc`.",
       "revId": "1713bb896f53d9cb9b32923ce81a35853dfc286d",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fd9d7af_2475511d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2025-11-26T08:27:03Z",
+      "side": 1,
+      "message": "Thanks a lot for the change, this looks fine to me as is :)",
+      "revId": "1713bb896f53d9cb9b32923ce81a35853dfc286d",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
