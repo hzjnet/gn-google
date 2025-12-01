@@ -411,7 +411,13 @@ class Target : public Item {
   }
 
   // The module name for the target.
-  std::string module_name() const { return label().name(); }
+  std::string module_name() const {
+    return module_name_override_.empty() ? label().name()
+                                         : module_name_override_;
+  }
+  void set_module_name(const std::string& module_name) {
+    module_name_override_ = module_name;
+  }
 
   // Computes and returns the outputs of this target expressed as SourceFiles.
   //
@@ -499,6 +505,8 @@ class Target : public Item {
   SourceDir output_dir_;
   std::string output_extension_;
   bool output_extension_set_ = false;
+
+  std::string module_name_override_;
 
   FileList sources_;
   SourceFileTypeSet source_types_used_;
