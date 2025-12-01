@@ -18,6 +18,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "91422140_6ae6f99e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2025-12-01T23:45:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eafb884f_7d1c8c58",
+      "revId": "1cb45de443cf650985cd1f35db0754080720f6dd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "993f3f09_7cc21ea8",
@@ -31,6 +49,30 @@
       "writtenOn": "2025-12-01T04:50:56Z",
       "side": 1,
       "message": "Update document for this?",
+      "range": {
+        "startLine": 59,
+        "startChar": 49,
+        "endLine": 59,
+        "endChar": 63
+      },
+      "revId": "1cb45de443cf650985cd1f35db0754080720f6dd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef3f8911_477db1f1",
+        "filename": "src/gn/c_substitution_type.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2025-12-01T23:45:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "993f3f09_7cc21ea8",
       "range": {
         "startLine": 59,
         "startChar": 49,
