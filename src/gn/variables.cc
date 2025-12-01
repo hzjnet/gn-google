@@ -1476,6 +1476,25 @@ Example
   }
 )";
 
+const char kModuleName[] = "module_name";
+const char kModuleName_HelpShort[] =
+    "module_name: [string] Overrides the module name for a source_set.";
+const char kModuleName_Help[] =
+    R"(module_name: [string] Overrides the module name for a source_set.
+
+  This allows a source_set to be built with a specific module name, which can
+  be different from the target name. This is useful because module names need
+  to be globally unique, while target names are generally only unique within
+  a package.
+
+Example
+
+  source_set("baz_module") {
+    module_name = "foo_bar_baz"
+    ...
+  }
+)";
+
 const char kOutputExtension[] = "output_extension";
 const char kOutputExtension_HelpShort[] =
     "output_extension: [string] Value to use for the output's file extension.";
@@ -2450,6 +2469,7 @@ const VariableInfoMap& GetTargetVariables() {
     INSERT_VARIABLE(Libs)
     INSERT_VARIABLE(LibDirs)
     INSERT_VARIABLE(Metadata)
+    INSERT_VARIABLE(ModuleName)
     INSERT_VARIABLE(OutputDir)
     INSERT_VARIABLE(OutputExtension)
     INSERT_VARIABLE(OutputName)

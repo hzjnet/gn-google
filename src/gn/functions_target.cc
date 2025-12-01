@@ -832,6 +832,7 @@ C-language source_sets
 
 Variables
 
+  module_name
 )" CONFIG_VALUES_VARS_HELP DEPS_VARS DEPENDENT_CONFIG_VARS GENERAL_TARGET_VARS;
 
 Value RunSourceSet(Scope* scope,

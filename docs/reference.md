@@ -135,7 +135,7 @@
     *   [libs: [string list] Additional libraries to link.](#var_libs)
     *   [metadata: [scope] Metadata of this target.](#var_metadata)
     *   [mnemonic: [string] Prefix displayed when ninja runs this action.](#var_mnemonic)
-    *   [module_name: [string] The name for the compiled module.](#var_module_name)
+    *   [module_name: [string] Overrides the module name for a source_set.](#var_module_name)
     *   [output_conversion: Data format for generated_file targets.](#var_output_conversion)
     *   [output_dir: [directory] Directory to put output file in.](#var_output_dir)
     *   [output_extension: [string] Value to use for the output's file extension.](#var_output_extension)
@@ -2271,6 +2271,7 @@
 #### **Variables**
 
 ```
+  module_name
   Flags: asmflags, cflags, cflags_c, cflags_cc, cflags_objc,
          cflags_objcc, defines, include_dirs, inputs, ldflags,
          lib_dirs, libs, precompiled_header, precompiled_source,
@@ -6267,12 +6268,22 @@
 
   Whitespace is not allowed within a mnemonic.
 ```
-### <a name="var_module_name"></a>**module_name**: [string] The name for the compiled module.&nbsp;[Back to Top](#gn-reference)
+### <a name="var_module_name"></a>**module_name**: [string] Overrides the module name for a source_set.&nbsp;[Back to Top](#gn-reference)
 
 ```
-  Valid for binary targets that contain Swift sources.
+  This allows a source_set to be built with a specific module name, which can
+  be different from the target name. This is useful because module names need
+  to be globally unique, while target names are generally only unique within
+  a package.
+```
 
-  If module_name is not set, then this rule will use the target name.
+#### **Example**
+
+```
+  source_set("baz_module") {
+    module_name = "foo_bar_baz"
+    ...
+  }
 ```
 ### <a name="var_output_conversion"></a>**output_conversion**: Data format for generated_file targets.&nbsp;[Back to Top](#gn-reference)
 
