@@ -22,6 +22,7 @@
 #include "gn/tool.h"
 #include "gn/toolchain.h"
 #include "gn/trace.h"
+#include "gn/variables.h"
 
 namespace {
 
