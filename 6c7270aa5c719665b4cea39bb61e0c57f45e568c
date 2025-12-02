@@ -72,6 +72,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d47de082_7f15228b",
+        "filename": "src/gn/compile_commands_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 4410212
+      },
+      "writtenOn": "2025-12-02T22:49:13Z",
+      "side": 1,
+      "message": "Restored to the original, going back to reserve and then pushing back in a loop.",
+      "parentUuid": "9de670b2_6bb0c34c",
+      "revId": "6c7270aa5c719665b4cea39bb61e0c57f45e568c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e7de7a37_5d3a718f",
