@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ea313da_98c3eeed",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-12-02T05:15:10Z",
+      "side": 1,
+      "message": "I think this is related to other issue you are working. If this is blocker for that, could you add relationship with that too?",
+      "revId": "e843ce03ce21bf86d8d6a60a25b9a065cfe2235b",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}

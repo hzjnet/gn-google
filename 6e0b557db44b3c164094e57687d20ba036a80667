@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a67bf9dc_6176c52b",
+        "filename": "src/gn/function_toolchain.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-12-02T05:15:10Z",
+      "side": 0,
+      "message": "Better to keep this empty line?",
+      "revId": "6e0b557db44b3c164094e57687d20ba036a80667",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
