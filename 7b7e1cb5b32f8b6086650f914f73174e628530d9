@@ -1,0 +1,80 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6b718cd_81fc4de9",
+        "filename": "src/gn/target.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-12-03T04:56:08Z",
+      "side": 1,
+      "message": "This is related to this CL?",
+      "fixSuggestions": [
+        {
+          "fixId": "5442ebe0_436ec759",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/target.cc",
+              "range": {
+                "startLine": 25,
+                "startChar": 0,
+                "endLine": 26,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "7b7e1cb5b32f8b6086650f914f73174e628530d9",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e9ae356_e954cef3",
+        "filename": "src/gn/target.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2025-12-03T04:56:08Z",
+      "side": 1,
+      "message": "pass by value?",
+      "range": {
+        "startLine": 418,
+        "startChar": 34,
+        "endLine": 418,
+        "endChar": 40
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "5a52887b_49f5007a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/target.h",
+              "range": {
+                "startLine": 418,
+                "startChar": 0,
+                "endLine": 420,
+                "endChar": 0
+              },
+              "replacement": "  void set_module_name(std::string module_name) {\n    module_name_override_ \u003d std::move(module_name);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7b7e1cb5b32f8b6086650f914f73174e628530d9",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
