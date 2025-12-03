@@ -16,6 +16,24 @@
       "message": "I think this is related to other issue you are working. If this is blocker for that, could you add relationship with that too?",
       "revId": "e843ce03ce21bf86d8d6a60a25b9a065cfe2235b",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88ed7aaa_1b447330",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2025-12-03T00:32:45Z",
+      "side": 1,
+      "message": "It\u0027s not a blocker. It just makes things more convenient",
+      "parentUuid": "4ea313da_98c3eeed",
+      "revId": "e843ce03ce21bf86d8d6a60a25b9a065cfe2235b",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
