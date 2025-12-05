@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c2e0f02_522db654",
+        "filename": "src/base/sha2.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003062
+      },
+      "writtenOn": "2025-12-05T17:28:00Z",
+      "side": 1,
+      "message": "This one",
+      "revId": "952cbc0250a9fbba8490d6362a6b3ea2db9f3dce",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}

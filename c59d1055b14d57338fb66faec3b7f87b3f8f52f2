@@ -40,6 +40,30 @@
       ],
       "revId": "c59d1055b14d57338fb66faec3b7f87b3f8f52f2",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6823d58a_b38fe66a",
+        "filename": "src/base/sha2.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1003062
+      },
+      "writtenOn": "2025-12-05T17:28:00Z",
+      "side": 1,
+      "message": "It wasn\u0027t. I reimplemented from reading the NIST spec, hence the link below :)\n\nHence the bugs that are now fixed :P",
+      "parentUuid": "3c22f1e6_ee6ae922",
+      "range": {
+        "startLine": 3,
+        "startChar": 27,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "revId": "c59d1055b14d57338fb66faec3b7f87b3f8f52f2",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
