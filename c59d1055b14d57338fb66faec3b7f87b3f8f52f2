@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c22f1e6_ee6ae922",
+        "filename": "src/base/sha2.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-12-05T16:36:26Z",
+      "side": 1,
+      "message": "I assume that this file was copied/forked from Chromium (?).  Would it be useful to leave a breadcrumb with this piece of knowledge somwewhere (as a separate comment here?  in the CL description?).",
+      "range": {
+        "startLine": 3,
+        "startChar": 27,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a48513bf_57221000",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/base/sha2.cc",
+              "range": {
+                "startLine": 5,
+                "startChar": 0,
+                "endLine": 5,
+                "endChar": 0
+              },
+              "replacement": "// This file is a fork of the Chromium base/sha2.cc.\n\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c59d1055b14d57338fb66faec3b7f87b3f8f52f2",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
