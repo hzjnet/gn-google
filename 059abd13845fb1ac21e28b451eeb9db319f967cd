@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61f90ede_d312f562",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003062
+      },
+      "writtenOn": "2025-12-05T10:21:09Z",
+      "side": 1,
+      "message": "Prior to https://gn-review.googlesource.com/c/gn/+/20480, there\u0027s only one usage of MD5 in GN and it\u0027s for legacy compatibility with VS.\n\nLet\u0027s fix this now before it\u0027s impossible to change. I understand it\u0027s not security-critical, but let\u0027s not force people to import insecure hashes just to interoperate either :)",
+      "revId": "059abd13845fb1ac21e28b451eeb9db319f967cd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
