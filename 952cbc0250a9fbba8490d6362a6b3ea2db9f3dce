@@ -55,6 +55,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "b47d0bab_a6b2c344",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-12-05T22:27:55Z",
+      "side": 1,
+      "message": "\u003e It\u0027s not contained with GN though–other things that might not otherwise need to now need to import md5.\n\nIn fairness, if we switch GN\u0027s `string_hash` from MD-5 to SHA-256 then those other things (e.g. https://crrev.com/c/7226634) will _still_ have to import some undesirable crates.  (Yes, SHA-256 is better than MD-5, but `hmac-sha256` will need to be hidden from general consumption because we don\u0027t want to duplicate BoringSSL code in production builds.)\n \n\u003e This CL is the work to change it to use sha256.",
+      "parentUuid": "17e3d4aa_3c7c347b",
+      "revId": "952cbc0250a9fbba8490d6362a6b3ea2db9f3dce",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6c2e0f02_522db654",
         "filename": "src/base/sha2.cc",
         "patchSetId": 3
