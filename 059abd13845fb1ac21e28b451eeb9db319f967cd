@@ -34,6 +34,24 @@
       "parentUuid": "61f90ede_d312f562",
       "revId": "059abd13845fb1ac21e28b451eeb9db319f967cd",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72e84050_816e75a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-12-05T17:40:08Z",
+      "side": 1,
+      "message": "I am okay with this CL from Chromium\u0027s `//build/rust` perspective, because now I think that I can switch https://crrev.com/c/7226634 to use the self-contained https://docs.rs/hmac-sha256 crate.  This should mostly side-step open questions I raised above about:\n\n* BoringSSL\n    - Adding a new `//build/rust` \u003d\u003e `//third_party/boringssl` dependency\n* RustCrypto (e.g. `sha2` crate)\n    - In general we recommend to use BoringSSL instead.  This concern also applies to the `hmac-sha256` crate, but I think that it is okay there because it is a more self-contained crate and therefore doesn\u0027t seem as much as a slippery slope / double-standards.  And we will anyway limit GN `visibility` to `//build/rust/chromium_prelude`.\n    - There is a fair amount of `unsafe` and `asm!` (compared to a single [`unsafe`](https://github.com/jedisct1/rust-hmac-sha256/blob/718a8a8cdafa783a2a7b501f990ed7af23e52dfd/src/lib.rs#L78C22-L78C46) in the `hmac-sha256` crate).\n    - It has additional dependencies (e.g. the `digest` crate), unlike the self-contained `hmac-sha256` crate.",
+      "parentUuid": "a8ce8270_c271b271",
+      "revId": "059abd13845fb1ac21e28b451eeb9db319f967cd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }

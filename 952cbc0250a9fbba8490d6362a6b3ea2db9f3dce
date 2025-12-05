@@ -3,6 +3,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5cd7a5a7_14ba6932",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-12-05T17:40:08Z",
+      "side": 1,
+      "message": "LGTM, but I am curious what @agrieve thinks.",
+      "revId": "952cbc0250a9fbba8490d6362a6b3ea2db9f3dce",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6c2e0f02_522db654",
         "filename": "src/base/sha2.cc",
         "patchSetId": 3
