@@ -20,6 +20,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a92c80d8_3505f7d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000055
+      },
+      "writtenOn": "2025-12-05T18:36:11Z",
+      "side": 1,
+      "message": "I don\u0027t see an issue with using md5 in a build scripting language, so don\u0027t think it\u0027s worth spending more time on changing it.\n\nWe can always add sha256 in addition if someone needs it.\n\nIf you want to do the work to change to sha256, I am also fine with that.",
+      "revId": "952cbc0250a9fbba8490d6362a6b3ea2db9f3dce",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6c2e0f02_522db654",
         "filename": "src/base/sha2.cc",
         "patchSetId": 3
