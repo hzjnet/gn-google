@@ -90,6 +90,8 @@ std::string OperatingSystemArchitecture() {
       return "x86_64";
     case PROCESSOR_ARCHITECTURE_IA64:
       return "ia64";
+    case PROCESSOR_ARCHITECTURE_ARM64:
+      return "arm64";
   }
   return std::string();
 #else

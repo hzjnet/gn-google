@@ -606,7 +606,19 @@ def WriteGNNinja(path, platform, host, options, args_list):
 
     win_manifest = os.path.relpath(
       os.path.join(REPO_ROOT, "build/windows.manifest.xml"), options.out_path)
-    ldflags.extend(['/DEBUG', '/MACHINE:x64', '/MANIFEST:EMBED',
+    
+    # Detect target architecture from environment or use host architecture
+    target_arch = os.environ.get('VSCMD_ARG_TGT_ARCH') or platform.machine().lower()
+    if target_arch in ('arm64', 'aarch64'):
+      machine_type = 'ARM64'
+    elif target_arch in ('amd64', 'x86_64', 'x64'):
+      machine_type = 'x64'
+    elif target_arch in ('x86', 'i386', 'i686'):
+      machine_type = 'x86'
+    else:
+      machine_type = 'x64'  # default fallback
+    
+    ldflags.extend(['/DEBUG', f'/MACHINE:{machine_type}', '/MANIFEST:EMBED',
                     f'/MANIFESTINPUT:{win_manifest}'])
 
   static_libraries = {
