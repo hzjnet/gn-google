@@ -71,6 +71,23 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b627ddf8_b7bbd3dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2025-12-09T20:44:31Z",
+      "side": 1,
+      "message": "QQ: Should this CL also edit `docs/reference.md` (it seems that docs text is duplicated across `functions.cc` and `docs/reference.md`;  FWIW the earlier CL at https://gn-review.git.corp.google.com/c/gn/+/20480/8/docs/reference.md did also edit the `docs/reference.md` file)?",
+      "revId": "952cbc0250a9fbba8490d6362a6b3ea2db9f3dce",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "6c2e0f02_522db654",
