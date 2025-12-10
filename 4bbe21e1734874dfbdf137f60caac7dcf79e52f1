@@ -24,6 +24,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c18edc3_5a80fe87",
+        "filename": "docs/reference.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 3469,
+      "author": {
+        "id": 1003062
+      },
+      "writtenOn": "2025-12-10T06:39:08Z",
+      "side": 1,
+      "message": "Done, thanks!",
+      "parentUuid": "8472a6e8_7a1690a2",
+      "range": {
+        "startLine": 3469,
+        "startChar": 9,
+        "endLine": 3469,
+        "endChar": 12
+      },
+      "revId": "4bbe21e1734874dfbdf137f60caac7dcf79e52f1",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "407881e9_af76382e",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-12-10T00:28:56Z",
       "side": 1,
       "message": "optional: Does this need to remain here?  Or should this paragraph be deleted?  (same question for `functions.cc`)",
+      "range": {
+        "startLine": 3477,
+        "startChar": 0,
+        "endLine": 3480,
+        "endChar": 72
+      },
+      "revId": "4bbe21e1734874dfbdf137f60caac7dcf79e52f1",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d34f36b_5928cbed",
+        "filename": "docs/reference.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 3480,
+      "author": {
+        "id": 1003062
+      },
+      "writtenOn": "2025-12-10T06:39:08Z",
+      "side": 1,
+      "message": "I would just leave it as-is since 8 hexadeecimal digits is probably weakened enough that finding a collision wouldn\u0027t be hard.",
+      "parentUuid": "407881e9_af76382e",
       "range": {
         "startLine": 3477,
         "startChar": 0,
