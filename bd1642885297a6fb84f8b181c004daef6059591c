@@ -16,6 +16,24 @@
       "message": "Added the same fix to sha1 as well, please take a look once more, thank you.",
       "revId": "bd1642885297a6fb84f8b181c004daef6059591c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bae1a9fe_4e7e82a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003062
+      },
+      "writtenOn": "2025-12-11T17:53:21Z",
+      "side": 1,
+      "message": "I don\u0027t really feel strongly about sha1, but probably there should be tests :)",
+      "parentUuid": "e093d8ac_581c1de0",
+      "revId": "bd1642885297a6fb84f8b181c004daef6059591c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
