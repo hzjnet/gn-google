@@ -33,6 +33,24 @@
       "message": "Is https://gn.googlesource.com/gn/+/refs/heads/main/src/base/sha1.cc#165 similarly problematic (just without tests)?",
       "revId": "45c10b821efd83a341e15779730c7d3cf5dd916d",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ddbee79_a901681e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4531277
+      },
+      "writtenOn": "2025-12-11T17:40:29Z",
+      "side": 1,
+      "message": "It should be yes but I don\u0027t see any failures there, are there any unit tests for sha1?",
+      "parentUuid": "7095ac36_530c8e10",
+      "revId": "45c10b821efd83a341e15779730c7d3cf5dd916d",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
