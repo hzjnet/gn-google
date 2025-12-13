@@ -298,8 +298,10 @@ void File::DoInitialize(const FilePath& path, uint32_t flags) {
   if (flags & FLAG_READ)
     access |= GENERIC_READ;
 
-  DWORD sharing = FILE_SHARE_READ | FILE_SHARE_WRITE;
+  DWORD sharing = FILE_SHARE_READ | FILE_SHARE_DELETE;
   DWORD create_flags = 0;
+  if (flags & FLAG_ASYNC)
+    create_flags |= (FILE_FLAG_NO_BUFFERING | FILE_FLAG_OVERLAPPED);
   file_.Set(CreateFile(ToWCharT(&path.value()), access, sharing, NULL,
                        disposition, create_flags, NULL));
 

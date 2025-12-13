@@ -929,12 +929,17 @@ def WriteGNNinja(path, platform, host, options, args_list):
 
   if platform.is_windows():
     static_libraries['base']['sources'].extend([
+        'src/base/files/async_file_win.cc',
+        'src/base/files/file_buffer_win.cc',
         'src/base/files/file_enumerator_win.cc',
         'src/base/files/file_util_win.cc',
         'src/base/files/file_win.cc',
         'src/base/win/registry.cc',
         'src/base/win/scoped_handle.cc',
         'src/base/win/scoped_process_information.cc',
+    ])
+    executables['gn_unittests']['sources'].extend([
+        'src/base/files/async_file_win_unittest.cc',
     ])
 
     if platform.is_msvc():
