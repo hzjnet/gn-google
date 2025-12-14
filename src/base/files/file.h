@@ -42,6 +42,7 @@ class File {
     FLAG_CREATE_ALWAYS = 1 << 3,  // May overwrite an old file.
     FLAG_READ = 1 << 4,
     FLAG_WRITE = 1 << 5,
+    FLAG_ASYNC = 1 << 6,
   };
 
   // This enum has been recorded in multiple histograms using PlatformFileError

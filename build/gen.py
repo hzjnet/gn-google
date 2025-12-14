@@ -815,6 +815,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
 
       'gn_unittests': { 'sources': [
         'src/base/sha2_unittest.cc',
+        'src/base/files/async_file_unittest.cc',
         'src/gn/action_target_generator_unittest.cc',
         'src/gn/analyzer_unittest.cc',
         'src/gn/args_unittest.cc',
@@ -929,6 +930,8 @@ def WriteGNNinja(path, platform, host, options, args_list):
 
   if platform.is_windows():
     static_libraries['base']['sources'].extend([
+        'src/base/files/async_file_win.cc',
+        'src/base/files/file_buffer_win.cc',
         'src/base/files/file_enumerator_win.cc',
         'src/base/files/file_util_win.cc',
         'src/base/files/file_win.cc',
@@ -965,7 +968,11 @@ def WriteGNNinja(path, platform, host, options, args_list):
           '-lws2_32',
           '-lshlwapi',
       ])
-
+  else:
+    static_libraries['base']['sources'].extend([
+        'src/base/files/async_file_default.cc',
+        'src/base/files/file_buffer_default.cc',
+    ])
 
   libs.extend(options.link_libs)
 
