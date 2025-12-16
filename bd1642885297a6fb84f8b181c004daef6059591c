@@ -121,6 +121,23 @@
       "message": "Adding Brett as well in case others are out of office.",
       "revId": "bd1642885297a6fb84f8b181c004daef6059591c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb50b3e4_f4d8555e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4531277
+      },
+      "writtenOn": "2025-12-16T19:08:46Z",
+      "side": 1,
+      "message": "Adding David to the reviewer list.",
+      "revId": "bd1642885297a6fb84f8b181c004daef6059591c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
