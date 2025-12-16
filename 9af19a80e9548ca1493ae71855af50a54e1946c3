@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe0bad86_37fda168",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3792874
+      },
+      "writtenOn": "2025-12-16T15:00:11Z",
+      "side": 1,
+      "message": "Hello friends. Still not content with GN being slower on Windows, I\u0027ve found that reducing paralellism speeds it up further. Please feel at liberty to commit this if it lg to both of you. Thanks for taking a look.",
+      "revId": "9af19a80e9548ca1493ae71855af50a54e1946c3",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
