@@ -32,6 +32,7 @@
 #include "gn/standard_out.h"
 #include "gn/switches.h"
 #include "gn/target.h"
+#include "gn/trace.h"
 #include "gn/visual_studio_writer.h"
 #include "gn/xcode_writer.h"
 
@@ -762,7 +763,8 @@ int RunGen(const std::vector<std::string>& args) {
   }
 
   // Deliberately leaked to avoid expensive process teardown.
-  Setup* setup = new Setup();
+  SetupHandle setup_handle;
+  Setup* setup = setup_handle.setup();
   // Generate an empty args.gn file if it does not exists
   if (!base::CommandLine::ForCurrentProcess()->HasSwitch(switches::kArgs)) {
     setup->set_gen_empty_args(true);
@@ -866,10 +868,17 @@ int RunGen(const std::vector<std::string>& args) {
     }
   }
 
+  {
+    ElapsedTimer dtimer;
+    ScopedTrace trace(TraceItem::TRACE_WRITE_DEPS, "Write deps");
   if (!WriteRuntimeDepsFilesIfNecessary(&setup->build_settings(),
                                         setup->builder(), &err)) {
     err.PrintToStdout();
     return 1;
+  }
+      OutputString(base::StringPrintf(
+          "Writing deps took %" PRId64 "ms\n",
+          dtimer.Elapsed().InMilliseconds()));
   }
 
   if (!CheckForInvalidGeneratedInputs(setup))

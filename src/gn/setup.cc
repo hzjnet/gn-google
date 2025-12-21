@@ -548,8 +548,6 @@ bool Setup::RunPostMessageLoop(const base::CommandLine& cmdline) {
   // Write out tracing and timing if requested.
   if (cmdline.HasSwitch(switches::kTime))
     PrintLongHelp(SummarizeTraces());
-  if (cmdline.HasSwitch(switches::kTracelog))
-    SaveTraces(cmdline.GetSwitchValuePath(switches::kTracelog));
 
   return true;
 }
@@ -1185,4 +1183,11 @@ bool Setup::FillOtherConfig(const base::CommandLine& cmdline, Err* err) {
   }
 
   return true;
+}
+
+SetupHandle::~SetupHandle() {
+  if (auto* cmdline = base::CommandLine::ForCurrentProcess();
+      cmdline->HasSwitch(switches::kTracelog)) {
+    SaveTraces(cmdline->GetSwitchValuePath(switches::kTracelog));
+  }
 }

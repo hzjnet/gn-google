@@ -37,6 +37,7 @@ class TraceItem {
     TRACE_CHECK_HEADER,   // One file.
     TRACE_CHECK_HEADERS,  // All files.
     TRACE_WALK_METADATA,
+    TRACE_WRITE_DEPS,
   };
 
   TraceItem(Type type, const std::string& name, std::thread::id thread_id);

@@ -220,6 +220,7 @@ std::string SummarizeTraces() {
       case TraceItem::TRACE_DEFINE_TARGET:
       case TraceItem::TRACE_ON_RESOLVED:
       case TraceItem::TRACE_WALK_METADATA:
+      case TraceItem::TRACE_WRITE_DEPS:
         break;  // Ignore these for the summary.
     }
   }
@@ -333,6 +334,9 @@ void SaveTraces(const base::FilePath& file_name) {
         break;
       case TraceItem::TRACE_WALK_METADATA:
         out << "\"walk_metadata\"";
+        break;
+      case TraceItem::TRACE_WRITE_DEPS:
+        out << "\"write_deps\"";
         break;
     }
 

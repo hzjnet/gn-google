@@ -4,9 +4,9 @@
 
 #include "gn/runtime_deps.h"
 
-#include <map>
-#include <set>
 #include <sstream>
+#include <unordered_map>
+#include <unordered_set>
 
 #include "base/command_line.h"
 #include "base/files/file_util.h"
@@ -33,21 +33,22 @@ using RuntimeDepsVector = std::vector<std::pair<OutputFile, const Target*>>;
 void AddIfNew(const OutputFile& output_file,
               const Target* source,
               RuntimeDepsVector* deps,
-              std::set<OutputFile>* found_file) {
-  if (found_file->find(output_file) != found_file->end())
-    return;  // Already there.
-  deps->push_back(std::make_pair(output_file, source));
+              std::unordered_set<OutputFile>* found_files) {
+  if (found_files->emplace(output_file).second) {
+    // This is a new file.
+    deps->emplace_back(output_file, source);
+  }
 }
 
 // Automatically converts a string that looks like a source to an OutputFile.
 void AddIfNew(const std::string& str,
               const Target* source,
               RuntimeDepsVector* deps,
-              std::set<OutputFile>* found_file) {
+              std::unordered_set<OutputFile>* found_files) {
   OutputFile output_file(
       RebasePath(str, source->settings()->build_settings()->build_dir(),
                  source->settings()->build_settings()->root_path_utf8()));
-  AddIfNew(output_file, source, deps, found_file);
+  AddIfNew(output_file, source, deps, found_files);
 }
 
 // To avoid duplicate traversals of targets, or duplicating output files that
@@ -59,10 +60,11 @@ void AddIfNew(const std::string& str,
 void RecursiveCollectRuntimeDeps(const Target* target,
                                  bool is_target_data_dep,
                                  RuntimeDepsVector* deps,
-                                 std::map<const Target*, bool>* seen_targets,
-                                 std::set<OutputFile>* found_files) {
-  const auto& found_seen_target = seen_targets->find(target);
-  if (found_seen_target != seen_targets->end()) {
+                                 std::unordered_map<const Target*, bool>* seen_targets,
+                                 std::unordered_set<OutputFile>* found_files) {
+  auto [found_seen_target, inserted] =
+      seen_targets->emplace(target, is_target_data_dep);
+  if (!inserted) {
     // Already visited.
     if (found_seen_target->second || !is_target_data_dep) {
       // Already visited as a data dep, or the current dep is not a data
@@ -71,8 +73,8 @@ void RecursiveCollectRuntimeDeps(const Target* target,
     }
     // In the else case, the previously seen target was a regular dependency
     // and we'll now process it as a data dependency.
+    found_seen_target->second = is_target_data_dep;
   }
-  (*seen_targets)[target] = is_target_data_dep;
 
   // Add the main output file for executables, shared libraries, and
   // loadable modules.
@@ -184,11 +186,9 @@ bool CollectRuntimeDepsFromFlag(const BuildSettings* build_settings,
       // Force the first output for shared-library-type linker outputs since
       // the dependency output files might not be the main output.
       CHECK(!target->computed_outputs().empty());
-      output_file =
-          OutputFile(target->computed_outputs()[0].value() + extension);
+      output_file.emplace(target->computed_outputs()[0].value() + extension);
     } else if (target->has_dependency_output_file()) {
-      output_file =
-          OutputFile(target->dependency_output_file().value() + extension);
+      output_file.emplace(target->dependency_output_file().value() + extension);
     } else {
       // If there is no dependency_output_file, this target's dependency output
       // is either a phony alias or was elided entirely (due to lack of real
@@ -199,7 +199,7 @@ bool CollectRuntimeDepsFromFlag(const BuildSettings* build_settings,
       output_file->value().append(extension);
     }
     if (output_file)
-      files_to_write->push_back(std::make_pair(*output_file, target));
+      files_to_write->emplace_back(*output_file, target);
   }
   return true;
 }
@@ -294,8 +294,8 @@ Multiple outputs
 
 RuntimeDepsVector ComputeRuntimeDeps(const Target* target) {
   RuntimeDepsVector result;
-  std::map<const Target*, bool> seen_targets;
-  std::set<OutputFile> found_files;
+  std::unordered_map<const Target*, bool> seen_targets;
+  std::unordered_set<OutputFile> found_files;
 
   // The initial target is not considered a data dependency so that actions's
   // outputs (if the current target is an action) are not automatically
@@ -314,9 +314,10 @@ bool WriteRuntimeDepsFilesIfNecessary(const BuildSettings* build_settings,
     return false;
 
   // Files scheduled by write_runtime_deps.
-  for (const Target* target : g_scheduler->GetWriteRuntimeDepsTargets()) {
-    files_to_write.push_back(
-        std::make_pair(target->write_runtime_deps_output(), target));
+  const auto targets = g_scheduler->GetWriteRuntimeDepsTargets();
+  files_to_write.reserve(files_to_write.size() + targets.size());
+  for (const Target* target : targets) {
+    files_to_write.emplace_back(target->write_runtime_deps_output(), target);
   }
 
   for (const auto& entry : files_to_write) {

@@ -221,4 +221,17 @@ class Setup {
   Setup& operator=(const Setup&) = delete;
 };
 
+class SetupHandle {
+ public:
+  SetupHandle() : setup_(new Setup()) {}
+  SetupHandle(const SetupHandle&) = delete;
+  SetupHandle& operator=(const SetupHandle&) = delete;
+  ~SetupHandle();
+
+  Setup* setup() { return setup_; }
+
+ private:
+  Setup* setup_ = nullptr;
+};
+
 #endif  // TOOLS_GN_SETUP_H_
