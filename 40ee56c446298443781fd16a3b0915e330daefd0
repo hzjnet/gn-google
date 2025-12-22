@@ -33,6 +33,42 @@
       "message": "Thanks!",
       "revId": "40ee56c446298443781fd16a3b0915e330daefd0",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0257401_56f75438",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4551233
+      },
+      "writtenOn": "2025-12-22T18:44:06Z",
+      "side": 1,
+      "message": "\u003e Thanks!",
+      "parentUuid": "fa7142ae_61515d9a",
+      "revId": "40ee56c446298443781fd16a3b0915e330daefd0",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0b6ed98_f77195be",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4551233
+      },
+      "writtenOn": "2025-12-22T18:44:06Z",
+      "side": 1,
+      "message": "\u003e It is simpler to revert all commits since they didn\u0027t change GN\u0027s behavior, and there are dependencies between some of the CLs. I\u0027ll try to find some time to rework the changes in a more acceptable form eventually.",
+      "parentUuid": "7743ed26_8c161917",
+      "revId": "40ee56c446298443781fd16a3b0915e330daefd0",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
