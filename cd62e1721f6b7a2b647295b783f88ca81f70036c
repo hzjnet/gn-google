@@ -16,6 +16,23 @@
       "message": "thanks!  I\u0027ve made the suggested changes",
       "revId": "cd62e1721f6b7a2b647295b783f88ca81f70036c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "522a4aa9_4c5eb236",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-01-05T09:34:03Z",
+      "side": 1,
+      "message": "Sorry, I had not seen the update. Thanks a lot!",
+      "revId": "cd62e1721f6b7a2b647295b783f88ca81f70036c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
