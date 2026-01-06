@@ -12,22 +12,16 @@
 #include "util/build_config.h"
 #include "util/test/test.h"
 
-namespace {
-
-struct ParseDepStringCase {
-  const char* cur_dir;
-  const char* str;
-  bool success;
-  const char* expected_dir;
-  const char* expected_name;
-  const char* expected_toolchain_dir;
-  const char* expected_toolchain_name;
-};
-
-}  // namespace
-
 TEST(Label, Resolve) {
-  ParseDepStringCase cases[] = {
+  const struct TestCase {
+    const char* cur_dir;
+    const char* str;
+    bool success;
+    const char* expected_dir;
+    const char* expected_name;
+    const char* expected_toolchain_dir;
+    const char* expected_toolchain_name;
+  } test_cases[] = {
       {"//chrome/", "", false, "", "", "", ""},
       {"//chrome/", "/", false, "", "", "", ""},
       {"//chrome/", ":", false, "", "", "", ""},
@@ -78,9 +72,7 @@ TEST(Label, Resolve) {
 
   Label default_toolchain(SourceDir("//t/"), "d");
 
-  for (size_t i = 0; i < std::size(cases); i++) {
-    const ParseDepStringCase& cur = cases[i];
-
+  for (const auto& cur : test_cases) {
     std::string location, name;
     Err err;
     Value v(nullptr, Value::STRING);

@@ -11,23 +11,17 @@
 #include "gn/value.h"
 #include "util/test/test.h"
 
-namespace {
-
-struct PatternCase {
-  const char* input;
-  bool success;
-
-  LabelPattern::Type type;
-  const char* dir;
-  const char* name;
-  const char* toolchain;
-};
-
-}  // namespace
-
 TEST(LabelPattern, PatternParse) {
   SourceDir current_dir("//foo/");
-  PatternCase cases[] = {
+  const struct TestCase {
+    const char* input;
+    bool success;
+
+    LabelPattern::Type type;
+    const char* dir;
+    const char* name;
+    const char* toolchain;
+  } test_cases[] = {
       // Missing stuff.
       {"", false, LabelPattern::MATCH, "", "", ""},
       {":", false, LabelPattern::MATCH, "", "", ""},
@@ -71,8 +65,7 @@ TEST(LabelPattern, PatternParse) {
 #endif
   };
 
-  for (size_t i = 0; i < std::size(cases); i++) {
-    const PatternCase& cur = cases[i];
+  for (const auto& cur : test_cases) {
     Err err;
     LabelPattern result = LabelPattern::GetPattern(
         current_dir, std::string_view(), Value(nullptr, cur.input), &err);
