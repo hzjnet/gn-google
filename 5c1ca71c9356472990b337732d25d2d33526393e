@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d501d346_fc2901f7",
+        "filename": "src/gn/function_rebase_path.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-06T05:55:10Z",
+      "side": 1,
+      "message": "Use std::move.",
+      "range": {
+        "startLine": 60,
+        "startChar": 11,
+        "endLine": 60,
+        "endChar": 18
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2ad4279b_eeedb4a3",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/function_rebase_path.cc",
+              "range": {
+                "startLine": 8,
+                "startChar": 0,
+                "endLine": 8,
+                "endChar": 0
+              },
+              "replacement": "#include \u003cutility\u003e\n"
+            },
+            {
+              "path": "src/gn/function_rebase_path.cc",
+              "range": {
+                "startLine": 60,
+                "startChar": 0,
+                "endLine": 61,
+                "endChar": 0
+              },
+              "replacement": "    *err \u003d std::move(new_err);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5c1ca71c9356472990b337732d25d2d33526393e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
