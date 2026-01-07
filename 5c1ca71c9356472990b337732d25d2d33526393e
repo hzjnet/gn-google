@@ -18,6 +18,23 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb4db216_b0926cd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-07T00:35:15Z",
+      "side": 1,
+      "message": "Thanks for the review!",
+      "revId": "5c1ca71c9356472990b337732d25d2d33526393e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d501d346_fc2901f7",
@@ -65,6 +82,30 @@
           ]
         }
       ],
+      "revId": "5c1ca71c9356472990b337732d25d2d33526393e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ca13c75_3d7b5531",
+        "filename": "src/gn/function_rebase_path.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-07T00:35:15Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "d501d346_fc2901f7",
+      "range": {
+        "startLine": 60,
+        "startChar": 11,
+        "endLine": 60,
+        "endChar": 18
+      },
       "revId": "5c1ca71c9356472990b337732d25d2d33526393e",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
