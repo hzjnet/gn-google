@@ -18,6 +18,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dca62af2_ccecdfee",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-01-13T23:03:24Z",
+      "side": 1,
+      "message": "Added to commit description.",
+      "parentUuid": "ac2abdd3_1c21298b",
+      "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b9449dc9_ce83fbec",
@@ -31,6 +49,24 @@
       "writtenOn": "2026-01-13T04:52:46Z",
       "side": 1,
       "message": "Could you add README.md explaining more about `conductor` directory?",
+      "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc1e7580_e09aeb89",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-01-13T23:03:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9449dc9_ce83fbec",
       "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
@@ -52,6 +88,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cae97a5_adb45380",
+        "filename": "conductor/product.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-01-13T23:03:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6cc6113_f12d402b",
+      "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68be7e9c_04188a21",
@@ -65,6 +119,24 @@
       "writtenOn": "2026-01-13T05:01:13Z",
       "side": 1,
       "message": "This is necessary file to commit?",
+      "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b374ea0c_9851a7f7",
+        "filename": "conductor/setup_state.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-01-13T23:03:24Z",
+      "side": 1,
+      "message": "Yes, this is how gemini knows that conductor was successfully setup",
+      "parentUuid": "68be7e9c_04188a21",
       "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
