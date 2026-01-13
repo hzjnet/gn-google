@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ac2abdd3_1c21298b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-13T05:01:13Z",
+      "side": 1,
+      "message": "Are these files all written by you? Or generated automatically?\nIf so, how did you generate these files and what kind of manual edit you applied?",
+      "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b9449dc9_ce83fbec",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -14,6 +31,40 @@
       "writtenOn": "2026-01-13T04:52:46Z",
       "side": 1,
       "message": "Could you add README.md explaining more about `conductor` directory?",
+      "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6cc6113_f12d402b",
+        "filename": "conductor/product.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-13T05:01:13Z",
+      "side": 1,
+      "message": "Where is primary goals defined?",
+      "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68be7e9c_04188a21",
+        "filename": "conductor/setup_state.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-13T05:01:13Z",
+      "side": 1,
+      "message": "This is necessary file to commit?",
       "revId": "7ce37d3498ae38ba24e5830e5256ce98295889cd",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
