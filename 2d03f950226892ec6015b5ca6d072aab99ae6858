@@ -33,6 +33,23 @@
       "message": "I didn\u0027t realize that the author of the original CL wasn\u0027t an owner. Adding @agrieve@google.com as a code owner. 😊",
       "revId": "2d03f950226892ec6015b5ca6d072aab99ae6858",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f06da413_0f38d37f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3792874
+      },
+      "writtenOn": "2026-01-14T12:19:00Z",
+      "side": 1,
+      "message": "FWIW, this change looks correct to me. I checked https://gn-review.googlesource.com/c/gn/+/19140, and it doesn\u0027t look like making an empty queue a failure was intentional. Thanks for the fix!",
+      "revId": "2d03f950226892ec6015b5ca6d072aab99ae6858",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
