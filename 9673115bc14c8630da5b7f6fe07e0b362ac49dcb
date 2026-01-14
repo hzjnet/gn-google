@@ -16,6 +16,24 @@
       "message": "This breaks ANGLE MSVC build when I try rolling it here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/7460967/3/DEPS#576\n\nE.g. failures:\nhttps://ci.chromium.org/ui/p/angle/builders/try/win-msvc-compile/28723/overview\nhttps://ci.chromium.org/ui/p/angle/builders/try/win-msvc-dbg-compile/28756/overview\nhttps://ci.chromium.org/ui/p/angle/builders/try/win-msvc-x86-compile/28751/overview\nhttps://ci.chromium.org/ui/p/angle/builders/try/win-msvc-x86-dbg-compile/28761/overview\nhttps://ci.chromium.org/ui/p/angle/builders/try/winuwp-compile/28477/overview\nhttps://ci.chromium.org/ui/p/angle/builders/try/winuwp-dbg-compile/28503/overview\n\n\"gn gen\" returns ERRORLEVEL 1 with no explanation.",
       "revId": "9673115bc14c8630da5b7f6fe07e0b362ac49dcb",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88ebfb36_e80287c8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3792874
+      },
+      "writtenOn": "2026-01-14T17:27:39Z",
+      "side": 1,
+      "message": "I think https://gn-review.googlesource.com/c/gn/+/20840 might fix that.",
+      "parentUuid": "b4d58582_4fccafb1",
+      "revId": "9673115bc14c8630da5b7f6fe07e0b362ac49dcb",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
