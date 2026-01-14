@@ -16,6 +16,23 @@
       "message": "PTAL. In V8 we have a few builds that don\u0027t schedule any work in `WriteRuntimeDepsFilesIfNecessary`, so when it now calls `g_scheduler-\u003eRun()`, it returns false causing `gen gen --check` to finish with return code 1.",
       "revId": "2d03f950226892ec6015b5ca6d072aab99ae6858",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bee79140_0f75e3e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4585469
+      },
+      "writtenOn": "2026-01-14T11:55:08Z",
+      "side": 1,
+      "message": "I didn\u0027t realize that the author of the original CL wasn\u0027t an owner. Adding @agrieve@google.com as a code owner. 😊",
+      "revId": "2d03f950226892ec6015b5ca6d072aab99ae6858",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
