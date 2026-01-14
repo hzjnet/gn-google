@@ -16,6 +16,24 @@
       "message": "Could you add objective in bug and why did you choose flatbuffer for that goal?",
       "revId": "66cd546f2e29fedad2d85feb147a4eb53ae5248a",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc0f76a0_c44a1c63",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-01-14T03:51:21Z",
+      "side": 1,
+      "message": "Added to bug.\n\nThe objective here is to allow siso to read the output of GN by skipping parsing of ninja files entirely.\n\nOur requirements mean that we need a zero-copy file format. The go-to formats for this are flatbuffers and CapnProto. I chose flatbuffers because while neither are designed for parallel writes, flatbuffer\u0027s wire format is much simpler, and thus it\u0027s much easier to make custom logic to write something matching the wire format in parallel.",
+      "parentUuid": "99a95141_4c619b03",
+      "revId": "66cd546f2e29fedad2d85feb147a4eb53ae5248a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
