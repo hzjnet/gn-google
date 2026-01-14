@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99a95141_4c619b03",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-14T03:07:20Z",
+      "side": 1,
+      "message": "Could you add objective in bug and why did you choose flatbuffer for that goal?",
+      "revId": "66cd546f2e29fedad2d85feb147a4eb53ae5248a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
