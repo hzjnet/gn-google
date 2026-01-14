@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b39feed_bca772ff",
+        "filename": "conductor/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-14T01:56:28Z",
+      "side": 1,
+      "message": "Leave link to https://github.com/gemini-cli-extensions/conductor in the README.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 9
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0f194671_ded66234",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "conductor/README.md",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 3,
+                "endChar": 0
+              },
+              "replacement": "Conductor (https://github.com/gemini-cli-extensions/conductor) is a Gemini CLI\nextension to better support working on brownfield projects.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ceab196f7beb5bba1b8c992efcbcb4fc98fe30a6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
