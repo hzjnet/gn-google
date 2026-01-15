@@ -34,6 +34,24 @@
       "parentUuid": "b4d58582_4fccafb1",
       "revId": "9673115bc14c8630da5b7f6fe07e0b362ac49dcb",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b5bae41_d65bf52c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3792874
+      },
+      "writtenOn": "2026-01-15T08:18:50Z",
+      "side": 1,
+      "message": "@ynovikov@google.com: The CL above landed at https://gn.googlesource.com/gn.git/+/103f8b437f5e791e0aef9d5c372521a5d675fabb and rolled into Chromium at https://crrev.com/1569227. Let me know if that didn\u0027t fix the issue. Thanks.",
+      "parentUuid": "88ebfb36_e80287c8",
+      "revId": "9673115bc14c8630da5b7f6fe07e0b362ac49dcb",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
