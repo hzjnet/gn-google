@@ -52,6 +52,24 @@
       "parentUuid": "88ebfb36_e80287c8",
       "revId": "9673115bc14c8630da5b7f6fe07e0b362ac49dcb",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df88f6d8_d1114e2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4585472
+      },
+      "writtenOn": "2026-01-15T15:37:16Z",
+      "side": 1,
+      "message": "Seems to be passing with 103f8b437f5e791e0aef9d5c372521a5d675fabb here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/7484910/2/DEPS#576\nhttps://ci.chromium.org/ui/p/angle/builders/try/win-msvc-compile/28782/overview\nhttps://ci.chromium.org/ui/p/angle/builders/try/win-msvc-x86-compile/28786/overview\nhttps://ci.chromium.org/ui/p/angle/builders/try/winuwp-compile/28536/overview\n\nThanks for the fix!",
+      "parentUuid": "3b5bae41_d65bf52c",
+      "revId": "9673115bc14c8630da5b7f6fe07e0b362ac49dcb",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
