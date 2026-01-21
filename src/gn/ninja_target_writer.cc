@@ -627,5 +627,24 @@ void NinjaTargetWriter::WriteStampOrPhonyForTarget(
     out_ << " ||";
     path_output_.WriteFiles(out_, order_only_deps);
   }
+  WriteValidations();
   out_ << std::endl;
+}
+
+void NinjaTargetWriter::WriteValidations() {
+  const LabelTargetVector& validations = target_->validations();
+  if (validations.empty())
+    return;
+
+  bool first = true;
+  for (const auto& pair : validations) {
+    if (pair.ptr->has_dependency_output()) {
+      if (first) {
+        out_ << " |@";
+        first = false;
+      }
+      out_ << " ";
+      WriteOutput(pair.ptr->dependency_output());
+    }
+  }
 }
