@@ -375,4 +375,55 @@ TEST_F(BuilderTest, ConfigLoad) {
   EXPECT_TRUE(loader_->HasLoadedOne(SourceFile("//b/BUILD.gn")));
 }
 
+// Tests that validations dependencies don't block resolution but do trigger
+// loads and waiting for definition.
+TEST_F(BuilderTest, Validations) {
+  DefineToolchain();
+  SourceDir toolchain_dir = settings_.toolchain_label().dir();
+  std::string toolchain_name = settings_.toolchain_label().name();
+
+  Label a_label(SourceDir("//a/"), "a", toolchain_dir, toolchain_name);
+  Label b_label(SourceDir("//b/"), "b", toolchain_dir, toolchain_name);
+
+  // Define A with validatation B.
+  Target* a = new Target(&settings_, a_label);
+  a->set_output_type(Target::ACTION);
+  a->visibility().SetPublic();
+  a->validations().push_back(LabelTargetPair(b_label));
+  builder_.ItemDefined(std::unique_ptr<Item>(a));
+
+  // Should have requested that B is loaded.
+  EXPECT_TRUE(loader_->HasLoadedOne(SourceFile("//b/BUILD.gn")));
+
+  // A should NOT be resolved yet (waiting for B definition).
+  BuilderRecord* a_record = builder_.GetRecord(a_label);
+  EXPECT_TRUE(a_record);
+  EXPECT_FALSE(a_record->resolved());
+
+  // Define B. B depends on A.
+  Target* b = new Target(&settings_, b_label);
+  b->set_output_type(Target::ACTION);
+  b->visibility().SetPublic();
+  b->private_deps().push_back(LabelTargetPair(a_label));
+  builder_.ItemDefined(std::unique_ptr<Item>(b));
+
+  scheduler().Run();
+
+  // Now both should be resolved.
+  EXPECT_TRUE(a_record->resolved());
+  BuilderRecord* b_record = builder_.GetRecord(b_label);
+  EXPECT_TRUE(b_record->resolved());
+
+  // There should be no cycle.
+  Err err;
+  EXPECT_TRUE(builder_.CheckForBadItems(&err));
+  if (err.has_error()) {
+    fprintf(stderr, "CheckForBadItems error: %s\n", err.message().c_str());
+  }
+
+  // A should have B in its validations.
+  ASSERT_EQ(1u, a->validations().size());
+  EXPECT_EQ(b, a->validations()[0].ptr);
+}
+
 }  // namespace gn_builder_unittest
