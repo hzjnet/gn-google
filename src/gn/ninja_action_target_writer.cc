@@ -108,6 +108,8 @@ void NinjaActionTargetWriter::Run() {
       path_output_.WriteFiles(out_, order_only_deps);
     }
 
+    WriteValidations();
+
     out_ << std::endl;
     if (target_->action_values().has_depfile()) {
       WriteDepfile(SourceFile());
@@ -235,6 +237,7 @@ void NinjaActionTargetWriter::WriteSourceRules(
       out_ << " ||";
       path_output_.WriteFiles(out_, order_only_deps);
     }
+    WriteValidations();
     out_ << std::endl;
 
     // Response files require a unique name be defined.

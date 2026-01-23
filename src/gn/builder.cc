@@ -253,6 +253,7 @@ bool Builder::TargetDefined(BuilderRecord* record, Err* err) {
   if (!AddDeps(record, target->public_deps(), err) ||
       !AddDeps(record, target->private_deps(), err) ||
       !AddDeps(record, target->data_deps(), err) ||
+      !AddDeps(record, target->validations(), err) ||
       !AddDeps(record, target->configs().vector(), err) ||
       !AddDeps(record, target->all_dependent_configs(), err) ||
       !AddDeps(record, target->public_configs(), err) ||
@@ -501,6 +502,7 @@ bool Builder::ResolveItem(BuilderRecord* record, Err* err) {
     if (!ResolveDeps(&target->public_deps(), err) ||
         !ResolveDeps(&target->private_deps(), err) ||
         !ResolveDeps(&target->data_deps(), err) ||
+        !ResolveDeps(&target->validations(), err) ||
         !ResolveConfigs(&target->configs(), err) ||
         !ResolveConfigs(&target->all_dependent_configs(), err) ||
         !ResolveConfigs(&target->public_configs(), err) ||
