@@ -2212,6 +2212,20 @@ Example
   }
 )";
 
+const char kValidations[] = "validations";
+const char kValidations_HelpShort[] =
+    "validations: [label list] Validation dependencies.";
+const char kValidations_Help[] =
+    R"(validations: Validation dependencies.
+
+  A list of target labels.
+
+  "Validations" are a list of targets that should be built if the current
+  target is built, but which do not effect the result of the current target.
+  This is used to declare things like static analysis, style checking, or
+  other checks that should run in parallel with the build.
+)";
+
 const char kVisibility[] = "visibility";
 const char kVisibility_HelpShort[] =
     "visibility: [label list] A list of labels that can depend on a target.";
