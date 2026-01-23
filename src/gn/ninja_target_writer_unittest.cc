@@ -28,6 +28,12 @@ class TestingNinjaTargetWriter : public NinjaTargetWriter {
     return NinjaTargetWriter::WriteInputDepsStampOrPhonyAndGetDep(
         additional_hard_deps, num_stamp_uses);
   }
+
+  void WriteStampOrPhonyForTarget(
+      const std::vector<OutputFile>& deps,
+      const std::vector<OutputFile>& order_only_deps) {
+    NinjaTargetWriter::WriteStampOrPhonyForTarget(deps, order_only_deps);
+  }
 };
 
 }  // namespace
@@ -296,7 +302,39 @@ TEST(NinjaTargetWriter, WriteInputDepsStampOrPhonyAndGetDepWithToolchainDeps) {
 
   // Since there is more than one dependency, a stamp file will be returned
   // and the rule for the stamp file will be written to the stream.
-  ASSERT_EQ(1u, dep.size());
-  EXPECT_EQ("phony/foo/setup", dep[0].value());
-  EXPECT_EQ("", stream.str());
+    ASSERT_EQ(1u, dep.size());
+    EXPECT_EQ("phony/foo/setup", dep[0].value());
+    EXPECT_EQ("", stream.str());
+  }
+
+  TEST(NinjaTargetWriter, WriteValidations) {
+    TestWithScope setup;
+    setup.build_settings()->set_no_stamp_files(false);
+    Err err;
+
+  Target validation_target(setup.settings(), Label(SourceDir("//foo/"), "val"));
+  validation_target.set_output_type(Target::ACTION);
+  validation_target.visibility().SetPublic();
+  validation_target.SetToolchain(setup.toolchain());
+  validation_target.action_values().set_script(SourceFile("//foo/script.py"));
+  ASSERT_TRUE(validation_target.OnResolved(&err));
+
+  Target target(setup.settings(), Label(SourceDir("//foo/"), "target"));
+  target.set_output_type(Target::GROUP);
+  target.visibility().SetPublic();
+  target.SetToolchain(setup.toolchain());
+  target.validations().push_back(LabelTargetPair(&validation_target));
+  ASSERT_TRUE(target.OnResolved(&err));
+
+  std::ostringstream stream;
+  TestingNinjaTargetWriter writer(&target, setup.toolchain(), stream);
+
+  std::vector<OutputFile> deps;
+  std::vector<OutputFile> order_only;
+  deps.push_back(OutputFile("obj/foo/target.stamp"));
+
+  writer.WriteStampOrPhonyForTarget(deps, order_only);
+
+  std::string out = stream.str();
+  EXPECT_NE(std::string::npos, out.find("|@ obj/foo/val.stamp"));
 }
