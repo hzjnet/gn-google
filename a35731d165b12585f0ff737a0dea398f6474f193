@@ -37,6 +37,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bdf79ade_fa664403",
+        "filename": "src/gn/ninja_target_writer.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1003017
+      },
+      "writtenOn": "2026-01-26T02:22:11Z",
+      "side": 1,
+      "message": "I\u0027m not really familiar with the GN implication. But, is there any validation without dependency output?",
+      "range": {
+        "startLine": 639,
+        "startChar": 0,
+        "endLine": 645,
+        "endChar": 3
+      },
+      "revId": "a35731d165b12585f0ff737a0dea398f6474f193",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "87bf09e7_4db80ab8",
         "filename": "src/gn/variables.cc",
         "patchSetId": 3
