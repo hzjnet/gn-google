@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "00b8c018_c10b6289",
+        "filename": "docs/reference.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-28T23:15:32Z",
+      "side": 1,
+      "message": "Agree. Actually there are many more changes I didn\u0027t push which confused me. I generated this file by running ```out/gn help --markdown all \u003e docs/reference.md```",
+      "parentUuid": "b2d6cd2f_554f097c",
+      "range": {
+        "startLine": 1334,
+        "startChar": 0,
+        "endLine": 1334,
+        "endChar": 4
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8dddaf24_f43fcc40",
         "filename": "src/gn/builder_unittest.cc",
         "patchSetId": 4
@@ -112,6 +136,30 @@
       "writtenOn": "2026-01-28T15:14:45Z",
       "side": 1,
       "message": "Is there a case where has_dependency_output becomes false for validations deps?",
+      "range": {
+        "startLine": 641,
+        "startChar": 18,
+        "endLine": 641,
+        "endChar": 39
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc39c1ec_f9cf1ab2",
+        "filename": "src/gn/ninja_target_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-28T23:15:32Z",
+      "side": 1,
+      "message": "Yes, if a group has the lint targets and they are behind conditionals this can happen. For example in `build_webgui.gn` in Chromium we have targets that point to this group:\n```\n  group(\"lint\") {\n    deps \u003d []\n    if (enable_type_aware_eslint_checks) {\n      deps +\u003d [ \":lint_ts\" ]\n    }\n\n    if (defined(invoker.css_files)) {\n      deps +\u003d [ \":lint_css\" ]\n    }\n  }\n```",
+      "parentUuid": "7c3a6400_66634940",
       "range": {
         "startLine": 641,
         "startChar": 18,
