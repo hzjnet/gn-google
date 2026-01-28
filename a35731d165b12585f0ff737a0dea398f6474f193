@@ -176,6 +176,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcdecd91_f05f88dc",
+        "filename": "src/gn/builder.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1002832
+      },
+      "writtenOn": "2026-01-28T18:12:41Z",
+      "side": 1,
+      "message": "Thanks!  I tried patchset #4 and AFAICT everything worked well for me.",
+      "parentUuid": "eae298e4_8bff66c8",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 53
+      },
+      "revId": "a35731d165b12585f0ff737a0dea398f6474f193",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bdf79ade_fa664403",
