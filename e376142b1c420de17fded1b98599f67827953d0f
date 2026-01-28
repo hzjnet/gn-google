@@ -16,6 +16,23 @@
       "message": "Hi Andrew I saw your name mentioned in this thread: https://groups.google.com/a/chromium.org/g/gn-dev/c/BIqH2p23Fk0\n\nIt would be great to have your input on this CL.",
       "revId": "e376142b1c420de17fded1b98599f67827953d0f",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b460a043_b23ce0c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000055
+      },
+      "writtenOn": "2026-01-28T14:48:20Z",
+      "side": 1,
+      "message": "I think you have enough reviewers here already, so removing myself, but thanks for working on this!",
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
