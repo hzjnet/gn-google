@@ -154,6 +154,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eae298e4_8bff66c8",
+        "filename": "src/gn/builder.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-28T12:08:04Z",
+      "side": 1,
+      "message": "I looked into this today. Removing the `AddDeps` call works as long as the targets are declared in one file because then they are \"defined\" at the same time. If they are in separate files this results in a `Record not found` error. I solved this by making validation dependencies special and not result in cycles. I checked out the CL you linked above, enabled clippy and build. Seems to have worked but maybe you could try again if you find time.",
+      "parentUuid": "989c9a43_9b7a1d6c",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 53
+      },
+      "revId": "a35731d165b12585f0ff737a0dea398f6474f193",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bdf79ade_fa664403",
         "filename": "src/gn/ninja_target_writer.cc",
         "patchSetId": 3
@@ -264,6 +288,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9e9ed25_f71f2e64",
+        "filename": "src/gn/variables.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 2215,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-28T12:08:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87bf09e7_4db80ab8",
+      "revId": "a35731d165b12585f0ff737a0dea398f6474f193",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2bde1efe_12e14669",
@@ -318,6 +360,48 @@
         "endLine": 2226,
         "endChar": 58
       },
+      "revId": "a35731d165b12585f0ff737a0dea398f6474f193",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98cf5a8a_f1799eee",
+        "filename": "src/gn/variables.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 2226,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-28T12:08:04Z",
+      "side": 1,
+      "message": "Both Ninja and Siso schedule validation actions as separate top level targets. That means if target A has validation B and C depends on A then C can run right after A is built and doesn\u0027t have to wait for B.\n\nEven if the build is interrupted after target A is built Ninja and Siso will do the right thing, i.e. build the validation target B.\n\nYou can find the logic here: \nhttps://github.com/ninja-build/ninja/blob/master/src/build.cc#L684-L694\nEven if a target is \u0027clean\u0027, i.e. doesn\u0027t need to be build, its validations are added as top level targets. \n\nI also verified this experimentally by:\n1. Building a target and its validation. \n2. Deleting only the validation output.\n3. Re-running the build and verifying that only the validation was run.\n\nHope this helps!",
+      "parentUuid": "f1a889c6_b34629a4",
+      "range": {
+        "startLine": 2226,
+        "startChar": 20,
+        "endLine": 2226,
+        "endChar": 58
+      },
+      "revId": "a35731d165b12585f0ff737a0dea398f6474f193",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1fbc1a03_29fa5e80",
+        "filename": "src/gn/variables.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 2226,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-28T12:08:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bde1efe_12e14669",
       "revId": "a35731d165b12585f0ff737a0dea398f6474f193",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
