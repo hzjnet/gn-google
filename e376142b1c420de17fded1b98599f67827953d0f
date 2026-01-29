@@ -264,6 +264,30 @@
       },
       "revId": "e376142b1c420de17fded1b98599f67827953d0f",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "750bbabd_684451a8",
+        "filename": "src/gn/ninja_target_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-29T06:15:17Z",
+      "side": 1,
+      "message": "L363 checks if `validations` is empty. The case I check for here is this:\nYou have the group as in the last comment called `lint` and something like \n```action(\"a\") { validations \u003d [\":lint\"] }``` \nThen",
+      "parentUuid": "660e2605_7334429e",
+      "range": {
+        "startLine": 641,
+        "startChar": 18,
+        "endLine": 641,
+        "endChar": 39
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
