@@ -312,6 +312,30 @@
       },
       "revId": "e376142b1c420de17fded1b98599f67827953d0f",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37ebd3c4_12df25ab",
+        "filename": "src/gn/ninja_target_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-29T06:24:18Z",
+      "side": 1,
+      "message": "Sorry, the rest of the message vanished somehow. \nThen `(a.)validations.empty \u003d\u003d false` \u0026\u0026 `(lint.)has_dependency_output()` is false.",
+      "parentUuid": "41f1db3e_fdf0a712",
+      "range": {
+        "startLine": 641,
+        "startChar": 18,
+        "endLine": 641,
+        "endChar": 39
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
