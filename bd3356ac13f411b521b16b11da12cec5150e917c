@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50af0023_ca8a2950",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000397
+      },
+      "writtenOn": "2026-01-29T23:53:11Z",
+      "side": 1,
+      "message": "FYI:  The `validations` don\u0027t show up in the output of commands like `gn desc`.",
+      "revId": "bd3356ac13f411b521b16b11da12cec5150e917c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
