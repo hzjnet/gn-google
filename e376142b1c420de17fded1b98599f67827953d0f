@@ -360,6 +360,30 @@
       },
       "revId": "e376142b1c420de17fded1b98599f67827953d0f",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e6805c3_5c1405e9",
+        "filename": "src/gn/ninja_target_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-29T06:52:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a6df99c_b6c13197",
+      "range": {
+        "startLine": 641,
+        "startChar": 18,
+        "endLine": 641,
+        "endChar": 39
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
