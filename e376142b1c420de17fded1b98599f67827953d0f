@@ -336,6 +336,30 @@
       },
       "revId": "e376142b1c420de17fded1b98599f67827953d0f",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a6df99c_b6c13197",
+        "filename": "src/gn/ninja_target_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-29T06:49:54Z",
+      "side": 1,
+      "message": "With offline discussion I got that this happens if empty group target is in validations. So it is good to leave comment about that case here.",
+      "parentUuid": "37ebd3c4_12df25ab",
+      "range": {
+        "startLine": 641,
+        "startChar": 18,
+        "endLine": 641,
+        "endChar": 39
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
