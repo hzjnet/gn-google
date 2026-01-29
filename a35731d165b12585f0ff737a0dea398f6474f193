@@ -18,6 +18,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "36499abb_5bd3159d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-29T04:46:30Z",
+      "side": 1,
+      "message": "Does the bug footer count?",
+      "parentUuid": "3e817b1f_abbf44c5",
+      "revId": "a35731d165b12585f0ff737a0dea398f6474f193",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "de6f200d_2b2ec8c1",
@@ -285,6 +303,30 @@
       "side": 1,
       "message": "Thank you both for looking into this! And thank you for trying out the change and sharing your findings. This is super helpful!\n\nI played around with this yesterday to find out whether we need the check. \nGN does not allow actions without outputs. But, maybe contrieved, given a `group` that conditionally depends on linters and a target having `validations \u003d [\":group\"]` and all conditionals evaluating to `false` can result in iterating over the group and having no outputs. Ninja can handle a dangling `|@` though. I\u0027ll change the code a bit so the logic does not look so separated.",
       "parentUuid": "f326f807_5adc5543",
+      "range": {
+        "startLine": 639,
+        "startChar": 0,
+        "endLine": 645,
+        "endChar": 3
+      },
+      "revId": "a35731d165b12585f0ff737a0dea398f6474f193",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8e8cb3d_0bb562dd",
+        "filename": "src/gn/ninja_target_writer.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-29T04:46:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "868af126_a1ec205a",
       "range": {
         "startLine": 639,
         "startChar": 0,

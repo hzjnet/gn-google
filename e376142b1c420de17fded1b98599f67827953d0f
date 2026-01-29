@@ -82,6 +82,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d548fc0_1e9391a4",
+        "filename": "docs/reference.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-29T04:46:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00b8c018_c10b6289",
+      "range": {
+        "startLine": 1334,
+        "startChar": 0,
+        "endLine": 1334,
+        "endChar": 4
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8dddaf24_f43fcc40",
@@ -123,6 +147,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "26cbf6ac_1541cc3c",
+        "filename": "src/gn/builder_unittest.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-29T04:46:30Z",
+      "side": 1,
+      "message": "Good! Done 😊",
+      "parentUuid": "8dddaf24_f43fcc40",
+      "range": {
+        "startLine": 420,
+        "startChar": 0,
+        "endLine": 422,
+        "endChar": 3
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c3a6400_66634940",
@@ -160,6 +208,30 @@
       "side": 1,
       "message": "Yes, if a group has the lint targets and they are behind conditionals this can happen. For example in `build_webgui.gn` in Chromium we have targets that point to this group:\n```\n  group(\"lint\") {\n    deps \u003d []\n    if (enable_type_aware_eslint_checks) {\n      deps +\u003d [ \":lint_ts\" ]\n    }\n\n    if (defined(invoker.css_files)) {\n      deps +\u003d [ \":lint_css\" ]\n    }\n  }\n```",
       "parentUuid": "7c3a6400_66634940",
+      "range": {
+        "startLine": 641,
+        "startChar": 18,
+        "endLine": 641,
+        "endChar": 39
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5eb49fb2_ef8ba9f6",
+        "filename": "src/gn/ninja_target_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-01-29T04:46:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc39c1ec_f9cf1ab2",
       "range": {
         "startLine": 641,
         "startChar": 18,
