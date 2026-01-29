@@ -1,0 +1,213 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8a036f4_f9c07980",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-29T05:26:22Z",
+      "side": 1,
+      "message": "Just writing issue number like `Bug: 478798763` works.",
+      "range": {
+        "startLine": 17,
+        "startChar": 5,
+        "endLine": 17,
+        "endChar": 27
+      },
+      "revId": "f1fd1b3995053b9946db1ae7293fe0daedbe8f73",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90f6cb6c_9e1e6195",
+        "filename": "src/gn/builder_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-29T05:26:22Z",
+      "side": 1,
+      "message": "Can we use make_unique?",
+      "range": {
+        "startLine": 393,
+        "startChar": 14,
+        "endLine": 393,
+        "endChar": 17
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "8604ce0d_85efa4f8",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/builder_unittest.cc",
+              "range": {
+                "startLine": 393,
+                "startChar": 0,
+                "endLine": 394,
+                "endChar": 0
+              },
+              "replacement": "  auto a \u003d std::make_unique\u003cTarget\u003e(\u0026settings_, a_label);\n"
+            },
+            {
+              "path": "src/gn/builder_unittest.cc",
+              "range": {
+                "startLine": 397,
+                "startChar": 0,
+                "endLine": 398,
+                "endChar": 0
+              },
+              "replacement": "  Target* a_ptr \u003d a.get();\n  builder_.ItemDefined(std::move(a));\n"
+            },
+            {
+              "path": "src/gn/builder_unittest.cc",
+              "range": {
+                "startLine": 427,
+                "startChar": 0,
+                "endLine": 429,
+                "endChar": 0
+              },
+              "replacement": "  ASSERT_EQ(1u, a_ptr-\u003evalidations().size());\n  EXPECT_EQ(b, a_ptr-\u003evalidations()[0].ptr);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f1fd1b3995053b9946db1ae7293fe0daedbe8f73",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f2943b6_fe189c8c",
+        "filename": "src/gn/builder_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-29T05:26:22Z",
+      "side": 1,
+      "message": "Same.",
+      "range": {
+        "startLine": 408,
+        "startChar": 14,
+        "endLine": 408,
+        "endChar": 17
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "3d49247f_84963222",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/builder_unittest.cc",
+              "range": {
+                "startLine": 408,
+                "startChar": 0,
+                "endLine": 409,
+                "endChar": 0
+              },
+              "replacement": "  auto b \u003d std::make_unique\u003cTarget\u003e(\u0026settings_, b_label);\n"
+            },
+            {
+              "path": "src/gn/builder_unittest.cc",
+              "range": {
+                "startLine": 412,
+                "startChar": 0,
+                "endLine": 413,
+                "endChar": 0
+              },
+              "replacement": "  Target* b_ptr \u003d b.get();\n  builder_.ItemDefined(std::unique_ptr\u003cItem\u003e(b.release()));\n"
+            },
+            {
+              "path": "src/gn/builder_unittest.cc",
+              "range": {
+                "startLine": 428,
+                "startChar": 0,
+                "endLine": 429,
+                "endChar": 0
+              },
+              "replacement": "  EXPECT_EQ(b_ptr, a-\u003evalidations()[0].ptr);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f1fd1b3995053b9946db1ae7293fe0daedbe8f73",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c691755_c242bf15",
+        "filename": "src/gn/ninja_target_writer_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-29T05:26:22Z",
+      "side": 1,
+      "message": "Can we use EXPECT_EQ to check entire output of ninja build file?",
+      "range": {
+        "startLine": 341,
+        "startChar": 2,
+        "endLine": 341,
+        "endChar": 11
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "61a661cd_36ffff6e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/ninja_target_writer_unittest.cc",
+              "range": {
+                "startLine": 340,
+                "startChar": 0,
+                "endLine": 342,
+                "endChar": 0
+              },
+              "replacement": "  EXPECT_EQ(\"build obj/foo/target.stamp: stamp |@ obj/foo/val.stamp\\n\",\n            stream.str());\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f1fd1b3995053b9946db1ae7293fe0daedbe8f73",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b5ca3c0_5488337c",
+        "filename": "src/gn/ninja_target_writer_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-29T05:26:22Z",
+      "side": 1,
+      "message": "Same.",
+      "range": {
+        "startLine": 390,
+        "startChar": 2,
+        "endLine": 390,
+        "endChar": 11
+      },
+      "revId": "f1fd1b3995053b9946db1ae7293fe0daedbe8f73",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}

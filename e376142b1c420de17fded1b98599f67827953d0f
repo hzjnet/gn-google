@@ -240,6 +240,30 @@
       },
       "revId": "e376142b1c420de17fded1b98599f67827953d0f",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "660e2605_7334429e",
+        "filename": "src/gn/ninja_target_writer.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-01-29T05:26:22Z",
+      "side": 1,
+      "message": "If you meant this happens if `deps` is empty, that is handled in L636? Or the targets `lint_ts` or `lint_css` somehow has no outputs?",
+      "parentUuid": "5eb49fb2_ef8ba9f6",
+      "range": {
+        "startLine": 641,
+        "startChar": 18,
+        "endLine": 641,
+        "endChar": 39
+      },
+      "revId": "e376142b1c420de17fded1b98599f67827953d0f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
