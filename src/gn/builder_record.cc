@@ -76,7 +76,8 @@ void BuilderRecord::AddGenDep(BuilderRecord* record) {
 }
 
 void BuilderRecord::AddValidationDep(BuilderRecord* record) {
-  if (all_deps_.add(record) && !record->item()) {
+  all_deps_.add(record);
+  if (validation_deps_.add(record) && !record->item()) {
     unresolved_count_ += 1;
     record->waiting_on_definition_.add(this);
   }

@@ -529,7 +529,7 @@ bool Builder::ResolveItem(BuilderRecord* record, Err* err) {
     if (!ResolveDeps(&target->public_deps(), err) ||
         !ResolveDeps(&target->private_deps(), err) ||
         !ResolveDeps(&target->data_deps(), err) ||
-        !ResolveDeps(&target->validations(), err) ||
+        !ResolveValidationDeps(&target->validations(), err) ||
         !ResolveConfigs(&target->configs(), err) ||
         !ResolveConfigs(&target->all_dependent_configs(), err) ||
         !ResolveConfigs(&target->public_configs(), err) ||
@@ -586,7 +586,19 @@ void Builder::CompleteAsyncTargetResolution(BuilderRecord* record,
 bool Builder::CompleteItemResolution(BuilderRecord* record, Err* err) {
   record->set_resolved(true);
 
-  if (record->should_generate() && resolved_and_generated_callback_)
+  bool should_write = record->should_generate();
+  if (should_write) {
+    // Check if any validations are not yet resolved. If so, we can't write this
+    // target yet because we need the output paths from the validations.
+    for (auto* validation : record->validation_deps()) {
+      if (!validation->resolved()) {
+        should_write = false;
+        validation->waiting_on_resolution_for_writing().add(record);
+      }
+    }
+  }
+
+  if (should_write && resolved_and_generated_callback_)
     resolved_and_generated_callback_(record);
 
   // Recursively update everybody waiting on this item to be resolved.
@@ -599,6 +611,24 @@ bool Builder::CompleteItemResolution(BuilderRecord* record, Err* err) {
     }
   }
   record->waiting_on_resolution().clear();
+
+  // Check for any targets waiting on this one for writing.
+  const BuilderRecordSet waiting_for_writing =
+      record->waiting_on_resolution_for_writing();
+  for (auto it = waiting_for_writing.begin(); it.valid(); ++it) {
+    BuilderRecord* waiting = *it;
+    bool ready = true;
+    for (auto* validation : waiting->validation_deps()) {
+      if (!validation->resolved()) {
+        ready = false;
+        break;
+      }
+    }
+    if (ready && resolved_and_generated_callback_)
+      resolved_and_generated_callback_(waiting);
+  }
+  record->waiting_on_resolution_for_writing().clear();
+
   return true;
 }
 
@@ -610,6 +640,34 @@ bool Builder::ResolveDeps(LabelTargetVector* deps, Err* err) {
         cur.label, cur.origin, BuilderRecord::ITEM_TARGET, err);
     if (!record)
       return false;
+    cur.ptr = record->item()->AsTarget();
+  }
+  return true;
+}
+
+bool Builder::ResolveValidationDeps(LabelTargetVector* deps, Err* err) {
+  for (LabelTargetPair& cur : *deps) {
+    DCHECK(!cur.ptr);
+
+    // We only need the item to be defined, not resolved.
+    BuilderRecord* record = GetRecord(cur.label);
+    if (!record || !record->item()) {
+      *err = Err(cur.origin, "Item not found",
+                 "\"" + cur.label.GetUserVisibleName(true) +
+                     "\" doesn't\n"
+                     "refer to an existent thing.");
+      return false;
+    }
+
+    if (!BuilderRecord::IsItemOfType(record->item(),
+                                     BuilderRecord::ITEM_TARGET)) {
+      *err = Err(cur.origin, "This is not a target",
+                 "\"" + cur.label.GetUserVisibleName(true) +
+                     "\" refers to a " + record->item()->GetItemTypeName() +
+                     " instead of a target.");
+      return false;
+    }
+
     cur.ptr = record->item()->AsTarget();
   }
   return true;
