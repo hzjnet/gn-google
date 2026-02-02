@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71094359_fe6971df",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-02-02T08:33:48Z",
+      "side": 1,
+      "message": "Hi Takuto, here a crucial fix of a race condition that happened when I tried to build fuchsia. It didn\u0027t show before with Chrome or local tests. This probably also solves Aaron\u0027s issue with fuchsia not running all Clippy actions. I built both Chrome and Fuchsia with it. Taking the ninjatrace of Fuchsia I found 2008 Clippy actions, around the number Aaron expected. Please have a look.",
+      "revId": "ed903014db30ea8b8a6be29f2a007dea130e2538",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
