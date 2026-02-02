@@ -34,6 +34,24 @@
       ],
       "revId": "77c08cc66f8f4baff331c833058776f7ad71951b",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18ba254b_396d695f",
+        "filename": "src/gn/desc_builder_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-02-02T09:11:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "497847f5_763a2958",
+      "revId": "77c08cc66f8f4baff331c833058776f7ad71951b",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
