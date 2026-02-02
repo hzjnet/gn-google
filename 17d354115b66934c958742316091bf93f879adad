@@ -16,6 +16,24 @@
       "message": "Could you update https://gn.googlesource.com/gn/+/refs/heads/main/docs/reference.md too?",
       "revId": "17d354115b66934c958742316091bf93f879adad",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb22dfb3_ea229038",
+        "filename": "src/gn/command_desc.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-02-02T09:21:02Z",
+      "side": 1,
+      "message": "Oh no forgot again. I\u0027ll update the CL. BTW when I run it I get unrelated changes but I will push those too. Otherwise everyone else also gets them.",
+      "parentUuid": "fcb92498_841aff55",
+      "revId": "17d354115b66934c958742316091bf93f879adad",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
