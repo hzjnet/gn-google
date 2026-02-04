@@ -246,11 +246,8 @@ Analyzer::Analyzer(const Builder& builder,
     // Fill dep_map_.
     if (item->AsTarget()) {
       for (const auto& dep_target_pair :
-           item->AsTarget()->GetDeps(Target::DEPS_ALL))
+           item->AsTarget()->GetDeps(Target::DEPS_ALL_WITH_VALIDATIONS))
         dep_map_.insert(std::make_pair(dep_target_pair.ptr, item));
-
-      for (const auto& validation_target_pair : item->AsTarget()->validations())
-        dep_map_.insert(std::make_pair(validation_target_pair.ptr, item));
 
       for (const auto& dep_config_pair : item->AsTarget()->configs())
         dep_map_.insert(std::make_pair(dep_config_pair.ptr, item));
@@ -406,9 +403,8 @@ void Analyzer::FilterTarget(const Target* target,
     if (target->output_type() != Target::GROUP) {
       filtered->insert(target);
     } else {
-      for (const auto& pair : target->GetDeps(Target::DEPS_ALL))
-        FilterTarget(pair.ptr, seen, filtered);
-      for (const auto& pair : target->validations())
+      for (const auto& pair :
+           target->GetDeps(Target::DEPS_ALL_WITH_VALIDATIONS))
         FilterTarget(pair.ptr, seen, filtered);
     }
   }

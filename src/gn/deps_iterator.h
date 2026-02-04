@@ -20,11 +20,12 @@ class DepsIterator {
   // Creates an empty iterator.
   DepsIterator();
 
-  // Iterate over the deps in the given vectors. If passing less than three,
+  // Iterate over the deps in the given vectors. If passing less than four,
   // pad with nulls.
   DepsIterator(const LabelTargetVector* a,
                const LabelTargetVector* b,
-               const LabelTargetVector* c);
+               const LabelTargetVector* c,
+               const LabelTargetVector* d = nullptr);
 
   // Prefix increment operator. This assumes there are more items (i.e.
   // *this != DepsIterator()).
@@ -39,7 +40,8 @@ class DepsIterator {
     return current_index_ != other.current_index_ ||
            vect_stack_[0] != other.vect_stack_[0] ||
            vect_stack_[1] != other.vect_stack_[1] ||
-           vect_stack_[2] != other.vect_stack_[2];
+           vect_stack_[2] != other.vect_stack_[2] ||
+           vect_stack_[3] != other.vect_stack_[3];
   }
 
   // Dereference operator for STL-compatible iterators.
@@ -49,7 +51,7 @@ class DepsIterator {
   }
 
  private:
-  const LabelTargetVector* vect_stack_[3];
+  const LabelTargetVector* vect_stack_[4];
 
   size_t current_index_;
 };

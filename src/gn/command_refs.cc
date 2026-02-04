@@ -36,10 +36,9 @@ using DepMap = std::multimap<const Target*, const Target*>;
 // Populates the reverse dependency map for the targets in the Setup.
 void FillDepMap(Setup* setup, DepMap* dep_map) {
   for (auto* target : setup->builder().GetAllResolvedTargets()) {
-    for (const auto& dep_pair : target->GetDeps(Target::DEPS_ALL))
+    for (const auto& dep_pair :
+         target->GetDeps(Target::DEPS_ALL_WITH_VALIDATIONS))
       dep_map->insert(std::make_pair(dep_pair.ptr, target));
-    for (const auto& validation_pair : target->validations())
-      dep_map->insert(std::make_pair(validation_pair.ptr, target));
   }
 }
 

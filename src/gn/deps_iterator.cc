@@ -10,15 +10,18 @@ DepsIterator::DepsIterator() : current_index_(0) {
   vect_stack_[0] = nullptr;
   vect_stack_[1] = nullptr;
   vect_stack_[2] = nullptr;
+  vect_stack_[3] = nullptr;
 }
 
 DepsIterator::DepsIterator(const LabelTargetVector* a,
                            const LabelTargetVector* b,
-                           const LabelTargetVector* c)
+                           const LabelTargetVector* c,
+                           const LabelTargetVector* d)
     : current_index_(0) {
   vect_stack_[0] = a;
   vect_stack_[1] = b;
   vect_stack_[2] = c;
+  vect_stack_[3] = d;
 
   if (vect_stack_[0] && vect_stack_[0]->empty())
     operator++();
@@ -37,7 +40,8 @@ DepsIterator& DepsIterator::operator++() {
     // Advance to next vect. Shift the elements left by one.
     vect_stack_[0] = vect_stack_[1];
     vect_stack_[1] = vect_stack_[2];
-    vect_stack_[2] = nullptr;
+    vect_stack_[2] = vect_stack_[3];
+    vect_stack_[3] = nullptr;
 
     current_index_ = 0;
 

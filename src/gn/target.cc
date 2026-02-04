@@ -673,6 +673,10 @@ DepsIteratorRange Target::GetDeps(DepsIterationType type) const {
     return DepsIteratorRange(
         DepsIterator(&public_deps_, &private_deps_, nullptr));
   }
+  if (type == DEPS_ALL_WITH_VALIDATIONS) {
+    return DepsIteratorRange(DepsIterator(&public_deps_, &private_deps_,
+                                          &data_deps_, &validations_));
+  }
   // All deps.
   return DepsIteratorRange(
       DepsIterator(&public_deps_, &private_deps_, &data_deps_));
@@ -1160,11 +1164,7 @@ bool Target::ResolvePrecompiledHeaders(Err* err) {
 }
 
 bool Target::CheckVisibility(Err* err) const {
-  for (const auto& pair : GetDeps(DEPS_ALL)) {
-    if (!Visibility::CheckItemVisibility(this, pair.ptr, err))
-      return false;
-  }
-  for (const auto& pair : validations_) {
+  for (const auto& pair : GetDeps(DEPS_ALL_WITH_VALIDATIONS)) {
     if (!Visibility::CheckItemVisibility(this, pair.ptr, err))
       return false;
   }
@@ -1198,15 +1198,7 @@ bool Target::CheckTestonly(Err* err) const {
     return true;
 
   // Verify no deps have "testonly" set.
-  for (const auto& pair : GetDeps(DEPS_ALL)) {
-    if (pair.ptr->testonly()) {
-      *err = MakeTestOnlyError(this, pair.ptr);
-      return false;
-    }
-  }
-
-  // Verify no validations have "testonly" set.
-  for (const auto& pair : validations_) {
+  for (const auto& pair : GetDeps(DEPS_ALL_WITH_VALIDATIONS)) {
     if (pair.ptr->testonly()) {
       *err = MakeTestOnlyError(this, pair.ptr);
       return false;
@@ -1295,7 +1287,8 @@ bool Target::GetMetadata(const std::vector<std::string>& keys_to_extract,
 
   // Gather walk keys and find the appropriate target. Targets identified in
   // the walk key set must be deps or data_deps of the declaring target.
-  const DepsIteratorRange& all_deps = GetDeps(Target::DEPS_ALL);
+  const DepsIteratorRange& all_deps =
+      GetDeps(Target::DEPS_ALL_WITH_VALIDATIONS);
   const SourceDir& current_dir = label().dir();
   for (const auto& next : next_walk_keys) {
     DCHECK(next.type() == Value::STRING);
@@ -1306,14 +1299,6 @@ bool Target::GetMetadata(const std::vector<std::string>& keys_to_extract,
     // walk order of the remaining deps.
     if (next.string_value().empty()) {
       for (const auto& dep : all_deps) {
-        // If we haven't walked this dep yet, go down into it.
-        if (targets_walked->add(dep.ptr)) {
-          if (!dep.ptr->GetMetadata(keys_to_extract, keys_to_walk, rebase_dir,
-                                    false, result, targets_walked, err))
-            return false;
-        }
-      }
-      for (const auto& dep : validations_) {
         // If we haven't walked this dep yet, go down into it.
         if (targets_walked->add(dep.ptr)) {
           if (!dep.ptr->GetMetadata(keys_to_extract, keys_to_walk, rebase_dir,
@@ -1351,22 +1336,6 @@ bool Target::GetMetadata(const std::vector<std::string>& keys_to_extract,
         // We found it, so we can exit this search now.
         found_next = true;
         break;
-      }
-    }
-    if (!found_next) {
-      for (const auto& dep : validations_) {
-        // Match against the label with the toolchain.
-        if (dep.label.GetUserVisibleName(true) == canonicalize_next_label) {
-          // If we haven't walked this dep yet, go down into it.
-          if (targets_walked->add(dep.ptr)) {
-            if (!dep.ptr->GetMetadata(keys_to_extract, keys_to_walk, rebase_dir,
-                                      false, result, targets_walked, err))
-              return false;
-          }
-          // We found it, so we can exit this search now.
-          found_next = true;
-          break;
-        }
       }
     }
     // If we didn't find the specified dep in the target, that's an error.
