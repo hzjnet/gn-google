@@ -50,6 +50,30 @@
       ],
       "revId": "5f9cc0e4d91b1f2116599fab745dc75b61d5ca9c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c38478a0_182755af",
+        "filename": "src/gn/target_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1548,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-02-05T07:58:56Z",
+      "side": 1,
+      "message": "Much simpler. Done.",
+      "parentUuid": "31251ef7_4cbf568a",
+      "range": {
+        "startLine": 1548,
+        "startChar": 26,
+        "endLine": 1548,
+        "endChar": 32
+      },
+      "revId": "5f9cc0e4d91b1f2116599fab745dc75b61d5ca9c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
