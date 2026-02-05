@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31251ef7_4cbf568a",
+        "filename": "src/gn/target_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1548,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-05T07:40:22Z",
+      "side": 1,
+      "message": "Can we use emplace here?",
+      "range": {
+        "startLine": 1548,
+        "startChar": 26,
+        "endLine": 1548,
+        "endChar": 32
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e8f70b1e_52a6b0d7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/target_unittest.cc",
+              "range": {
+                "startLine": 1548,
+                "startChar": 0,
+                "endLine": 1550,
+                "endChar": 0
+              },
+              "replacement": "  a.metadata().contents().emplace(\"walk\", a_expected);\n"
+            },
+            {
+              "path": "src/gn/target_unittest.cc",
+              "range": {
+                "startLine": 1554,
+                "startChar": 0,
+                "endLine": 1556,
+                "endChar": 0
+              },
+              "replacement": "  b.metadata().contents().emplace(\"walk\", b_expected);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5f9cc0e4d91b1f2116599fab745dc75b61d5ca9c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
