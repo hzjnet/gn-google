@@ -1174,6 +1174,24 @@ TEST_F(TargetTest, AssertNoDeps) {
   ASSERT_TRUE(a2.OnResolved(&err));
 }
 
+TEST_F(TargetTest, AssertNoDepsWithValidation) {
+  TestWithScope setup;
+  Err err;
+
+  // B is the forbidden target.
+  TestTarget b(setup, "//b", Target::SHARED_LIBRARY);
+  ASSERT_TRUE(b.OnResolved(&err));
+
+  // A depends on B via validation and asserts no deps on B.
+  TestTarget a(setup, "//a", Target::EXECUTABLE);
+  a.validations().push_back(LabelTargetPair(&b));
+  a.assert_no_deps().push_back(LabelPattern(LabelPattern::MATCH, SourceDir("//b/"),
+                                            "b", Label()));
+
+  // Should fail because validation is a dependency.
+  ASSERT_FALSE(a.OnResolved(&err));
+}
+
 TEST_F(TargetTest, PullRecursiveBundleData) {
   TestWithScope setup;
   Err err;

@@ -257,7 +257,7 @@ bool RecursiveCheckAssertNoDeps(const Target* target,
   }
 
   // Recursively check dependencies.
-  for (const auto& pair : target->GetDeps(Target::DEPS_ALL)) {
+  for (const auto& pair : target->GetDeps(Target::DEPS_ALL_WITH_VALIDATIONS)) {
     if (pair.ptr->output_type() == Target::EXECUTABLE)
       continue;
     if (!RecursiveCheckAssertNoDeps(pair.ptr, true, assert_no, visited,
