@@ -57,6 +57,30 @@
       ],
       "revId": "89dbb3ff7801b0b1655c7f6b0df4aa50c1416a48",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41ca09c1_2048fb9c",
+        "filename": "src/gn/builder_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-02-05T07:17:29Z",
+      "side": 1,
+      "message": "Nice! Forgot about that. Done.",
+      "parentUuid": "ffa7b715_60f47793",
+      "range": {
+        "startLine": 660,
+        "startChar": 0,
+        "endLine": 664,
+        "endChar": 37
+      },
+      "revId": "89dbb3ff7801b0b1655c7f6b0df4aa50c1416a48",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
