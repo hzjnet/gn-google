@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27ba403f_98f605cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4540592
+      },
+      "writtenOn": "2026-02-05T07:18:15Z",
+      "side": 1,
+      "message": "Another Fuchsia related use case. Please have a look.",
+      "revId": "d35ba14e922b624bc6a693c90c4092af63f4d829",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
