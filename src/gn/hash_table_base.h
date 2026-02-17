@@ -253,6 +253,27 @@ class HashTableBase {
   // Return the number of keys in the set.
   size_t size() const { return count_; }
 
+  // Ensure that the hash table has enough buckets to store |n| items
+  // without a rehash.
+  void reserve(size_t n) {
+    if (n <= count_)
+      return;
+
+    // We need size such that (n + tombstone_count_) * 4 < size * 3.
+    // For simplicity, we ignore tombstone_count_ here as it's usually 0
+    // for UniqueVector/PointerSet in GN.
+    size_t needed_size = (n * 4) / 3 + 1;
+    if (needed_size <= size_)
+      return;
+
+    size_t new_size = size_ == 1 ? 8 : size_;
+    while (new_size < needed_size)
+      new_size *= 2;
+
+    if (new_size > size_)
+      Rehash(new_size);
+  }
+
  protected:
   // The following should only be called by derived classes that
   // extend this template class, and are not available to their
@@ -508,15 +529,18 @@ class HashTableBase {
   [[gnu::noinline]]
 #endif
   void GrowBuckets() {
-    size_t size = size_;
-    size_t new_size = (size == 1) ? 8 : size * 2;
+    size_t new_size = (size_ == 1) ? 8 : size_ * 2;
+    Rehash(new_size);
+  }
+
+  void Rehash(size_t new_size) {
     size_t new_mask = new_size - 1;
 
-    // NOTE: Using calloc() since no object constructiopn can or should take
+    // NOTE: Using calloc() since no object construction can or should take
     // place here.
     Node* new_buckets = reinterpret_cast<Node*>(calloc(new_size, sizeof(Node)));
 
-    for (size_t src_index = 0; src_index < size; ++src_index) {
+    for (size_t src_index = 0; src_index < size_; ++src_index) {
       const Node* node = &buckets_[src_index];
       if (!node->is_valid())
         continue;

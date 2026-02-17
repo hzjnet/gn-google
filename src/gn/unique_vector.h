@@ -71,6 +71,8 @@ class UniqueVectorHashSet : public UniqueVectorHashTableBase {
     BaseType::UpdateAfterInsert(false);
   }
 
+  void reserve(size_t n) { BaseType::reserve(n); }
+
   void Clear() { NodeClear(); }
 };
 
@@ -93,7 +95,10 @@ class UniqueVector {
     vector_.clear();
     set_.Clear();
   }
-  void reserve(size_t s) { vector_.reserve(s); }
+  void reserve(size_t s) {
+    vector_.reserve(s);
+    set_.reserve(s);
+  }
 
   const T& operator[](size_t index) const { return vector_[index]; }
 

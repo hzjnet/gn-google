@@ -599,6 +599,7 @@ bool Target::OnResolved(Err* err) {
   }
 
   PullRecursiveBundleData();
+  PullRecursiveReachableTargets();
   if (!ResolvePrecompiledHeaders(err))
     return false;
 
@@ -890,6 +891,22 @@ void Target::PullRecursiveBundleData() {
 
   if (has_bundle_data())
     bundle_data().OnTargetResolved(this);
+}
+
+void Target::PullRecursiveReachableTargets() {
+  size_t estimated_size = 0;
+  for (const auto& pair : GetDeps(DEPS_LINKED)) {
+    estimated_size += 1 + pair.ptr->reachable_targets().size();
+  }
+  reachable_targets_.reserve(estimated_size);
+
+  for (const auto& pair : GetDeps(DEPS_LINKED)) {
+    if (reachable_targets_.add(pair.ptr)) {
+      for (const auto* target : pair.ptr->reachable_targets()) {
+        reachable_targets_.add(target);
+      }
+    }
+  }
 }
 
 bool Target::HasRealInputs() const {

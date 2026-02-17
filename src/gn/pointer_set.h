@@ -95,6 +95,10 @@ class PointerSet : public HashTableBase<PointerSetNode> {
   // Clear the set.
   void clear() { NodeClear(); }
 
+  // Ensure that the set has enough buckets to store |n| items
+  // without a rehash.
+  void reserve(size_t n) { BaseType::reserve(n); }
+
   // Add one pointer to the set. Return true if the pointer was
   // added, or false if its was already in the set.
   bool add(T* ptr) {

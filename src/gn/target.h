@@ -472,6 +472,8 @@ class Target : public Item {
                                const char** computed_tool_type,
                                std::vector<OutputFile>* outputs) const;
 
+  const TargetSet& reachable_targets() const { return reachable_targets_; }
+
  private:
   FRIEND_TEST_ALL_PREFIXES(TargetTest, ResolvePrecompiledHeaders);
   FRIEND_TEST_ALL_PREFIXES(TargetTest, HasRealInputs);
@@ -483,6 +485,7 @@ class Target : public Item {
   void PullDependentTargetLibs();
   void PullRecursiveHardDeps();
   void PullRecursiveBundleData();
+  void PullRecursiveReachableTargets();
 
   // Checks to see whether this target or any of its dependencies have real
   // inputs. If not, this target should be omitted as a dependency. This check
@@ -569,6 +572,8 @@ class Target : public Item {
 
   // GeneratedFile as metadata collection values.
   std::unique_ptr<GeneratedFile> generated_file_;
+
+  TargetSet reachable_targets_;
 
   Target(const Target&) = delete;
   Target& operator=(const Target&) = delete;

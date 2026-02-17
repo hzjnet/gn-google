@@ -19,6 +19,26 @@ void ResolvedTargetData::ComputeLibInfo(TargetInfo* info) const {
   UniqueVector<SourceDir> all_lib_dirs;
   UniqueVector<LibFile> all_libs;
 
+  // Pre-count the number of elements to reserve space in the UniqueVectors.
+  // This minimizes the number of expensive re-allocations and re-hashes of
+  // the internal data structures (both the vector and the hash table)
+  // during the dependency walk.
+  size_t estimated_libs_count = 0;
+  size_t estimated_lib_dirs_count = 0;
+  for (ConfigValuesIterator iter(info->target); !iter.done(); iter.Next()) {
+    estimated_libs_count += iter.cur().libs().size();
+    estimated_lib_dirs_count += iter.cur().lib_dirs().size();
+  }
+  for (const Target* dep : info->deps.linked_deps()) {
+    if (!dep->IsFinal() || dep->output_type() == Target::STATIC_LIBRARY) {
+      const TargetInfo* dep_info = GetTargetLibInfo(dep);
+      estimated_libs_count += dep_info->libs.size();
+      estimated_lib_dirs_count += dep_info->lib_dirs.size();
+    }
+  }
+  all_lib_dirs.reserve(estimated_lib_dirs_count);
+  all_libs.reserve(estimated_libs_count);
+
   for (ConfigValuesIterator iter(info->target); !iter.done(); iter.Next()) {
     const ConfigValues& cur = iter.cur();
     all_lib_dirs.Append(cur.lib_dirs());
@@ -69,6 +89,24 @@ void ResolvedTargetData::ComputeFrameworkInfo(TargetInfo* info) const {
 
 void ResolvedTargetData::ComputeHardDeps(TargetInfo* info) const {
   TargetSet all_hard_deps;
+
+  // Pre-count the number of hard dependencies to reserve space in the TargetSet.
+  // This reduces the number of re-hashes of the internal hash table
+  // during the recursive walk.
+  size_t estimated_hard_deps_count = 0;
+  for (const Target* dep : info->deps.linked_deps()) {
+    if (info->target->hard_dep() || dep->hard_dep()) {
+      estimated_hard_deps_count++;
+      continue;
+    }
+    if (dep->IsBinary() && !dep->all_headers_public() &&
+        dep->public_headers().empty() && !dep->builds_swift_module()) {
+      continue;
+    }
+    estimated_hard_deps_count += GetTargetHardDeps(dep)->hard_deps.size();
+  }
+  all_hard_deps.reserve(estimated_hard_deps_count);
+
   for (const Target* dep : info->deps.linked_deps()) {
     // Direct hard dependencies
     if (info->target->hard_dep() || dep->hard_dep()) {
@@ -95,6 +133,20 @@ void ResolvedTargetData::ComputeHardDeps(TargetInfo* info) const {
 
 void ResolvedTargetData::ComputeInheritedLibs(TargetInfo* info) const {
   TargetPublicPairListBuilder inherited_libraries;
+
+  // Pre-count the number of inherited libraries to reserve space in the builder.
+  // This minimizes the number of expensive re-allocations and re-hashes
+  // during the dependency tree walk.
+  size_t estimated_libs_count = 0;
+  for (const Target* dep : info->deps.public_deps()) {
+    estimated_libs_count++;
+    estimated_libs_count += GetTargetInheritedLibs(dep)->inherited_libs.size();
+  }
+  for (const Target* dep : info->deps.private_deps()) {
+    estimated_libs_count++;
+    estimated_libs_count += GetTargetInheritedLibs(dep)->inherited_libs.size();
+  }
+  inherited_libraries.reserve(estimated_libs_count);
 
   ComputeInheritedLibsFor(info->deps.public_deps(), true, &inherited_libraries);
   ComputeInheritedLibsFor(info->deps.private_deps(), false,
