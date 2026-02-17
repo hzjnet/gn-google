@@ -10,6 +10,7 @@
 #include <map>
 #include <mutex>
 #include <set>
+#include <shared_mutex>
 #include <string_view>
 #include <vector>
 
@@ -191,13 +192,24 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
   // execution.
   base::AtomicRefCount task_count_;
 
+  // Maps (target_to, target_from) -> is_permitted.
+  // Use -1 for not a dependency, 0 for non-permitted dependency, 1 for
+  // permitted dependency.
+  using DependencyCache = std::map<std::pair<const Target*, const Target*>, int>;
+
   // Locked variables ----------------------------------------------------------
   //
   // These are mutable during runtime and require locking.
 
-  std::mutex lock_;
+  mutable std::shared_mutex lock_;
 
   std::vector<Err> errors_;
+
+  mutable DependencyCache dependency_cache_;
+
+  // Separate lock for task count synchronization since std::condition_variable
+  // only works with std::unique_lock<std::mutex>.
+  std::mutex task_count_lock_;
 
   // Signaled when |task_count_| becomes zero.
   std::condition_variable task_count_cv_;
