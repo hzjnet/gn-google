@@ -26,6 +26,7 @@
 #include "gn/swift_values.h"
 #include "gn/toolchain.h"
 #include "gn/unique_vector.h"
+#include "gn/target_bitset.h"
 
 class DepsIteratorRange;
 class Settings;
@@ -248,6 +249,13 @@ class Target : public Item {
   // to iterate over multiple types of deps in one loop:
   //   for (const auto& pair : target->GetDeps(Target::DEPS_ALL)) ...
   DepsIteratorRange GetDeps(DepsIterationType type) const;
+
+  const TargetBitSet& reachable_targets() const { return reachable_targets_; }
+
+  void PullRecursiveReachableTargets();
+
+  int id() const { return id_; }
+  void set_id(int id) { id_ = id; }
 
   // Linked private dependencies.
   const LabelTargetVector& private_deps() const { return private_deps_; }
@@ -569,6 +577,11 @@ class Target : public Item {
 
   // GeneratedFile as metadata collection values.
   std::unique_ptr<GeneratedFile> generated_file_;
+
+  TargetBitSet reachable_targets_;
+  bool reachable_targets_computed_ = false;
+
+  int id_ = -1;
 
   Target(const Target&) = delete;
   Target& operator=(const Target&) = delete;

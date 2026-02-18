@@ -20,6 +20,7 @@
 #include "gn/c_include_iterator.h"
 #include "gn/err.h"
 #include "gn/source_dir.h"
+#include "gn/target_bitset.h"
 
 class BuildSettings;
 class InputFile;
@@ -191,6 +192,8 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
   // Number of tasks posted by RunCheckOverFiles() that haven't completed their
   // execution.
   base::AtomicRefCount task_count_;
+
+  size_t targets_count_ = 0;
 
   // Maps (target_to, target_from) -> is_permitted.
   enum class DependencyState {

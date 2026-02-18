@@ -15,6 +15,7 @@
 #include "gn/c_include_iterator.h"
 #include "gn/config.h"
 #include "gn/config_values_extractors.h"
+#include "gn/deps_iterator.h"
 #include "gn/err.h"
 #include "gn/filesystem_utils.h"
 #include "gn/scheduler.h"
@@ -124,6 +125,7 @@ HeaderChecker::HeaderChecker(const BuildSettings* build_settings,
     : build_settings_(build_settings),
       check_generated_(check_generated),
       check_system_(check_system),
+      targets_count_(targets.size()),
       lock_(),
       task_count_cv_() {
   for (auto* target : targets)
@@ -135,6 +137,40 @@ HeaderChecker::~HeaderChecker() = default;
 bool HeaderChecker::Run(const std::vector<const Target*>& to_check,
                         bool force_check,
                         std::vector<Err>* errors) {
+  if (to_check.empty())
+    return true;
+
+  // 1. Collect all reachable targets and assign IDs.
+  std::vector<const Target*> all_targets;
+  {
+    UniqueVector<const Target*> all_set;
+    std::vector<const Target*> stack = to_check;
+    while (!stack.empty()) {
+      const Target* t = stack.back();
+      stack.pop_back();
+      if (all_set.PushBackWithIndex(t).first) {
+        for (const auto& pair : t->GetDeps(Target::DEPS_ALL))
+          stack.push_back(pair.ptr);
+      }
+    }
+    all_targets = all_set.release();
+  }
+
+  // Ensure deterministic ID assignment and topological-ish order.
+  std::sort(all_targets.begin(), all_targets.end(),
+            [](const Target* a, const Target* b) {
+              return a->label() < b->label();
+            });
+
+  for (size_t i = 0; i < all_targets.size(); ++i) {
+    const_cast<Target*>(all_targets[i])->set_id(static_cast<int>(i));
+  }
+
+  // 2. Pre-compute reachability using BitSet.
+  for (const auto* t : all_targets) {
+    const_cast<Target*>(t)->PullRecursiveReachableTargets();
+  }
+
   FileMap files_to_check;
   for (auto* check : to_check) {
     // This function will get called with all target types, but check only
@@ -528,6 +564,16 @@ bool HeaderChecker::IsDependencyOf(const Target* search_for,
     return false;
   }
 
+  // Quick check: if it's not reachable at all, we can avoid both BFS runs.
+  if (search_for->id() != -1 &&
+      !search_from->reachable_targets().Contains(search_for->id())) {
+    *is_permitted = false;
+    std::unique_lock<std::shared_mutex> lock(lock_);
+    dependency_cache_[std::make_pair(search_for, search_from)] =
+        DependencyState::kNotADependency;
+    return false;
+  }
+
   {
     std::shared_lock<std::shared_mutex> lock(lock_);
     auto it = dependency_cache_.find(std::make_pair(search_for, search_from));
@@ -592,6 +638,9 @@ bool HeaderChecker::IsDependencyOf(const Target* search_for,
   // search_for.
 
   std::unordered_map<const Target*, ChainLink> breadcrumbs;
+  if (targets_count_ > 0)
+    breadcrumbs.reserve(std::min(targets_count_, static_cast<size_t>(1024)));
+
   base::queue<ChainLink> work_queue;
   work_queue.push(ChainLink(search_from, true));
 
@@ -624,12 +673,16 @@ bool HeaderChecker::IsDependencyOf(const Target* search_for,
       // in private ones. Also do this the first time through the loop, since
       // a target can include headers from its direct deps regardless of
       // public/private-ness.
-      first_time = false;
       for (const auto& dep : target->private_deps()) {
         if (breadcrumbs.emplace(dep.ptr, cur_link).second)
           work_queue.push(ChainLink(dep.ptr, false));
       }
+      for (const auto& dep : target->data_deps()) {
+        if (breadcrumbs.emplace(dep.ptr, cur_link).second)
+          work_queue.push(ChainLink(dep.ptr, false));
+      }
     }
+    first_time = false;
   }
 
   return false;

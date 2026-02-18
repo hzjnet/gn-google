@@ -184,6 +184,12 @@ std::vector<const Target*> Builder::GetAllResolvedTargets() const {
   std::sort(result.begin(), result.end(), [](const Target* a, const Target* b) {
     return a->label() < b->label();
   });
+
+  // Assign IDs to targets based on their sorted order.
+  for (size_t i = 0; i < result.size(); ++i) {
+    const_cast<Target*>(result[i])->set_id(static_cast<int>(i));
+  }
+
   return result;
 }
 
