@@ -33,20 +33,9 @@ int GetThreadCount() {
   // progressively worse as the thread count increases.
   return std::min(std::max(num_cores - 1, 8), 14);
 #else
-  // Base the default number of worker threads on number of cores in the
-  // system. When building large projects, the speed can be limited by how fast
-  // the main thread can dispatch work and connect the dependency graph. If
-  // there are too many worker threads, the main thread can be starved and it
-  // will run slower overall.
-  //
-  // One less worker thread than the number of physical CPUs seems to be a
-  // good value, both theoretically and experimentally. But always use at
-  // least some workers to prevent us from being too sensitive to I/O latency
-  // on low-end systems.
-  //
-  // The minimum thread count is based on measuring the optimal threads for the
-  // Chrome build on a several-year-old 4-core MacBook.
-  return std::max(num_cores - 1, 8);
+  // Use logical processor count - 1, capped at a reasonable high value
+  // to avoid excessive contention.
+  return std::min(std::max(NumberOfProcessors() - 1, 8), 32);
 #endif
 }
 
