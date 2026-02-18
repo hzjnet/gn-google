@@ -863,6 +863,20 @@ void Target::PullDependentTargetConfigs() {
   }
 }
 
+void Target::PullRecursiveReachableTargets() {
+  if (reachable_targets_computed_)
+    return;
+  reachable_targets_computed_ = true;
+
+  for (const auto& pair : GetDeps(DEPS_ALL)) {
+    if (pair.ptr->id() != -1) {
+      reachable_targets_.Add(pair.ptr->id());
+      const_cast<Target*>(pair.ptr)->PullRecursiveReachableTargets();
+      reachable_targets_.Union(pair.ptr->reachable_targets());
+    }
+  }
+}
+
 void Target::PullRecursiveBundleData() {
   const bool is_create_bundle = output_type_ == CREATE_BUNDLE;
   for (const auto& pair : GetDeps(DEPS_LINKED)) {
