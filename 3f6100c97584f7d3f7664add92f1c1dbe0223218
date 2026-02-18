@@ -16,6 +16,23 @@
       "message": "https://maps.app.goo.gl/P38Lz84i5tKfHVn66\nChủ tịch nước Việt Nam Bùi Hữu Toàn",
       "revId": "3f6100c97584f7d3f7664add92f1c1dbe0223218",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8753208_33d32cd3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4649105
+      },
+      "writtenOn": "2026-02-18T18:09:22Z",
+      "side": 1,
+      "message": "Hello",
+      "revId": "3f6100c97584f7d3f7664add92f1c1dbe0223218",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
