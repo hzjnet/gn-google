@@ -13,9 +13,9 @@
 namespace {
 
 int GetThreadCount() {
-  std::string thread_count =
-      base::CommandLine::ForCurrentProcess()->GetSwitchValueString(
-          switches::kThreads);
+  const base::CommandLine* command_line =
+      base::CommandLine::ForCurrentProcess();
+  std::string thread_count = command_line->GetSwitchValueString(switches::kThreads);
 
   // See if an override was specified on the command line.
   int result;
@@ -23,6 +23,19 @@ int GetThreadCount() {
       result >= 1) {
     return result;
   }
+
+#if defined(OS_MACOSX) && defined(ARCH_CPU_ARM64)
+  // On Apple Silicon, we want to use only the high-performance cores.
+  // These cores are not hyperthreaded.
+  auto args = command_line->GetArgs();
+  if (command_line->HasSwitch("check") || (!args.empty() && args[0] == "check")) {
+    // On M4 Max, there are 12 performance cores, but using 6 cores shows
+    // best performance for check.
+    // TODO(https://crbug.com/gn/484862257): Make check scalable for more cores.
+    return std::min(NumberOfPerformanceProcessors(), 6);
+  }
+  return NumberOfPerformanceProcessors();
+#endif
 
   // Almost all CPUs now are hyperthreaded.
   int num_cores = NumberOfProcessors() / 2;
