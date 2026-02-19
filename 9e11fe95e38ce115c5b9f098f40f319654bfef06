@@ -33,6 +33,24 @@
       "message": "nit: Computing the shard index based on the address of Target objects seems a bit fragile. It could easily lead to collisions (e.g. if std::hash\u003cconst T*\u003e() does a simple reinterpret_cast\u003c\u003e of the address into a size_t, and all addresses are 8 or 16 byte aligned). So much depends on the implementation of the C++ library and heap allocator. Can we make this a little bit more robust, perhaps by using the target label\u0027s hash value instead?",
       "revId": "9e11fe95e38ce115c5b9f098f40f319654bfef06",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a04d84c_bf6b865a",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-19T14:42:44Z",
+      "side": 1,
+      "message": "Sounds good, done.",
+      "parentUuid": "e7611e24_ace9c535",
+      "revId": "9e11fe95e38ce115c5b9f098f40f319654bfef06",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
