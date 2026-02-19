@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af500c20_7a17b4d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-19T14:14:45Z",
+      "side": 1,
+      "message": "I introduced sharding to improve scalability and changed to use the number of performance core always. PTAL again.",
+      "revId": "9e11fe95e38ce115c5b9f098f40f319654bfef06",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
