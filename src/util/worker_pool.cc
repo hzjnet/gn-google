@@ -27,6 +27,12 @@ int GetThreadCount() {
   // Almost all CPUs now are hyperthreaded.
   int num_cores = NumberOfProcessors() / 2;
 
+#if defined(OS_MACOSX) && defined(ARCH_CPU_ARM64)
+  // On Apple Silicon, we want to use only the high-performance cores.
+  // These cores are not hyperthreaded, so we don't divide by 2.
+  num_cores = NumberOfPerformanceProcessors();
+#endif
+
 #if defined(OS_WIN)
   // Experiments on Windows show that 8 threads is a good value for a 12-core
   // machine, whereas anything over 12-14 threads on a 64-core machine gets
@@ -43,10 +49,7 @@ int GetThreadCount() {
   // good value, both theoretically and experimentally. But always use at
   // least some workers to prevent us from being too sensitive to I/O latency
   // on low-end systems.
-  //
-  // The minimum thread count is based on measuring the optimal threads for the
-  // Chrome build on a several-year-old 4-core MacBook.
-  return std::max(num_cores - 1, 8);
+  return std::max(num_cores - 1, 16);
 #endif
 }
 
