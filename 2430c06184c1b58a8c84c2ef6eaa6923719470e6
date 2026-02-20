@@ -1,0 +1,225 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8760886c_7c64f905",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: the `search_from` capture is not very useful, can you make this a parameter to turn the lambda into a pure function? Also this should probably be a `ReachabilityCache` method instead for clarity, e.g. `PerformDependencyWalk(permmited)`)",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "460d2cd9_f8d92d9a",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: It looks like the second field of ChainLink is never used in this lambda. Maybe use a `base::queue\u003cconst Target*\u003e` instead?",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec976cdc_1981943b",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: Document why is this insert necessary / used for?",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6da6954a_adefe53e",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: Avoid implicit captures, they make the code harder to read. Especially since `chain`, `search_for` and `is_permitted` are defined so much higher in the source. Consider turning this into a method such as `ReachabilityCache::SearchForDependencyTo(search_for, permitted, chain)` for clarity.",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b4053ff_b950686a",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 632,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "Why not call `run_bfs()` here directly if `permitted_complete` is false? As all three code blocks below need to acquire the same lock anyway, can you explain why this separation exists?",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f05483b_65770914",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: Personally, I had to re-read this line several times to understand what it does, because it was far from obvious that it used `search_to` as input and changed `chain` in case of success.",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ac5add8_91e8ff14",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: why lock for writing when you did lock for reading above, and you\u0027ll lock for reading again below? Could all this logic be performed by a single ReliabilityCache method instead?",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8dbf344_3a2a3c8f",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: Please document the purpose of this class, because it is no longer obvious. Something like:\n\n\"\"\"\nTo implement IsDependencyOf(from_target, to_target), a BFS starting from an arbitrary `from_target` is performed, and a BreadCrumbTable is used to record during the walk, that a given `|target|` is a dependency of `|src_target|`, with `|is_public|` indicating the type of dependency.\n\nThis table only records the first (src_target-\u003etarget) dependency during the BFS, since only the shortest dependency path is interesting. This also means that if a target is the dependency of two distinct parents at the same level, only the first parent will be recorded in the table. Consider the following graph:\n\n```\n    A\n   / \\\n  B   C\n   \\ /\n    D\n```\n\nThe BFS will visit nodes in order: A, B, C and D, but will record only the\n(D, B) edge, not the (D, C) one, even if B-\u003eD is private and C-\u003eD is public.\n\nThis information is later used to reconstruct the dependency chain when `to_target` is found by the walk.\n\"\"\"",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b43d8ffb_b2b73f9e",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: Document what the ChainLink represents because this is now far from obvious given that the code is all over the map :) E.g. \"`link.target` if not nullptr is a dependent of `target` that was found during the BFS walk, with dependency type `link.is_public`\".",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62417afe_6e25e08f",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "Please document the purpose of this class. E.g.\n\n\"\"\"\nStore the shortest-dependency-path information for all BFS walks starting from a given `search_from` target.\n\n`permitted_breadcrumbs` corresponds to public dependencies only.\n`any_breadcrumbs` corresponds to all dependencies.\n\nEach walk type needs only to be performed once, which is recorded by the\ncorresponding completion flag.\n\"\"\"\n\nI recommend making |from_target| a member of this class to make this more explicit and simplify the API of the methods below.\n\nAlso maybe provide methods with more descriptive names to replace the relatively obscure lambdas defined below (e.g. \n`ReachabilityCache::PerformDependencyWalk(bool is_permitted)` + `ReachabilityCache::SearchForDependencyTo(search_to, is_permitted, chain)`) to make things clearer.\n\n\nSee comments below.",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed68f694_c740ee98",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: Document that |cache| should be the ReachabilityCache for |from_target|. Making the target part of the instance would simplify the interface too, with something like:\n\n```\nvoid CheckInclude(const Target* from_target, ...) {\n  auto\u0026 from_target_reachability \u003d GetReachabilityCacheForTarget(from_target);\n  return CheckInclude(from_target_reachability, ...);\n}\n\nvoid CheckInclude(ReachabilityCache\u0026 from_target_reachability,\n                  ...);\n```",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63b43b31_fd2584ac",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: Document that `cache` should correspond to `search_from` to remove any kind of ambiguity. Consider using a `from_cache` variable name, or something similar, or use the same API refactoring as described in the previous comment for clarity.",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1c32e32_13519534",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-20T22:48:03Z",
+      "side": 1,
+      "message": "nit: ditto",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
