@@ -13,6 +13,7 @@
 #include <set>
 #include <shared_mutex>
 #include <string_view>
+#include <unordered_map>
 #include <vector>
 
 #include "base/atomic_ref_count.h"
@@ -20,6 +21,7 @@
 #include "base/memory/ref_counted.h"
 #include "gn/c_include_iterator.h"
 #include "gn/err.h"
+#include "gn/hash_table_base.h"
 #include "gn/source_dir.h"
 
 class BuildSettings;
@@ -84,6 +86,78 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
 
   ~HeaderChecker();
 
+  // Header checking structures ------------------------------------------------
+
+  // Data for BreadcrumbNode.
+  //
+  // This class is a trivial type so it can be used in HashTableBase.
+  struct BreadcrumbNode {
+    const Target* target;
+    const Target* src_target;
+    bool is_public;
+
+    bool is_null() const { return !target; }
+    static bool is_tombstone() { return false; }
+    bool is_valid() const { return !is_null(); }
+    size_t hash_value() const { return std::hash<const Target*>()(target); }
+  };
+
+  struct BreadcrumbTable : public HashTableBase<BreadcrumbNode> {
+    using Base = HashTableBase<BreadcrumbNode>;
+    using Node = Base::Node;
+
+    // Since we only insert, we don't need to return success/failure.
+    // We can also assume that key uniqueness is checked before insertion if
+    // necessary, or that we simply overwrite (though BFS usually checks
+    // existence first).
+    //
+    // In IsDependencyOf, we use the return value checking if it was already
+    // there. So we need an Insert that returns whether it was new.
+    bool Insert(const Target* target,
+                const Target* src_target,
+                bool is_public) {
+      size_t hash = std::hash<const Target*>()(target);
+      Node* node = NodeLookup(
+          hash, [target](const Node* n) { return n->target == target; });
+
+      if (node->is_valid())
+        return false;
+
+      node->target = target;
+      node->src_target = src_target;
+      node->is_public = is_public;
+      UpdateAfterInsert(false);
+      return true;
+    }
+
+    // Returns the ChainLink for the given target, or a null-target ChainLink if
+    // not found.
+    HeaderChecker::ChainLink GetLink(const Target* target) const {
+      size_t hash = std::hash<const Target*>()(target);
+      const Node* node = NodeLookup(
+          hash, [target](const Node* n) { return n->target == target; });
+
+      if (node->is_valid())
+        return HeaderChecker::ChainLink(node->src_target, node->is_public);
+      return HeaderChecker::ChainLink();
+    }
+  };
+
+  struct ReachabilityCache {
+    ReachabilityCache() = default;
+    ReachabilityCache(const ReachabilityCache&) = delete;
+    ReachabilityCache& operator=(const ReachabilityCache&) = delete;
+
+    mutable std::shared_mutex lock;
+    // Breadcrumbs for the shortest permitted path.
+    BreadcrumbTable permitted_breadcrumbs;
+    // Breadcrumbs for the shortest path of any type.
+    BreadcrumbTable any_breadcrumbs;
+
+    bool permitted_complete = false;
+    bool any_complete = false;
+  };
+
   struct TargetInfo {
     TargetInfo() : target(nullptr), is_public(false), is_generated(false) {}
     TargetInfo(const Target* t, bool is_pub, bool is_gen)
@@ -124,21 +198,18 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
   // error messages.
   bool CheckFile(const Target* from_target,
                  const SourceFile& file,
-                 std::vector<Err>* err) const;
+                 std::vector<Err>* errors) const;
 
   // Checks that the given file in the given target can include the
   // given include file. If disallowed, adds the error or errors to
   // the errors array.  The range indicates the location of the
   // include in the file for error reporting.
-  // |no_depeency_cache| is used to cache or check whether there is no
-  // dependency from |from_target| to target having |include_file|.
-  void CheckInclude(
-      const Target* from_target,
-      const InputFile& source_file,
-      const SourceFile& include_file,
-      const LocationRange& range,
-      std::set<std::pair<const Target*, const Target*>>* no_dependency_cache,
-      std::vector<Err>* errors) const;
+  void CheckInclude(const Target* from_target,
+                    ReachabilityCache& cache,
+                    const InputFile& source_file,
+                    const SourceFile& include_file,
+                    const LocationRange& range,
+                    std::vector<Err>* errors) const;
 
   // Returns true if the given search_for target is a dependency of
   // search_from.
@@ -157,13 +228,15 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
   // included.
   bool IsDependencyOf(const Target* search_for,
                       const Target* search_from,
+                      ReachabilityCache& cache,
                       Chain* chain,
                       bool* is_permitted) const;
 
-  // For internal use by the previous override of IsDependencyOf.  If
-  // require_public is true, only public dependency chains are searched.
+  // For internal use by the previous override of IsDependencyOf. If
+  // require_permitted is true, only permitted dependency chains are searched.
   bool IsDependencyOf(const Target* search_for,
                       const Target* search_from,
+                      ReachabilityCache& cache,
                       bool require_permitted,
                       Chain* chain) const;
 
@@ -195,19 +268,10 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
 
   size_t targets_count_ = 0;
 
-  // Maps (target_to, target_from) -> is_permitted.
-  enum class DependencyState {
-    kNotADependency,
-    kNonPermittedDependency,
-    kPermittedDependency,
-  };
-  using DependencyCache =
-      std::map<std::pair<const Target*, const Target*>, DependencyState>;
-
   static constexpr size_t kNumShards = 64;
   struct DependencyCacheShard {
     mutable std::shared_mutex lock;
-    DependencyCache cache;
+    std::unordered_map<const Target*, std::unique_ptr<ReachabilityCache>> cache;
   };
 
   // Locked variables ----------------------------------------------------------
@@ -219,6 +283,9 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
   std::vector<Err> errors_;
 
   mutable std::array<DependencyCacheShard, kNumShards> dependency_cache_;
+
+  // Returns the cache for the given target, creating it if it doesn't exist.
+  ReachabilityCache& GetCacheForTarget(const Target* target) const;
 
   // Separate lock for task count synchronization since std::condition_variable
   // only works with std::unique_lock<std::mutex>.
