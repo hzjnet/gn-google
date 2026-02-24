@@ -253,6 +253,19 @@ class HashTableBase {
   // Return the number of keys in the set.
   size_t size() const { return count_; }
 
+  // Ensure the table can accommodate at least |capacity| elements before
+  // having to reallocate its internal buckets.
+  void Reserve(size_t capacity) {
+    size_t target_capacity = capacity * 4 / 3;
+    size_t new_size = 8;
+    while (new_size < target_capacity) {
+      new_size *= 2;
+    }
+    if (new_size > size_) {
+      GrowBucketsTo(new_size);
+    }
+  }
+
  protected:
   // The following should only be called by derived classes that
   // extend this template class, and are not available to their
@@ -508,8 +521,15 @@ class HashTableBase {
   [[gnu::noinline]]
 #endif
   void GrowBuckets() {
+    size_t new_size = (size_ == 1) ? 8 : size_ * 2;
+    GrowBucketsTo(new_size);
+  }
+
+#if defined(__GNUC__) || defined(__clang__)
+  [[gnu::noinline]]
+#endif
+  void GrowBucketsTo(size_t new_size) {
     size_t size = size_;
-    size_t new_size = (size == 1) ? 8 : size * 2;
     size_t new_mask = new_size - 1;
 
     // NOTE: Using calloc() since no object constructiopn can or should take
