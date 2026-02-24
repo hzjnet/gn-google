@@ -18,6 +18,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "62150ceb_54b1c7e8",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8760886c_7c64f905",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "460d2cd9_f8d92d9a",
@@ -31,6 +49,24 @@
       "writtenOn": "2026-02-20T22:48:03Z",
       "side": 1,
       "message": "nit: It looks like the second field of ChainLink is never used in this lambda. Maybe use a `base::queue\u003cconst Target*\u003e` instead?",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73d72e9c_a4098855",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "460d2cd9_f8d92d9a",
       "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
@@ -52,6 +88,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c7bf841_f5539b64",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec976cdc_1981943b",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6da6954a_adefe53e",
@@ -65,6 +119,24 @@
       "writtenOn": "2026-02-20T22:48:03Z",
       "side": 1,
       "message": "nit: Avoid implicit captures, they make the code harder to read. Especially since `chain`, `search_for` and `is_permitted` are defined so much higher in the source. Consider turning this into a method such as `ReachabilityCache::SearchForDependencyTo(search_for, permitted, chain)` for clarity.",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ce4faf5_baf34534",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6da6954a_adefe53e",
       "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
@@ -86,6 +158,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d703502_de4928cc",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 632,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "This is to minimize usage of unique lock.",
+      "parentUuid": "5b4053ff_b950686a",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9f05483b_65770914",
@@ -99,6 +189,24 @@
       "writtenOn": "2026-02-20T22:48:03Z",
       "side": 1,
       "message": "nit: Personally, I had to re-read this line several times to understand what it does, because it was far from obvious that it used `search_to` as input and changed `chain` in case of success.",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a297d42c_ab724392",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Refactored to member method of `ReachabilityCache`.",
+      "parentUuid": "9f05483b_65770914",
       "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
@@ -120,6 +228,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9518f49_b62c89ad",
+        "filename": "src/gn/header_checker.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Moved to `SearchForDependencyTo`.",
+      "parentUuid": "0ac5add8_91e8ff14",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c8dbf344_3a2a3c8f",
@@ -133,6 +259,24 @@
       "writtenOn": "2026-02-20T22:48:03Z",
       "side": 1,
       "message": "nit: Please document the purpose of this class, because it is no longer obvious. Something like:\n\n\"\"\"\nTo implement IsDependencyOf(from_target, to_target), a BFS starting from an arbitrary `from_target` is performed, and a BreadCrumbTable is used to record during the walk, that a given `|target|` is a dependency of `|src_target|`, with `|is_public|` indicating the type of dependency.\n\nThis table only records the first (src_target-\u003etarget) dependency during the BFS, since only the shortest dependency path is interesting. This also means that if a target is the dependency of two distinct parents at the same level, only the first parent will be recorded in the table. Consider the following graph:\n\n```\n    A\n   / \\\n  B   C\n   \\ /\n    D\n```\n\nThe BFS will visit nodes in order: A, B, C and D, but will record only the\n(D, B) edge, not the (D, C) one, even if B-\u003eD is private and C-\u003eD is public.\n\nThis information is later used to reconstruct the dependency chain when `to_target` is found by the walk.\n\"\"\"",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a84713ac_865daeea",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8dbf344_3a2a3c8f",
       "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
@@ -154,6 +298,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f53fdbe2_f301f3aa",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b43d8ffb_b2b73f9e",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "62417afe_6e25e08f",
@@ -167,6 +329,24 @@
       "writtenOn": "2026-02-20T22:48:03Z",
       "side": 1,
       "message": "Please document the purpose of this class. E.g.\n\n\"\"\"\nStore the shortest-dependency-path information for all BFS walks starting from a given `search_from` target.\n\n`permitted_breadcrumbs` corresponds to public dependencies only.\n`any_breadcrumbs` corresponds to all dependencies.\n\nEach walk type needs only to be performed once, which is recorded by the\ncorresponding completion flag.\n\"\"\"\n\nI recommend making |from_target| a member of this class to make this more explicit and simplify the API of the methods below.\n\nAlso maybe provide methods with more descriptive names to replace the relatively obscure lambdas defined below (e.g. \n`ReachabilityCache::PerformDependencyWalk(bool is_permitted)` + `ReachabilityCache::SearchForDependencyTo(search_to, is_permitted, chain)`) to make things clearer.\n\n\nSee comments below.",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4385eaef_4117faa5",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62417afe_6e25e08f",
       "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
@@ -188,6 +368,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb45d914_25f3b9cc",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed68f694_c740ee98",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63b43b31_fd2584ac",
@@ -205,6 +403,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7612c7a_6e09aeca",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63b43b31_fd2584ac",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1c32e32_13519534",
@@ -218,6 +434,24 @@
       "writtenOn": "2026-02-20T22:48:03Z",
       "side": 1,
       "message": "nit: ditto",
+      "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53f24312_b8a6f39d",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T07:12:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1c32e32_13519534",
       "revId": "2430c06184c1b58a8c84c2ef6eaa6923719470e6",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
