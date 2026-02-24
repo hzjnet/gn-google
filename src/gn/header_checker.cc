@@ -163,7 +163,48 @@ bool HeaderChecker::Run(const std::vector<const Target*>& to_check,
     if (check->IsBinary())
       AddTargetToFileMap(check, &files_to_check);
   }
-  RunCheckOverFiles(files_to_check, force_check);
+
+  WorkerPool pool;
+  {
+    ScopedTrace precompute_trace(TraceItem::TRACE_CHECK_HEADERS,
+                                 "Precompute reachability");
+    std::set<const Target*> targets_to_precompute;
+    for (const auto& file : files_to_check) {
+      for (const auto& target_info : file.second) {
+        if (target_info.target->check_includes())
+          targets_to_precompute.insert(target_info.target);
+      }
+    }
+
+    if (!targets_to_precompute.empty()) {
+      task_count_.Increment();
+      for (const auto* target : targets_to_precompute) {
+        task_count_.Increment();
+        pool.PostTask([this, target]() {
+          Chain chain;
+          ReachabilityCache& cache = GetReachabilityCacheForTarget(target);
+          cache.SearchForDependencyTo(nullptr, true, &chain);
+          cache.SearchForDependencyTo(nullptr, false, &chain);
+          if (!task_count_.Decrement()) {
+            std::unique_lock<std::mutex> lock(task_count_lock_);
+            task_count_cv_.notify_one();
+          }
+        });
+      }
+
+      if (!task_count_.Decrement()) {
+        std::unique_lock<std::mutex> lock(task_count_lock_);
+        task_count_cv_.notify_one();
+      }
+
+      std::unique_lock<std::mutex> lock(task_count_lock_);
+      while (!task_count_.IsZero())
+        task_count_cv_.wait(lock);
+    }
+  }
+
+  RunCheckOverFiles(files_to_check, force_check, &pool);
+
 
   if (errors_.empty())
     return true;
@@ -171,8 +212,9 @@ bool HeaderChecker::Run(const std::vector<const Target*>& to_check,
   return false;
 }
 
-void HeaderChecker::RunCheckOverFiles(const FileMap& files, bool force_check) {
-  WorkerPool pool;
+void HeaderChecker::RunCheckOverFiles(const FileMap& files,
+                                      bool force_check,
+                                      WorkerPool* pool) {
   task_count_.Increment();
 
   for (const auto& file : files) {
@@ -204,17 +246,21 @@ void HeaderChecker::RunCheckOverFiles(const FileMap& files, bool force_check) {
       continue;
 
     task_count_.Increment();
-    pool.PostTask([this, targets = std::move(targets_to_check),
+    pool->PostTask([this, targets = std::move(targets_to_check),
                    file = file.first]() { DoWork(targets, file); });
   }
 
-  task_count_.Decrement();
+  if (!task_count_.Decrement()) {
+    std::unique_lock<std::mutex> lock(task_count_lock_);
+    task_count_cv_.notify_one();
+  }
 
   // Wait for all tasks posted by this method to complete.
   std::unique_lock<std::mutex> auto_lock(task_count_lock_);
   while (!task_count_.IsZero())
     task_count_cv_.wait(auto_lock);
 }
+
 
 void HeaderChecker::DoWork(const std::vector<const Target*>& targets,
                            const SourceFile& file) {

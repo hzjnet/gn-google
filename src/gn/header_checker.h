@@ -28,6 +28,7 @@ class BuildSettings;
 class InputFile;
 class SourceFile;
 class Target;
+class WorkerPool;
 
 namespace base {
 class FilePath;
@@ -242,7 +243,9 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
 
   // Backend for Run() that takes the list of files to check. The errors_ list
   // will be populate on failure.
-  void RunCheckOverFiles(const FileMap& flies, bool force_check);
+  void RunCheckOverFiles(const FileMap& files,
+                         bool force_check,
+                         WorkerPool* pool);
 
   void DoWork(const std::vector<const Target*>& targets,
               const SourceFile& file);
