@@ -13,6 +13,8 @@
 #include <set>
 #include <shared_mutex>
 #include <string_view>
+#include "base/containers/queue.h"
+
 #include <unordered_map>
 #include <vector>
 
@@ -208,7 +210,8 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
 
     // Conducts a breadth-first search through the dependency graph to find a
     // shortest chain from source_target_. Assumes unique lock is held.
-    void PerformDependencyWalk(bool permitted);
+    // The walk stops early if search_for is reached.
+    void PerformDependencyWalkTo(const Target* search_for, bool permitted);
 
     const Target* source_target_;
 
@@ -217,6 +220,9 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
     BreadcrumbTable permitted_breadcrumbs_;
     // Breadcrumbs for the shortest path of any type.
     BreadcrumbTable any_breadcrumbs_;
+
+    base::queue<const Target*> permitted_work_queue_;
+    base::queue<const Target*> any_work_queue_;
 
     bool permitted_complete_ = false;
     bool any_complete_ = false;
@@ -244,7 +250,8 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
   // will be populate on failure.
   void RunCheckOverFiles(const FileMap& flies, bool force_check);
 
-  void DoWork(const Target* target, const SourceFile& file);
+  void DoWork(const std::vector<const Target*>& targets,
+              const SourceFile& file);
 
   // Adds the sources and public files from the given target to the given map.
   static void AddTargetToFileMap(const Target* target, FileMap* dest);
@@ -260,7 +267,7 @@ class HeaderChecker : public base::RefCountedThreadSafe<HeaderChecker> {
 
   // from_target is the target the file was defined from. It will be used in
   // error messages.
-  bool CheckFile(const Target* from_target,
+  bool CheckFile(const std::vector<const Target*>& targets,
                  const SourceFile& file,
                  std::vector<Err>* errors) const;
 

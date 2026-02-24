@@ -194,14 +194,18 @@ void HeaderChecker::RunCheckOverFiles(const FileMap& files, bool force_check) {
         continue;
     }
 
+    std::vector<const Target*> targets_to_check;
     for (const auto& vect_i : file.second) {
       if (vect_i.target->check_includes()) {
-        task_count_.Increment();
-        pool.PostTask([this, target = vect_i.target, file = file.first]() {
-          DoWork(target, file);
-        });
+        targets_to_check.push_back(vect_i.target);
       }
     }
+    if (targets_to_check.empty())
+      continue;
+
+    task_count_.Increment();
+    pool.PostTask([this, targets = std::move(targets_to_check),
+                   file = file.first]() { DoWork(targets, file); });
   }
 
   task_count_.Decrement();
@@ -212,9 +216,10 @@ void HeaderChecker::RunCheckOverFiles(const FileMap& files, bool force_check) {
     task_count_cv_.wait(auto_lock);
 }
 
-void HeaderChecker::DoWork(const Target* target, const SourceFile& file) {
+void HeaderChecker::DoWork(const std::vector<const Target*>& targets,
+                           const SourceFile& file) {
   std::vector<Err> errors;
-  if (!CheckFile(target, file, &errors)) {
+  if (!CheckFile(targets, file, &errors)) {
     std::lock_guard<std::mutex> lock(errors_lock_);
     errors_.insert(errors_.end(), errors.begin(), errors.end());
   }
@@ -321,7 +326,9 @@ SourceFile HeaderChecker::SourceFileForInclude(
   return SourceFile();
 }
 
-void HeaderChecker::ReachabilityCache::PerformDependencyWalk(bool permitted) {
+void HeaderChecker::ReachabilityCache::PerformDependencyWalkTo(
+    const Target* search_for,
+    bool permitted) {
   // Conduct the actual BFS.
   BreadcrumbTable& breadcrumbs =
       permitted ? permitted_breadcrumbs_ : any_breadcrumbs_;
@@ -330,22 +337,29 @@ void HeaderChecker::ReachabilityCache::PerformDependencyWalk(bool permitted) {
   if (complete)
     return;
 
-  // work_queue maintains a queue of targets which need to be considered as part
-  // of dependency chain, in the order they were first traversed. Each time a
-  // new transitive dependency of source_target_ is discovered for the first
-  // time, it is added to work_queue and a "breadcrumb" is added, indicating
-  // which target it was reached from when first discovered.
-  base::queue<const Target*> work_queue;
-  work_queue.push(source_target_);
-  breadcrumbs.Insert(source_target_, nullptr, true);
+  base::queue<const Target*>& work_queue =
+      permitted ? permitted_work_queue_ : any_work_queue_;
+
+  if (breadcrumbs.Insert(source_target_, nullptr, true)) {
+    work_queue.push(source_target_);
+    if (source_target_ == search_for) {
+      return;
+    }
+  }
 
   while (!work_queue.empty()) {
     const Target* target = work_queue.front();
     work_queue.pop();
 
+    bool found = false;
+
     for (const auto& dep : target->public_deps()) {
-      if (breadcrumbs.Insert(dep.ptr, target, true))
+      if (breadcrumbs.Insert(dep.ptr, target, true)) {
         work_queue.push(dep.ptr);
+        if (dep.ptr == search_for) {
+          found = true;
+        }
+      }
     }
 
     if (!permitted || target == source_target_) {
@@ -354,11 +368,24 @@ void HeaderChecker::ReachabilityCache::PerformDependencyWalk(bool permitted) {
       // a target can include headers from its direct deps regardless of
       // public/private-ness.
       for (const auto& dep : target->private_deps()) {
-        if (breadcrumbs.Insert(dep.ptr, target, false))
+        if (breadcrumbs.Insert(dep.ptr, target, false)) {
           work_queue.push(dep.ptr);
+          if (dep.ptr == search_for) {
+            found = true;
+          }
+        }
       }
     }
+
+    if (found) {
+      return;
+    }
   }
+
+  // Clear memory when done to save RAM.
+  base::queue<const Target*> empty_queue;
+  work_queue.swap(empty_queue);
+
   complete = true;
 }
 
@@ -368,18 +395,30 @@ bool HeaderChecker::ReachabilityCache::SearchForDependencyTo(
     Chain* chain) {
   {
     std::shared_lock<std::shared_mutex> read_lock(lock_);
+    // First, check if we've already found it during a previous paused walk.
+    if (SearchBreadcrumbs(search_for, permitted, chain)) {
+      return true;
+    }
+    // If we've completed the walk and didn't find it, it's not reachable.
     if (permitted ? permitted_complete_ : any_complete_) {
-      return SearchBreadcrumbs(search_for, permitted, chain);
+      return false;
     }
   }
 
   {
     std::unique_lock<std::shared_mutex> write_lock(lock_);
+    // Must check again after acquiring write lock.
+    if (SearchBreadcrumbs(search_for, permitted, chain)) {
+      return true;
+    }
     if (!(permitted ? permitted_complete_ : any_complete_)) {
-      PerformDependencyWalk(permitted);
+      PerformDependencyWalkTo(search_for, permitted);
     }
   }
 
+  // After writing (or if already completed), read the result without needing
+  // a write lock, although we could do it inside the write block. We do it
+  // here to keep the structure uniform and minimize time inside the write block.
   std::shared_lock<std::shared_mutex> read_lock(lock_);
   return SearchBreadcrumbs(search_for, permitted, chain);
 }
@@ -407,7 +446,7 @@ bool HeaderChecker::ReachabilityCache::SearchBreadcrumbs(
   return true;
 }
 
-bool HeaderChecker::CheckFile(const Target* from_target,
+bool HeaderChecker::CheckFile(const std::vector<const Target*>& targets,
                               const SourceFile& file,
                               std::vector<Err>* errors) const {
   ScopedTrace trace(TraceItem::TRACE_CHECK_HEADER, file.value());
@@ -427,44 +466,54 @@ bool HeaderChecker::CheckFile(const Target* from_target,
     if (IsFileInOuputDir(file))
       return true;
 
-    errors->emplace_back(from_target->defined_from(), "Source file not found.",
-                         "The target:\n  " +
-                             from_target->label().GetUserVisibleName(false) +
-                             "\nhas a source file:\n  " + file.value() +
-                             "\nwhich was not found.");
+    for (const Target* from_target : targets) {
+      errors->emplace_back(
+          from_target->defined_from(), "Source file not found.",
+          "The target:\n  " + from_target->label().GetUserVisibleName(false) +
+              "\nhas a source file:\n  " + file.value() +
+              "\nwhich was not found.");
+    }
     return false;
   }
 
   InputFile input_file(file);
   input_file.SetContents(contents);
 
-  std::vector<SourceDir> include_dirs;
-  for (ConfigValuesIterator iter(from_target); !iter.done(); iter.Next()) {
-    const std::vector<SourceDir>& target_include_dirs =
-        iter.cur().include_dirs();
-    include_dirs.insert(include_dirs.end(), target_include_dirs.begin(),
-                        target_include_dirs.end());
-  }
-
-  size_t error_count_before = errors->size();
+  std::vector<IncludeStringWithLocation> includes;
   CIncludeIterator iter(&input_file);
-
   IncludeStringWithLocation include;
-
-  // Get the cache for the source target once for the whole file.
-  ReachabilityCache& from_target_cache =
-      GetReachabilityCacheForTarget(from_target);
-
   while (iter.GetNextIncludeString(&include)) {
     if (include.system_style_include && !check_system_)
       continue;
+    includes.push_back(include);
+  }
 
-    Err err;
-    SourceFile included_file =
-        SourceFileForInclude(include, include_dirs, input_file, &err);
-    if (!included_file.is_null()) {
-      CheckInclude(from_target_cache, input_file, included_file,
-                   include.location, errors);
+  if (includes.empty())
+    return true;
+
+  size_t error_count_before = errors->size();
+
+  for (const Target* from_target : targets) {
+    std::vector<SourceDir> include_dirs;
+    for (ConfigValuesIterator target_iter(from_target); !target_iter.done();
+         target_iter.Next()) {
+      const std::vector<SourceDir>& target_include_dirs =
+          target_iter.cur().include_dirs();
+      include_dirs.insert(include_dirs.end(), target_include_dirs.begin(),
+                          target_include_dirs.end());
+    }
+
+    ReachabilityCache& from_target_cache =
+        GetReachabilityCacheForTarget(from_target);
+
+    for (const auto& inc : includes) {
+      Err err;
+      SourceFile included_file =
+          SourceFileForInclude(inc, include_dirs, input_file, &err);
+      if (!included_file.is_null()) {
+        CheckInclude(from_target_cache, input_file, included_file, inc.location,
+                     errors);
+      }
     }
   }
 
