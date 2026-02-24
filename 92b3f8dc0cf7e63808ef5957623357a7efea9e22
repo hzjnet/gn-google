@@ -16,6 +16,24 @@
       "message": "nit: Clarify with something like \"... a list of targets using the source file.\"",
       "revId": "92b3f8dc0cf7e63808ef5957623357a7efea9e22",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69a867aa_4267cf16",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-02-24T13:44:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1567e01d_81d7e7ce",
+      "revId": "92b3f8dc0cf7e63808ef5957623357a7efea9e22",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
