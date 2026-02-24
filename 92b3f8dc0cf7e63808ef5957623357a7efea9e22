@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1567e01d_81d7e7ce",
+        "filename": "src/gn/header_checker.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-02-24T13:28:25Z",
+      "side": 1,
+      "message": "nit: Clarify with something like \"... a list of targets using the source file.\"",
+      "revId": "92b3f8dc0cf7e63808ef5957623357a7efea9e22",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
