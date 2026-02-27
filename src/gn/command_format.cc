@@ -8,6 +8,8 @@
 
 #include <sstream>
 
+#include "gn/err.h"
+#include "gn/header_checker.h"
 #include "base/command_line.h"
 #include "base/files/file_util.h"
 #include "base/json/json_reader.h"
@@ -39,6 +41,7 @@ const char kSwitchReadTree[] = "read-tree";
 const char kSwitchStdin[] = "stdin";
 const char kSwitchTreeTypeJSON[] = "json";
 const char kSwitchTreeTypeText[] = "text";
+const char kSwitchFix[] = "fix-deps";
 
 const char kFormat[] = "format";
 const char kFormat_HelpShort[] = "format: Format .gn files.";
@@ -80,12 +83,16 @@ Arguments
       supported is json.) The given .gn file will be overwritten. This can be
       used to programmatically transform .gn files.
 
+  --fix-deps
+      Checks for missing deps and add them if necessary.
+
 Examples
   gn format //some/BUILD.gn //some/other/BUILD.gn //and/another/BUILD.gn
   gn format some\\BUILD.gn
   gn format /abspath/some/BUILD.gn
   gn format --stdin
   gn format --read-tree=json //rewritten/BUILD.gn
+  gn format --fix-deps //rewritten/BUILD.gn
 )";
 
 namespace {
@@ -1332,7 +1339,8 @@ bool FormatJsonToString(const std::string& json, std::string* output) {
 bool FormatStringToString(const std::string& input,
                           TreeDumpMode dump_tree,
                           std::string* output,
-                          std::string* dump_output) {
+                          std::string* dump_output,
+                          HeaderChecker* header_checker) {
   SourceFile source_file;
   InputFile file(source_file);
   file.SetContents(input);
@@ -1350,6 +1358,13 @@ bool FormatStringToString(const std::string& input,
   if (err.has_error()) {
     err.PrintToStdout();
     return false;
+  }
+
+  std::vector<Err> errors;
+  std::vector<const Target*> targets;
+  header_checker->Run(targets, false, &errors);
+  if (errors.size() >= 0) {
+    LOG(FATAL) << "uh oh, had errors: " << errors.size();
   }
 
   DoFormat(parse_node.get(), dump_tree, output, dump_output);
@@ -1404,7 +1419,7 @@ int RunFormat(const std::vector<std::string>& args) {
     std::string input = ReadStdin();
     std::string output;
     std::string dump_output;
-    if (!FormatStringToString(input, dump_tree, &output, &dump_output))
+    if (!FormatStringToString(input, dump_tree, &output, &dump_output, nullptr))
       return 1;
     printf("%s", dump_output.c_str());
     printf("%s", output.c_str());
@@ -1444,6 +1459,7 @@ int RunFormat(const std::vector<std::string>& args) {
       return 1;
     }
     base::FilePath to_format = setup.build_settings().GetFullPath(file);
+    
     std::string output;
     FormatJsonToString(ReadStdin(), &output);
     if (base::WriteFile(to_format, output.data(),
@@ -1460,6 +1476,12 @@ int RunFormat(const std::vector<std::string>& args) {
     return 0;
   }
 
+  auto* header_checker = new HeaderChecker(
+      &setup.build_settings(),
+      setup.builder().GetAllResolvedTargets(),
+      false,
+      false);
+  LOG(FATAL) << setup.builder().GetAllResolvedTargets().size();
   // TODO(scottmg): Eventually, this list of files should be processed in
   // parallel.
   int exit_code = 0;
@@ -1485,7 +1507,7 @@ int RunFormat(const std::vector<std::string>& args) {
     std::string output_string;
     std::string dump_output_string;
     if (!FormatStringToString(original_contents, dump_tree, &output_string,
-                              &dump_output_string)) {
+                              &dump_output_string, header_checker)) {
       exit_code = 1;
       continue;
     }

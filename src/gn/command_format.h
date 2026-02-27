@@ -9,6 +9,7 @@
 
 class Setup;
 class SourceFile;
+class HeaderChecker;
 
 namespace commands {
 
@@ -29,7 +30,8 @@ bool FormatJsonToString(const std::string& input, std::string* output);
 bool FormatStringToString(const std::string& input,
                           TreeDumpMode dump_tree,
                           std::string* output,
-                          std::string* dump_output);
+                          std::string* dump_output,
+                          HeaderChecker* header_checker);
 
 }  // namespace commands
 
