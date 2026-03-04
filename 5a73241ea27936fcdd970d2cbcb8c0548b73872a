@@ -18,6 +18,23 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b581e528_86720b3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-03-04T16:20:36Z",
+      "side": 1,
+      "message": "Thank you, if I understand correctly, the performance gain is not related to empty lists, but to the fact that copying lists that are never mutated happens very frequently, correct?",
+      "revId": "5a73241ea27936fcdd970d2cbcb8c0548b73872a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "41866683_2e316f9b",
