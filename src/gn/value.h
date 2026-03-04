@@ -9,12 +9,29 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 
 #include "base/logging.h"
+#include "base/memory/ref_counted.h"
+#include "base/memory/scoped_refptr.h"
 #include "gn/err.h"
 
 class ParseNode;
 class Scope;
+class Value;
+
+class ValueList : public base::RefCountedThreadSafe<ValueList> {
+ public:
+  ValueList();
+  ValueList(std::vector<Value> v);
+
+ private:
+  friend class base::RefCountedThreadSafe<ValueList>;
+  friend class Value;
+  ~ValueList();
+
+  std::vector<Value> values_;
+};
 
 // Represents a variable value in the interpreter.
 class Value {
@@ -84,14 +101,8 @@ class Value {
     return string_value_;
   }
 
-  std::vector<Value>& list_value() {
-    DCHECK(type_ == LIST);
-    return list_value_;
-  }
-  const std::vector<Value>& list_value() const {
-    DCHECK(type_ == LIST);
-    return list_value_;
-  }
+  std::vector<Value>& list_value();
+  const std::vector<Value>& list_value() const;
 
   Scope* scope_value() {
     DCHECK(type_ == SCOPE);
@@ -128,7 +139,7 @@ class Value {
     bool boolean_value_;
     int64_t int_value_;
     std::string string_value_;
-    std::vector<Value> list_value_;
+    scoped_refptr<ValueList> list_ptr_;
     std::unique_ptr<Scope> scope_value_;
   };
 };
