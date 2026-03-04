@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99410efd_095bb524",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-04T14:25:34Z",
+      "side": 1,
+      "message": "lgtm\n\nComments are optional.",
+      "revId": "5a73241ea27936fcdd970d2cbcb8c0548b73872a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41866683_2e316f9b",
+        "filename": "src/gn/value.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-04T14:25:34Z",
+      "side": 1,
+      "message": "nit: We can avoid the iteration if `list_ptr_` is null.\n\n```\n    std::string result \u003d \"[\";\n    if (list_ptr_) {\n      const std::vector\u003cValue\u003e\u0026 list \u003d list_value();\n      ...\n    }\n    result.push_back(\u0027]\u0027);\n    return result;\n```",
+      "revId": "5a73241ea27936fcdd970d2cbcb8c0548b73872a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a48b9091_d73345f6",
+        "filename": "src/gn/value.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-04T14:25:34Z",
+      "side": 1,
+      "message": "nit: We can return early if either pointer is nullptr here.\n\n```\n    if (list_ptr_ \u003d\u003d other.list_ptr_)\n      return true;\n    if (!list_ptr_ || !other.list_ptr_)\n      return false;\n    return list_value() \u003d\u003d other.list_value();\n```",
+      "revId": "5a73241ea27936fcdd970d2cbcb8c0548b73872a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
