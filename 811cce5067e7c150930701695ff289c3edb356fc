@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33a63b98_d224be59",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-05T15:45:36Z",
+      "side": 1,
+      "message": "lgtm",
+      "revId": "811cce5067e7c150930701695ff289c3edb356fc",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d891c747_b13431a0",
+        "filename": "src/gn/err.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-05T15:45:36Z",
+      "side": 1,
+      "message": "Can we check that `limit \u003e\u003d 0` before incrementing `g_num_errors_printed`? This would avoid atomic int increment when we don\u0027t check the error count.",
+      "range": {
+        "startLine": 184,
+        "startChar": 4,
+        "endLine": 184,
+        "endChar": 32
+      },
+      "revId": "811cce5067e7c150930701695ff289c3edb356fc",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
