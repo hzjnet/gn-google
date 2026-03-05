@@ -35,6 +35,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6221fabc_5b43fb1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-05T01:17:16Z",
+      "side": 1,
+      "message": "Yes.",
+      "parentUuid": "b581e528_86720b3f",
+      "revId": "5a73241ea27936fcdd970d2cbcb8c0548b73872a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "41866683_2e316f9b",
@@ -52,6 +70,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c4c1dbf_9e7c6be6",
+        "filename": "src/gn/value.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-05T01:17:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41866683_2e316f9b",
+      "revId": "5a73241ea27936fcdd970d2cbcb8c0548b73872a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a48b9091_d73345f6",
@@ -65,6 +101,24 @@
       "writtenOn": "2026-03-04T14:25:34Z",
       "side": 1,
       "message": "nit: We can return early if either pointer is nullptr here.\n\n```\n    if (list_ptr_ \u003d\u003d other.list_ptr_)\n      return true;\n    if (!list_ptr_ || !other.list_ptr_)\n      return false;\n    return list_value() \u003d\u003d other.list_value();\n```",
+      "revId": "5a73241ea27936fcdd970d2cbcb8c0548b73872a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ae05cb5_16151b26",
+        "filename": "src/gn/value.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-05T01:17:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a48b9091_d73345f6",
       "revId": "5a73241ea27936fcdd970d2cbcb8c0548b73872a",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
