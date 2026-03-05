@@ -315,6 +315,15 @@ const char kDefaultToolchain[] = "default-toolchain";
 
 const char kRegeneration[] = "regeneration";
 
+const char kBazel[] = "bazel";
+const char kBazel_HelpShort[] = "--bazel: Generates Bazel BUILD files.";
+const char kBazel_Help[] =
+    R"(--bazel: Generates Bazel BUILD files.
+
+  Specify a directory where to output the generated Bazel BUILD files.
+  For example: gn gen out/Default --bazel=out/Bazel
+)";
+
 const char kAddExportCompileCommands[] = "add-export-compile-commands";
 
 // -----------------------------------------------------------------------------
@@ -331,6 +340,7 @@ const SwitchInfoMap& GetSwitches() {
   static SwitchInfoMap info_map;
   if (info_map.empty()) {
     INSERT_VARIABLE(Args)
+    INSERT_VARIABLE(Bazel)
     INSERT_VARIABLE(Color)
     INSERT_VARIABLE(Dotfile)
     INSERT_VARIABLE(FailOnUnusedArgs)

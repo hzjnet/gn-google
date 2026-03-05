@@ -100,6 +100,7 @@ std::string NinjaTargetWriter::RunAndWriteFile(
     const Target* target,
     ResolvedTargetData* resolved,
     std::vector<OutputFile>* ninja_outputs) {
+  return "";
   const Settings* settings = target->settings();
 
   ScopedTrace trace(TraceItem::TRACE_FILE_WRITE_NINJA,

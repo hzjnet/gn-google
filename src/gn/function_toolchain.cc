@@ -7,6 +7,9 @@
 #include <memory>
 #include <utility>
 
+#include "base/strings/stringprintf.h"
+#include "base/values.h"
+#include "gn/bazel_generator.h"
 #include "gn/c_tool.h"
 #include "gn/err.h"
 #include "gn/functions.h"
@@ -257,6 +260,26 @@ Value RunToolchain(Scope* scope,
 
   // Save this toolchain.
   toolchain->ToolchainSetupComplete();
+
+  auto bazel_scope = Scope(scope);
+  Value tools(function, Value::LIST);
+  auto& l = tools.list_value();
+  for (const auto& [name, tool] : toolchain->tools()) {
+    if (IsToolAllowed(name)) {
+    std::string tool_label =
+        base::StringPrintf(":%s_%s", label.name().c_str(), name);
+    l.emplace_back(function, tool_label);
+    }
+  }
+  std::string root_build_dir = scope->settings()->toolchain_output_dir().value();
+  bazel_scope.SetValue("root_build_dir", Value(function, root_build_dir), function);
+  auto is_default = toolchain->label() == scope->settings()->default_toolchain_label();
+  if (is_default) {
+    bazel_scope.SetValue("is_default", Value(function, is_default), function);
+  }
+  bazel_scope.SetValue("tools", tools, function);
+  bazel_generator.GetPackage(label.dir())
+      .AddTarget("toolchain", label, &bazel_scope);
   Scope::ItemVector* collector = scope->GetItemCollector();
   if (!collector) {
     *err = Err(function, "Can't define a toolchain in this context.");
@@ -960,6 +983,20 @@ Value RunTool(Scope* scope,
 
   tool->set_defined_from(function);
   toolchain->SetTool(std::move(tool));
+  if (IsToolAllowed(tool_name)) {
+  auto label = Label(
+      toolchain->label().dir(),
+      base::StringPrintf("%s_%s", toolchain->label().name().c_str(),
+                         tool_name.c_str()),
+      toolchain->label().toolchain_dir(), toolchain->label().toolchain_name());
+  auto bazel_scope = Scope(&block_scope);
+  bazel_scope
+      .SetValue("action",
+                Value(function, base::StringPrintf("@rules_gn//actions:%s",
+                                                   tool_name.c_str())), function);
+          bazel_generator.GetPackage(label.dir())
+      .AddTarget("tool", label, &bazel_scope);
+                }
 
   // Make sure there weren't any vars set in this tool that were unused.
   if (!block_scope.CheckForUnusedVars(err))

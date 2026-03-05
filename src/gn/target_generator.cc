@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "gn/action_target_generator.h"
+#include "gn/bazel_generator.h"
 #include "gn/binary_target_generator.h"
 #include "gn/build_settings.h"
 #include "gn/bundle_data_target_generator.h"
@@ -159,6 +160,9 @@ void TargetGenerator::GenerateTarget(Scope* scope,
 
   if (err->has_error())
     return;
+
+  bazel_generator.GetPackage(label.dir())
+    .AddTarget(output_type, label, scope);
 
   // Save this target for the file.
   Scope::ItemVector* collector = scope->GetItemCollector();

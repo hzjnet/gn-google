@@ -647,6 +647,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
         'src/gn/analyzer.cc',
         'src/gn/args.cc',
         'src/gn/binary_target_generator.cc',
+        'src/gn/bazel_generator.cc',
         'src/gn/build_settings.cc',
         'src/gn/builder.cc',
         'src/gn/builder_record.cc',

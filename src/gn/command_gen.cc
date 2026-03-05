@@ -4,6 +4,7 @@
 
 #include <inttypes.h>
 
+#include <fstream>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
@@ -13,6 +14,7 @@
 #include "base/strings/string_number_conversions.h"
 #include "base/strings/stringprintf.h"
 #include "base/timer/elapsed_timer.h"
+#include "gn/bazel_generator.h"
 #include "gn/build_settings.h"
 #include "gn/commands.h"
 #include "gn/compile_commands_writer.h"
@@ -61,6 +63,7 @@ const char kSwitchNinjaOutputsFile[] = "ninja-outputs-file";
 const char kSwitchNinjaOutputsScript[] = "ninja-outputs-script";
 const char kSwitchNinjaOutputsScriptArgs[] = "ninja-outputs-script-args";
 const char kSwitchNoDeps[] = "no-deps";
+const char kSwitchBazel[] = "bazel";
 const char kSwitchSln[] = "sln";
 const char kSwitchXcodeProject[] = "xcode-project";
 const char kSwitchXcodeBuildSystem[] = "xcode-build-system";
@@ -813,13 +816,46 @@ int RunGen(const std::vector<std::string>& args) {
               });
   }
 
-  Err err;
-  // Write the root ninja files.
-  if (!NinjaWriter::RunAndWriteFiles(&setup->build_settings(), setup->builder(),
-                                     write_info.rules, &err)) {
-    err.PrintToStdout();
-    return 1;
+  if (command_line->HasSwitch(kSwitchBazel)) {
+    auto dst = command_line->GetSwitchValuePath(kSwitchBazel);
+    bazel_generator.Generate(dst);
+    auto default_toolchain =
+        setup->loader()->default_toolchain_label().GetUserVisibleName(false);
+    // "//out/Default/" => "out/Default"
+    auto build_dir = setup->build_settings().build_dir().SourceWithNoTrailingSlash().substr(2);
+    std::ofstream os(dst.Append("metadata.bzl").value());
+    os << "DEFAULT_TOOLCHAIN = Label(\""  << default_toolchain << "\")\n";
+    os << "ROOT_BUILD_DIR = \"" << build_dir << "\"\n";
+  
+    std::ofstream dep_out(dst.Append("DEPS.txt").value());
+    // Copied from ninja_build_writer.
+    std::vector<base::FilePath> other_files = g_scheduler->GetGenDependencies();
+    const InputFileManager* input_file_manager =
+        g_scheduler->input_file_manager();
+
+    VectorSetSorter<base::FilePath> sorter(
+        input_file_manager->GetInputFileCount() + other_files.size());
+
+    input_file_manager->AddAllPhysicalInputFileNamesToVectorSetSorter(&sorter);
+    sorter.Add(other_files.begin(), other_files.end());
+
+    const base::FilePath workspace_root =
+        setup->build_settings().root_path();
+
+    auto item_callback = [&dep_out,
+                          &workspace_root, &build_dir](const base::FilePath& input_file) {
+      auto file =
+          MakeAbsoluteFilePathRelativeIfPossible(workspace_root, input_file).value();
+      if (!file.starts_with(build_dir)) {
+        dep_out << (file.starts_with("./") ? file.substr(2) : file) << '\n';
+      }
+    };
+
+    sorter.IterateOver(item_callback);
+
+    return 0;
   }
+  Err err;
 
   if (!RunNinjaPostProcessTools(
           &setup->build_settings(),

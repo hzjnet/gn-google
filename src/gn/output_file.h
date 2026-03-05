@@ -44,6 +44,9 @@ class OutputFile {
     return value_ < other.value_;
   }
 
+  // Returns true if the value is empty.
+  bool empty() const { return value_.empty(); }
+
  private:
   std::string value_;
 };

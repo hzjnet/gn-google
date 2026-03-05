@@ -13,6 +13,7 @@
 #include "base/sha2.h"
 #include "base/strings/string_number_conversions.h"
 #include "base/strings/string_util.h"
+#include "gn/bazel_generator.h"
 #include "gn/build_settings.h"
 #include "gn/config.h"
 #include "gn/config_values_generator.h"
@@ -393,6 +394,9 @@ Value RunConfig(const FunctionCallNode* function,
   }
   if (err->has_error())
     return Value();
+
+  bazel_generator.GetPackage(label.dir())
+      .AddTarget("config", label, scope);
 
   // Save the generated item.
   Scope::ItemVector* collector = scope->GetItemCollector();
