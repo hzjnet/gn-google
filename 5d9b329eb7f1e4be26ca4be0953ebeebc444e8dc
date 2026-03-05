@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "472bcc5f_9bc63c3e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000070
+      },
+      "writtenOn": "2026-03-05T09:17:30Z",
+      "side": 1,
+      "message": "Thank you for the fix (and sorry for suggesting this optimisation that turned out to be bugged).",
+      "revId": "5d9b329eb7f1e4be26ca4be0953ebeebc444e8dc",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
