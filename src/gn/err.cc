@@ -6,6 +6,9 @@
 
 #include <stddef.h>
 
+#include <atomic>
+#include <mutex>
+
 #include "base/strings/string_number_conversions.h"
 #include "base/strings/string_util.h"
 #include "gn/filesystem_utils.h"
@@ -14,8 +17,30 @@
 #include "gn/standard_out.h"
 #include "gn/tokenizer.h"
 #include "gn/value.h"
+#include "base/command_line.h"
+#include "gn/switches.h"
 
 namespace {
+
+std::atomic<int> g_num_errors_printed{0};
+
+int GetErrorLimit() {
+  static int g_error_limit = 10;
+  static std::once_flag flag;
+  std::call_once(flag, []() {
+    if (base::CommandLine::InitializedForCurrentProcess()) {
+      const base::CommandLine* cmdline = base::CommandLine::ForCurrentProcess();
+      if (cmdline && cmdline->HasSwitch(switches::kErrorLimit)) {
+        std::string limit_str = cmdline->GetSwitchValueString(switches::kErrorLimit);
+        int parsed_limit;
+        if (base::StringToInt(limit_str, &parsed_limit)) {
+          g_error_limit = parsed_limit;
+        }
+      }
+    }
+  });
+  return g_error_limit;
+}
 
 std::string GetNthLine(std::string_view data, int n) {
   size_t line_off = Tokenizer::ByteOffsetOfNthLine(data, n);
@@ -156,6 +181,17 @@ void Err::InternalPrintToStdout(bool is_sub_err, bool is_fatal) const {
   DCHECK(info_);
 
   if (!is_sub_err) {
+    int limit = GetErrorLimit();
+    int printed = ++g_num_errors_printed;
+    if (limit >= 0 && printed > limit) {
+      if (printed == limit + 1) {
+        OutputString(
+            "Too many errors/warnings. Suppressing further messages.\n",
+            DECORATION_RED);
+      }
+      return;
+    }
+
     if (is_fatal)
       OutputString("ERROR ", DECORATION_RED);
     else
