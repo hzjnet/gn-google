@@ -159,6 +159,23 @@
       "message": "Btw, I have uploaded https://gn-review.googlesource.com/c/gn/+/16740 to enable runtime libc++ and libstdc++ debug assertions on debug builds in CQ, which should help catch these unexpected regressions more easily in the future.\n\nFor some reason. `_LIBCPP_DEBUG\u003d1` does not work on our XCode builders though (see CQ failure for patchset 1 on this CL).",
       "revId": "8b973aa51d02aa1ab327100007d4070c24b862b0",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f30d5d81_3dc54004",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4689526
+      },
+      "writtenOn": "2026-03-08T19:30:06Z",
+      "side": 1,
+      "message": "Thank you",
+      "revId": "8b973aa51d02aa1ab327100007d4070c24b862b0",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
