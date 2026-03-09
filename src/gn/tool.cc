@@ -10,6 +10,7 @@
 #include "gn/rust_tool.h"
 #include "gn/settings.h"
 #include "gn/target.h"
+#include "gn/value_extractors.h"
 
 const char* Tool::kToolNone = "";
 
@@ -199,6 +200,21 @@ bool Tool::ReadOutputExtension(Scope* scope, Err* err) {
   return true;
 }
 
+bool Tool::ReadInputs(Scope* scope, Err* err) {
+  DCHECK(!complete_);
+  const Value* value = scope->GetValue("inputs", true);
+  if (!value)
+    return true;  // Not present is fine.
+
+  std::vector<SourceFile> inputs;
+  if (!ExtractListOfRelativeFiles(scope->settings()->build_settings(), *value,
+                                  scope->GetSourceDir(), &inputs, err)) {
+    return false;
+  }
+  set_inputs(std::move(inputs));
+  return true;
+}
+
 bool Tool::InitTool(Scope* scope, Toolchain* toolchain, Err* err) {
   if (!ReadPattern(scope, "command", &command_, err) ||
       !ReadString(scope, "command_launcher", &command_launcher_, err) ||
@@ -211,7 +227,8 @@ bool Tool::InitTool(Scope* scope, Toolchain* toolchain, Err* err) {
       !ReadBool(scope, "restat", &restat_, err) ||
       !ReadPattern(scope, "rspfile", &rspfile_, err) ||
       !ReadPattern(scope, "rspfile_content", &rspfile_content_, err) ||
-      !ReadLabel(scope, "pool", toolchain->label(), &pool_, err)) {
+      !ReadLabel(scope, "pool", toolchain->label(), &pool_, err) ||
+      !ReadInputs(scope, err)) {
     return false;
   }
   const bool command_is_required = name_ != GeneralTool::kGeneralToolAction;

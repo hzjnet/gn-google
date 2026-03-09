@@ -224,6 +224,12 @@ class Tool {
   const LabelPtrPair<Pool>& pool() const { return pool_; }
   void set_pool(LabelPtrPair<Pool> pool) { pool_ = std::move(pool); }
 
+  const std::vector<SourceFile>& inputs() const { return inputs_; }
+  void set_inputs(std::vector<SourceFile> inputs) {
+    DCHECK(!complete_);
+    inputs_ = std::move(inputs);
+  }
+
   // Other functions ----------------------------------------------------------
 
   // Function for the above override to call to complete the tool.
@@ -277,6 +283,7 @@ class Tool {
                  LabelPtrPair<Pool>* field,
                  Err* err);
   bool ReadOutputExtension(Scope* scope, Err* err);
+  bool ReadInputs(Scope* scope, Err* err);
 
   const ParseNode* defined_from_ = nullptr;
   const char* name_ = nullptr;
@@ -303,6 +310,7 @@ class Tool {
   SubstitutionPattern rspfile_;
   SubstitutionPattern rspfile_content_;
   LabelPtrPair<Pool> pool_;
+  std::vector<SourceFile> inputs_;
 
   bool complete_ = false;
 
