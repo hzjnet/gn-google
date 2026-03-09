@@ -119,6 +119,19 @@ void NinjaToolchainWriter::WriteToolRule(Tool* tool,
 
   if (tool->restat())
     out_ << kIndent << "restat = 1" << std::endl;
+
+  if (tool->inputs().size() > 1) {
+    out_ << "build ";
+    path_output_.WriteFile(
+        out_, *tool->inputs_phony(rule_prefix, *settings_->build_settings()));
+    out_ << ": phony";
+    for (const auto& input : tool->inputs()) {
+      out_ << " ";
+      path_output_.WriteFile(out_,
+                             OutputFile(settings_->build_settings(), input));
+    }
+    out_ << std::endl;
+  }
 }
 
 void NinjaToolchainWriter::WriteRulePattern(const char* name,
