@@ -286,9 +286,17 @@ void NinjaBinaryTargetWriter::WriteCompilerBuildLine(
   out_ << ": " << rule_prefix_ << tool_name;
   path_output_.WriteFiles(out_, sources);
 
-  if (!extra_deps.empty()) {
+  const Tool* tool = target_->toolchain()->GetTool(tool_name);
+  if (!extra_deps.empty() || (tool && !tool->inputs().empty())) {
     out_ << " |";
     path_output_.WriteFiles(out_, extra_deps);
+    if (tool) {
+      for (const auto& input : tool->inputs()) {
+        out_ << " ";
+        path_output_.WriteFile(out_,
+                               OutputFile(settings_->build_settings(), input));
+      }
+    }
   }
 
   if (!order_only_deps.empty()) {

@@ -605,6 +605,10 @@ void NinjaCBinaryTargetWriter::WriteLinkerStuff(
   std::copy(input_deps.begin(), input_deps.end(),
             std::back_inserter(implicit_deps));
 
+  for (const auto& input : tool_->inputs()) {
+    implicit_deps.push_back(OutputFile(settings_->build_settings(), input));
+  }
+
   // Any C++ target which depends on a Rust .rlib has to depend on its entire
   // tree of transitive rlibs found inside the linking target (which excludes
   // rlibs only depended on inside a shared library dependency).
