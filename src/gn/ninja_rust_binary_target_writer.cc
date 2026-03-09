@@ -139,6 +139,10 @@ void NinjaRustBinaryTargetWriter::Run() {
   implicit_deps.Append(classified_deps.extra_object_files.begin(),
                        classified_deps.extra_object_files.end());
 
+  for (const auto& input : tool_->inputs()) {
+    implicit_deps.push_back(OutputFile(settings_->build_settings(), input));
+  }
+
   std::vector<OutputFile> rustdeps;
   std::vector<OutputFile> nonrustdeps;
   std::vector<OutputFile> swiftmodules;
@@ -213,7 +217,7 @@ void NinjaRustBinaryTargetWriter::Run() {
   SubstitutionWriter::ApplyListToLinkerAsOutputFile(
       target_, tool_, tool_->outputs(), &tool_outputs);
   WriteCompilerBuildLine({target_->rust_values().crate_root()},
-                         implicit_deps.vector(), order_only_deps, tool_->name(),
+                         implicit_deps.vector(), order_only_deps, tool_,
                          tool_outputs);
 
   std::vector<const Target*> extern_deps(
