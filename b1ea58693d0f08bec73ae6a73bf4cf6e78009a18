@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b8fad9a_214f01b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000019
+      },
+      "writtenOn": "2026-03-09T16:47:28Z",
+      "side": 1,
+      "message": "This was written using AI assistance. I\u0027m not sure if adding this in GetStringList() is the best place, but it does seem to hit the cases we want to hit.",
+      "revId": "b1ea58693d0f08bec73ae6a73bf4cf6e78009a18",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
