@@ -36,6 +36,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d86b6b85_b2a11ebc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-10T01:48:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07edfe2a_a982d072",
+      "revId": "1d9ec3b1a1adbff7d07a6f66811d3ffb4c2cc595",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6c0f67bd_8f282475",
@@ -119,6 +137,42 @@
       "writtenOn": "2026-03-09T14:00:26Z",
       "side": 1,
       "message": "Is it possible to have define phony target for tool inputs and use that in each compile instead of writing inputs for all compile step?",
+      "revId": "1d9ec3b1a1adbff7d07a6f66811d3ffb4c2cc595",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8a2841f_f3ce4378",
+        "filename": "src/gn/ninja_binary_target_writer.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-10T01:48:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d71a2e6_e1586ed7",
+      "revId": "1d9ec3b1a1adbff7d07a6f66811d3ffb4c2cc595",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96cf6f9f_ca995c88",
+        "filename": "src/gn/ninja_binary_target_writer.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-10T01:48:24Z",
+      "side": 1,
+      "message": "There\u0027s a lot to unpack here, but:\n* Each tool type will need its own inputs\n* I believe every single action will need to specify tool inputs. AFAICT from looking at https://ninja-build.org/manual.html#_rules, there\u0027s no way to specify implicit deps at a rule level.\n* I don\u0027t think generating a phony inline is the right way to do it. The majority of rules should contain only a single file as a dependency.",
+      "parentUuid": "3d71a2e6_e1586ed7",
       "revId": "1d9ec3b1a1adbff7d07a6f66811d3ffb4c2cc595",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
