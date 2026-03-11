@@ -24,6 +24,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "92a3a650_13d4f37b",
+        "filename": "src/gn/function_toolchain.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-11T00:12:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d9bdd56_8708b2d4",
+      "range": {
+        "startLine": 136,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 2
+      },
+      "revId": "2ccd0457c8ad60cbbafff1a80f9fd265c8b1927e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c4ab7292_dc13f49a",
@@ -41,6 +65,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "640471e7_ae7ff4ca",
+        "filename": "src/gn/function_toolchain.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-11T00:12:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4ab7292_dc13f49a",
+      "revId": "2ccd0457c8ad60cbbafff1a80f9fd265c8b1927e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b15dc804_0b128341",
@@ -54,6 +96,24 @@
       "writtenOn": "2026-03-10T04:53:07Z",
       "side": 1,
       "message": "Could you add comment why we write this only when size() \u003e 1?",
+      "revId": "2ccd0457c8ad60cbbafff1a80f9fd265c8b1927e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04a07638_8c299361",
+        "filename": "src/gn/ninja_toolchain_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-11T00:12:27Z",
+      "side": 1,
+      "message": "When size \u003d 1 we don\u0027t use a phony but instead just use the input file directly.",
+      "parentUuid": "b15dc804_0b128341",
       "revId": "2ccd0457c8ad60cbbafff1a80f9fd265c8b1927e",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
@@ -81,6 +141,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "331d3802_d8f00fdc",
+        "filename": "src/gn/tool.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-11T00:12:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4332ce79_7ef20d7d",
+      "range": {
+        "startLine": 219,
+        "startChar": 32,
+        "endLine": 219,
+        "endChar": 44
+      },
+      "revId": "2ccd0457c8ad60cbbafff1a80f9fd265c8b1927e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "af4079f4_1481e5c3",
@@ -94,6 +178,30 @@
       "writtenOn": "2026-03-10T04:53:07Z",
       "side": 1,
       "message": "Can we receive std::string_view?",
+      "range": {
+        "startLine": 220,
+        "startChar": 15,
+        "endLine": 220,
+        "endChar": 21
+      },
+      "revId": "2ccd0457c8ad60cbbafff1a80f9fd265c8b1927e",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0ea846b_51edb71f",
+        "filename": "src/gn/tool.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-11T00:12:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af4079f4_1481e5c3",
       "range": {
         "startLine": 220,
         "startChar": 15,
