@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "622963ea_2054fb75",
+        "filename": "build/gen.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-11T04:35:29Z",
+      "side": 1,
+      "message": "Hmm, is this minimum version supporting std::format? If not, I\u0027d like to keep using the minimum version that supports it to reduce risk of breakage in GN roll.",
+      "range": {
+        "startLine": 536,
+        "startChar": 51,
+        "endLine": 536,
+        "endChar": 53
+      },
+      "revId": "5805cf919101366bc3cf2a6bfb8ab368cea84589",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
