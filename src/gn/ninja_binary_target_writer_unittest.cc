@@ -195,3 +195,36 @@ TEST_F(NinjaBinaryTargetWriterTest, Inputs) {
     EXPECT_EQ(expected, out_str) << expected << "\n" << out_str;
   }
 }
+
+TEST_F(NinjaBinaryTargetWriterTest, ModuleMapGeneration) {
+  Err err;
+  TestWithScope setup;
+
+  // Let's create a target and give it public headers.
+  Target target(setup.settings(), Label(SourceDir("//foo/"), "bar"));
+  target.set_output_type(Target::SOURCE_SET);
+  target.visibility().SetPublic();
+  target.sources().push_back(SourceFile("//foo/source1.cc"));
+  target.public_headers().push_back(SourceFile("//foo/public_header.h"));
+  target.source_types_used().Set(SourceFile::SOURCE_CPP);
+  target.set_module_type(Target::GENERATED_TEXTUAL_MODULEMAP);
+  target.SetToolchain(setup.toolchain());
+  ASSERT_TRUE(target.OnResolved(&err));
+
+  std::ostringstream out;
+  NinjaBinaryTargetWriter writer(&target, out);
+
+  std::ostringstream modulemap_out;
+  SourceDir out_dir("//out/Debug/gen/");
+
+  writer.WriteModuleMap(modulemap_out, out_dir);
+
+  const char expected[] =
+      "module \"bar\" {\n"
+      "  textual header \"../../../foo/public_header.h\"\n"
+      "  export *\n"
+      "}\n";
+
+  std::string out_str = modulemap_out.str();
+  EXPECT_EQ(expected, out_str) << expected << "\n" << out_str;
+}

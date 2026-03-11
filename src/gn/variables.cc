@@ -405,6 +405,18 @@ Example
   }
 )";
 
+const char kGenerateModulemap[] = "generate_modulemap";
+const char kGenerateModulemap_HelpShort[] =
+    "generate_modulemap: [string] Mode for generating modulemaps.";
+const char kGenerateModuleMap_Help[] =
+    R"(generate_modulemap: [string] Mode for generating modulemaps.
+
+Possible values:
+  "none" (default): Don't generate a modulemap file for the target.
+  "textual": Generate a modulemap file for the target.
+    All public headers will be marked as textual.
+)";
+
 // Target variables ------------------------------------------------------------
 
 #define COMMON_ORDERING_HELP                                                 \
