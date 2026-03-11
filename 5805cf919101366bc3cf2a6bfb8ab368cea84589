@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "28447a76_5da22468",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-11T05:15:17Z",
+      "side": 1,
+      "message": "I\u0027m not so sure that GN is currently used only for mac newer than 13, so could you hold https://gn-review.git.corp.google.com/c/gn/+/21440 today to see GN roll goes well after submitting this?",
+      "revId": "5805cf919101366bc3cf2a6bfb8ab368cea84589",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "622963ea_2054fb75",
         "filename": "build/gen.py",
         "patchSetId": 1
@@ -62,6 +79,30 @@
       "side": 1,
       "message": "The internet suggests that it\u0027s either 10.13 or 10.14 FYI",
       "parentUuid": "ab25f51a_8ad670d4",
+      "range": {
+        "startLine": 536,
+        "startChar": 51,
+        "endLine": 536,
+        "endChar": 53
+      },
+      "revId": "5805cf919101366bc3cf2a6bfb8ab368cea84589",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "569df6fc_d459c187",
+        "filename": "build/gen.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-11T05:15:17Z",
+      "side": 1,
+      "message": "It seems that 14 is minimum version we can use `std::format` from my local testing.",
+      "parentUuid": "b40a8b78_513dc6ad",
       "range": {
         "startLine": 536,
         "startChar": 51,
