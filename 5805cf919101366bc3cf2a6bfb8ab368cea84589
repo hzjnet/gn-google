@@ -22,6 +22,30 @@
       },
       "revId": "5805cf919101366bc3cf2a6bfb8ab368cea84589",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab25f51a_8ad670d4",
+        "filename": "build/gen.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-11T04:39:30Z",
+      "side": 1,
+      "message": "I\u0027m not entirely sure what the minimum version is. I don\u0027t have a mac so I can\u0027t try it out.\n\nI don\u0027t personally see any issues with increasing this to 14 though. macos 13 is EOL, so I don\u0027t think there\u0027s any reason we need to support it. If you really want to do a minimal revision bump though, feel free to patch my CL and see what version is required to get it to compile.",
+      "parentUuid": "622963ea_2054fb75",
+      "range": {
+        "startLine": 536,
+        "startChar": 51,
+        "endLine": 536,
+        "endChar": 53
+      },
+      "revId": "5805cf919101366bc3cf2a6bfb8ab368cea84589",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
