@@ -97,7 +97,7 @@ TEST(Tokenizer, Operator) {
       {Token::COMMA, ","},
   };
   EXPECT_TRUE(
-      CheckTokenizer("- + = += -= != ==  < > <= >= ! || && . ,", operators));
+      CheckTokenizer("- + = += -= != ==  < > <=>= ! || && . ,", operators));
 }
 
 TEST(Tokenizer, DoubleMinus) {
