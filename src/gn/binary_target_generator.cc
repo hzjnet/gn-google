@@ -300,7 +300,9 @@ bool BinaryTargetGenerator::FillModuleType() {
     return true;
   }
 
-  if (target_->all_headers_public() ? target_->source_types_used().Get(SourceFile::SOURCE_H) : target_->public_headers().empty()) {
+  if (target_->all_headers_public()
+          ? target_->source_types_used().Get(SourceFile::SOURCE_H)
+          : target_->public_headers().empty()) {
     target_->set_module_type(Target::UNNECESSARY_MODULEMAP);
     return true;
   }
@@ -318,7 +320,8 @@ bool BinaryTargetGenerator::FillModuleType() {
     target_->set_module_type(Target::GENERATED_TEXTUAL_MODULEMAP);
   } else if (value != "none") {
     *err_ = Err(*generate_modulemap_val,
-                "Invalid value for generate_modulemap. Expected \"textual\" or \"none\"");
+                "Invalid value for generate_modulemap. Expected \"textual\" or "
+                "\"none\"");
     return false;
   }
   return true;

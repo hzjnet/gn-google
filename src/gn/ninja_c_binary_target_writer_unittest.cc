@@ -2904,4 +2904,36 @@ TEST_F(NinjaCBinaryTargetWriterTest, ModuleMapGeneration) {
   writer.Run();
   std::string ninja_str = ninja_out.str();
   EXPECT_EQ(expected_ninja, ninja_str) << expected_ninja << "\n" << ninja_str;
+
+  // Test generation without explicit public headers (uses sources instead)
+  Target target_no_public(setup.settings(),
+                          Label(SourceDir("//foo/"), "no_public"));
+  target_no_public.set_output_type(Target::SOURCE_SET);
+  target_no_public.visibility().SetPublic();
+  target_no_public.sources().push_back(SourceFile("//foo/source1.cc"));
+  target_no_public.sources().push_back(SourceFile("//foo/header1.h"));
+  target_no_public.source_types_used().Set(SourceFile::SOURCE_CPP);
+  target_no_public.source_types_used().Set(SourceFile::SOURCE_H);
+  target_no_public.set_module_type(Target::GENERATED_TEXTUAL_MODULEMAP);
+  target_no_public.SetToolchain(setup.toolchain());
+  ASSERT_TRUE(target_no_public.OnResolved(&err));
+
+  std::ostringstream ninja_out_no_public;
+  NinjaCBinaryTargetWriter writer_no_public(&target_no_public,
+                                            ninja_out_no_public);
+
+  std::ostringstream modulemap_out_no_public;
+
+  writer_no_public.WriteModuleMap(modulemap_out_no_public, out_dir);
+
+  const char expected_modulemap_no_public[] =
+      "module \"no_public\" {\n"
+      "  textual header \"../../../foo/header1.h\"\n"
+      "  export *\n"
+      "}\n";
+
+  std::string modulemap_str_no_public = modulemap_out_no_public.str();
+  EXPECT_EQ(expected_modulemap_no_public, modulemap_str_no_public)
+      << expected_modulemap_no_public << "\n"
+      << modulemap_str_no_public;
 }
