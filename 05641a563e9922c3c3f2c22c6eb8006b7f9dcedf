@@ -24,6 +24,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a164d83_19ff3475",
+        "filename": "src/gn/binary_target_generator.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-12T17:01:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "212ad7c7_c38b5e28",
+      "range": {
+        "startLine": 303,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 0
+      },
+      "revId": "05641a563e9922c3c3f2c22c6eb8006b7f9dcedf",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e74d4e5_551f3972",
@@ -47,6 +71,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ea23c7a_74d3a0c5",
+        "filename": "src/gn/binary_target_generator.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-12T17:01:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e74d4e5_551f3972",
+      "range": {
+        "startLine": 321,
+        "startChar": 0,
+        "endLine": 321,
+        "endChar": 0
+      },
+      "revId": "05641a563e9922c3c3f2c22c6eb8006b7f9dcedf",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6e86a1ff_0ad09835",
@@ -60,6 +108,30 @@
       "writtenOn": "2026-03-12T04:59:30Z",
       "side": 1,
       "message": "This looks like an unintended change. A space was removed between `\u003c\u003d` and `\u003e\u003d`.",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 0
+      },
+      "revId": "05641a563e9922c3c3f2c22c6eb8006b7f9dcedf",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc4eab1e_4fcd5b11",
+        "filename": "src/gn/tokenizer_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-12T17:01:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e86a1ff_0ad09835",
       "range": {
         "startLine": 100,
         "startChar": 0,
