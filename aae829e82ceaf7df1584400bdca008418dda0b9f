@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c85156a_d12783eb",
+        "filename": "src/gn/compile_commands_writer_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-12T02:51:26Z",
+      "side": 1,
+      "message": "Note: -fmodule--map-file was previously incorrectly missing from the compile_commands.json for module_deps.",
+      "revId": "aae829e82ceaf7df1584400bdca008418dda0b9f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d40d1e8f_ed095821",
+        "filename": "src/gn/ninja_c_binary_target_writer_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2684,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-12T02:51:26Z",
+      "side": 1,
+      "message": "Note: intentionally changed ordering to be based on the module name rather than the PCM file name",
+      "revId": "aae829e82ceaf7df1584400bdca008418dda0b9f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
