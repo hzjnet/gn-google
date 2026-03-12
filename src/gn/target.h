@@ -22,6 +22,7 @@
 #include "gn/output_file.h"
 #include "gn/pointer_set.h"
 #include "gn/rust_values.h"
+#include "gn/settings.h"
 #include "gn/source_file.h"
 #include "gn/swift_values.h"
 #include "gn/toolchain.h"
@@ -443,8 +444,10 @@ class Target : public Item {
 
   // The module name for the target.
   std::string module_name() const {
-    return module_name_override_.empty() ? label().name()
-                                         : module_name_override_;
+    return module_name_override_.empty()
+               ? label().GetUserVisibleName(
+                     settings()->default_toolchain_label())
+               : module_name_override_;
   }
   void set_module_name(std::string module_name) {
     module_name_override_ = std::move(module_name);
