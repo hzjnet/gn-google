@@ -24,6 +24,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "92d2f1a3_b3583553",
+        "filename": "src/gn/binary_target_generator.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-16T00:45:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6df11055_5628a4de",
+      "range": {
+        "startLine": 304,
+        "startChar": 0,
+        "endLine": 304,
+        "endChar": 0
+      },
+      "revId": "83ff12ccb0b53f88dd096973610d11a697b3844f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4e184ec_03585025",
@@ -37,6 +61,30 @@
       "writtenOn": "2026-03-13T02:11:24Z",
       "side": 1,
       "message": "We want to use module name like `//foo:bar` here?",
+      "range": {
+        "startLine": 2880,
+        "startChar": 16,
+        "endLine": 2880,
+        "endChar": 19
+      },
+      "revId": "83ff12ccb0b53f88dd096973610d11a697b3844f",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2e107e8_a6efd32b",
+        "filename": "src/gn/ninja_c_binary_target_writer_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 2880,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-16T00:45:54Z",
+      "side": 1,
+      "message": "bar is the module name. I haven\u0027t yet submitted the CL to change the default to //foo:bar.",
+      "parentUuid": "b4e184ec_03585025",
       "range": {
         "startLine": 2880,
         "startChar": 16,
