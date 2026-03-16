@@ -16,6 +16,24 @@
       "message": "Maybe you need to do rebase?",
       "revId": "ac3eb0f8f4a8f188b14dc5f000e30bc9fa8780f1",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "606dedfb_3bc3bad9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-16T01:32:36Z",
+      "side": 1,
+      "message": "Ah, 14 is already specified. I think we need to update Xcode or macOS version on the bot.",
+      "parentUuid": "17368dbb_ea2296dd",
+      "revId": "ac3eb0f8f4a8f188b14dc5f000e30bc9fa8780f1",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
