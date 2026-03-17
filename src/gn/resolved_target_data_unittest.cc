@@ -434,9 +434,9 @@ TEST(ResolvedTargetDataTest, ModuleDepsInheritance) {
 
   ResolvedTargetData resolved;
 
+  // Only targets with actual modulemap sources appear in module_deps_information.
+  // g and b have no modulemap sources, so only c appears.
   const auto& a_module_deps = resolved.GetModuleDepsInformation(&a);
-  ASSERT_EQ(3u, a_module_deps.size());
-  EXPECT_EQ(&g, a_module_deps[0].target());
-  EXPECT_EQ(&b, a_module_deps[1].target());
-  EXPECT_EQ(&c, a_module_deps[2].target());
+  ASSERT_EQ(1u, a_module_deps.size());
+  EXPECT_EQ(&c, a_module_deps[0].target());
 }

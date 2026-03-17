@@ -5,10 +5,11 @@
 #ifndef TOOLS_GN_RESOLVED_TARGET_DATA_H_
 #define TOOLS_GN_RESOLVED_TARGET_DATA_H_
 
+#include <array>
 #include <atomic>
 #include <memory>
 #include <mutex>
-#include <shared_mutex>
+#include <unordered_map>
 #include <vector>
 
 #include "base/containers/span.h"
@@ -17,7 +18,6 @@
 #include "gn/source_dir.h"
 #include "gn/target.h"
 #include "gn/target_public_pair.h"
-#include "gn/unique_vector.h"
 
 // A class used to compute target-specific data by collecting information
 // from its tree of dependencies.
@@ -45,6 +45,12 @@
 //
 class ResolvedTargetData {
  public:
+  // Pre-register a target so subsequent lookups from worker threads avoid
+  // taking the write lock. Call this on the main thread for each resolved
+  // target before scheduling its ninja write, ensuring all transitive deps
+  // are already in the map when workers process them.
+  void PreRegister(const Target* target) const { GetTargetInfo(target); }
+
   // Return the public/private/data/dependencies of a given target
   // as a ResolvedTargetDeps instance.
   const ResolvedTargetDeps& GetTargetDeps(const Target* target) const {
@@ -329,13 +335,27 @@ class ResolvedTargetData {
                           bool is_public,
                           RustLibsBuilder* rust_libs) const;
 
-  // A { Target* -> TargetInfo } map that will create entries
-  // on demand (hence the mutable qualifier). Implemented with a
-  // UniqueVector<> and a parallel vector of unique TargetInfo
-  // instances for best performance.
-  mutable std::shared_mutex map_mutex_;
-  mutable UniqueVector<const Target*> targets_;
-  mutable std::vector<std::unique_ptr<TargetInfo>> infos_;
+  // A { Target* -> TargetInfo } map implemented as a sharded hash map to
+  // minimize lock contention. With kNumShards shards, the probability that a
+  // writer (main thread doing PreRegister insertions) and a reader (worker
+  // thread doing lookups) collide on the same shard is ~1/kNumShards instead
+  // of 100% with a single global lock.
+  static constexpr size_t kNumShards = 128;
+
+  struct Shard {
+    mutable std::mutex mutex;
+    mutable std::unordered_map<const Target*, std::unique_ptr<TargetInfo>> map;
+  };
+
+  static size_t ShardIndex(const Target* target) {
+    // Shift right to skip the low alignment bits (typically zero for heap
+    // allocations), then fold high bits in for better distribution.
+    uintptr_t h = reinterpret_cast<uintptr_t>(target);
+    h = (h >> 4) ^ (h >> 12);
+    return h & (kNumShards - 1);
+  }
+
+  mutable std::array<Shard, kNumShards> shards_;
 };
 
 #endif  // TOOLS_GN_RESOLVED_TARGET_DATA_H_

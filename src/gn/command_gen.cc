@@ -129,6 +129,11 @@ void ItemResolvedAndGeneratedCallback(TargetWriteInfo* write_info,
   const Item* item = record->item();
   const Target* target = item->AsTarget();
   if (target) {
+    // Pre-register in ResolvedTargetData on the main thread so that worker
+    // threads never need to take the write lock when looking up target info.
+    // Targets are resolved in dependency order, so all transitive deps of
+    // this target are already pre-registered by the time we schedule its write.
+    write_info->resolved->PreRegister(target);
     g_scheduler->ScheduleWork(
         [write_info, target]() { BackgroundDoWrite(write_info, target); });
   }

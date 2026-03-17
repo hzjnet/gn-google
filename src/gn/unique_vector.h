@@ -72,6 +72,7 @@ class UniqueVectorHashSet : public UniqueVectorHashTableBase {
   }
 
   void Clear() { NodeClear(); }
+  void Reserve(size_t n) { ReserveBuckets(n); }
 };
 
 // An ordered set optimized for GN's usage. Such sets are used to store lists
@@ -93,7 +94,7 @@ class UniqueVector {
     vector_.clear();
     set_.Clear();
   }
-  void reserve(size_t s) { vector_.reserve(s); }
+  void reserve(size_t s) { vector_.reserve(s); set_.Reserve(s); }
 
   const T& operator[](size_t index) const { return vector_[index]; }
 

@@ -8,20 +8,14 @@
 
 ResolvedTargetData::TargetInfo* ResolvedTargetData::GetTargetInfo(
     const Target* target) const {
-  {
-    std::shared_lock<std::shared_mutex> lock(map_mutex_);
-    size_t index = targets_.IndexOf(target);
-    if (index != UniqueVector<const Target*>::kIndexNone) {
-      return infos_[index].get();
-    }
+  size_t shard_idx = ShardIndex(target);
+  Shard& shard = shards_[shard_idx];
+  std::lock_guard<std::mutex> lock(shard.mutex);
+  auto [it, inserted] = shard.map.emplace(target, nullptr);
+  if (inserted) {
+    it->second = std::make_unique<TargetInfo>(target);
   }
-
-  std::unique_lock<std::shared_mutex> lock(map_mutex_);
-  auto ret = targets_.PushBackWithIndex(target);
-  if (ret.first) {
-    infos_.push_back(std::make_unique<TargetInfo>(target));
-  }
-  return infos_[ret.second].get();
+  return it->second.get();
 }
 
 void ResolvedTargetData::ComputeLibInfo(TargetInfo* info) const {
@@ -209,7 +203,8 @@ void ResolvedTargetData::ComputeModuleDepsInformationFor(
       continue;
     }
 
-    module_deps_information->Append(dep, is_public);
+    if (dep->source_types_used().Get(SourceFile::SOURCE_MODULEMAP))
+      module_deps_information->Append(dep, is_public);
     const TargetInfo* dep_info = GetTargetModuleDepsInformation(dep);
     for (const auto& pair : dep_info->module_deps_information) {
       if (pair.is_public()) {

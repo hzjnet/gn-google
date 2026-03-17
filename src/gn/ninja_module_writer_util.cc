@@ -16,6 +16,8 @@ namespace {
 // Returns the first source file in the target's sources that is a modulemap
 // file. Returns nullptr if no modulemap file is found.
 const SourceFile* GetModuleMapFromTargetSources(const Target* target) {
+  if (!target->source_types_used().Get(SourceFile::SOURCE_MODULEMAP))
+    return nullptr;
   for (const SourceFile& sf : target->sources()) {
     if (sf.IsModuleMapType())
       return &sf;

@@ -503,6 +503,39 @@ class HashTableBase {
     return false;
   }
 
+ protected:
+  // Pre-allocate bucket storage for at least |n| items without triggering
+  // GrowBuckets. Useful when the final size is known or can be estimated.
+  void ReserveBuckets(size_t n) {
+    // Find smallest power-of-2 size that can hold n items at 75% load.
+    // GrowBuckets triggers when (count + tombs) * 4 >= size * 3, so we
+    // need size such that n * 4 < size * 3, i.e. size > n * 4 / 3.
+    size_t new_size = (size_ == 1) ? 8u : size_;
+    while (new_size * 3 <= n * 4)
+      new_size *= 2;
+    if (new_size <= size_)
+      return;
+
+    Node* new_buckets =
+        reinterpret_cast<Node*>(calloc(new_size, sizeof(Node)));
+    size_t new_mask = new_size - 1;
+    for (size_t i = 0; i < size_; ++i) {
+      const Node* node = &buckets_[i];
+      if (!node->is_valid())
+        continue;
+      size_t dst = node->hash_value() & new_mask;
+      while (!new_buckets[dst].is_null())
+        dst = (dst + 1) & new_mask;
+      new_buckets[dst] = *node;
+    }
+    if (buckets_ != buckets0_)
+      free(buckets_);
+    buckets_ = new_buckets;
+    buckets0_[0] = Node{};
+    size_ = new_size;
+    tombstone_count_ = 0;
+  }
+
  private:
 #if defined(__GNUC__) || defined(__clang__)
   [[gnu::noinline]]
