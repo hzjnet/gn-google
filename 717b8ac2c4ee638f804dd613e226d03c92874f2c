@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "38091d05_86b5999f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-17T03:00:38Z",
+      "side": 1,
+      "message": "Could you explain more about how to use the directory and context of this change?",
+      "revId": "717b8ac2c4ee638f804dd613e226d03c92874f2c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d9380916_48b97acc",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
