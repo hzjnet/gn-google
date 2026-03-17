@@ -34,6 +34,24 @@
       "parentUuid": "d9380916_48b97acc",
       "revId": "717b8ac2c4ee638f804dd613e226d03c92874f2c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9347853b_2a0626ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-17T03:00:32Z",
+      "side": 1,
+      "message": "To clarify, a submodule of GN or a submodule of chromium?\n\nIf it\u0027s the former, I don\u0027t want to introduce submodules to a project without submodules, since that adds a nontrivial amount of complexity.\n\nIf it\u0027s the latter, I want relatively deep coupling with GN itself, as I mentioned above, so making it a submodule of chromium doesn\u0027t really solve any issues.",
+      "parentUuid": "da871268_0b3e6937",
+      "revId": "717b8ac2c4ee638f804dd613e226d03c92874f2c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
