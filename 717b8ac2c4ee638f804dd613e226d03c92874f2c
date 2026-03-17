@@ -16,6 +16,24 @@
       "message": "What do you two think about submitting my starlark config here?\n\nI\u0027d like it here because this allows me to keep bazel changes and GN changes in sync, and thus my tests can be of much higher quality, because I can test GN -\u003e bazel build files -\u003e bazel execution, rather than testing GN -\u003e bazel build file and bazel build file -\u003e bazel execution seperately.",
       "revId": "717b8ac2c4ee638f804dd613e226d03c92874f2c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da871268_0b3e6937",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003017
+      },
+      "writtenOn": "2026-03-17T02:57:59Z",
+      "side": 1,
+      "message": "Have you considered creating a new repository (probably under https://gn.googlesource.com/) and making it as a submodule? I probably don\u0027t understand why git submodule isn\u0027t sufficient.",
+      "parentUuid": "d9380916_48b97acc",
+      "revId": "717b8ac2c4ee638f804dd613e226d03c92874f2c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
