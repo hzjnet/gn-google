@@ -87,6 +87,24 @@
       "parentUuid": "da871268_0b3e6937",
       "revId": "717b8ac2c4ee638f804dd613e226d03c92874f2c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23cd499d_b803dc44",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003017
+      },
+      "writtenOn": "2026-03-17T03:09:20Z",
+      "side": 1,
+      "message": "I meant the former. You could gitignore it if you don\u0027t want to submodule it.\n\n```\n\u003e git clone https://github.com/matts1/rules_gn\n\u003e echo \u0027rules_gn/\u0027 \u003e\u003e ~/.gitignore_global\n\u003e git status\nOn branch main\nYour branch is up to date with \u0027origin/main\u0027.\n\nnothing to commit, working tree clean\n```",
+      "parentUuid": "9347853b_2a0626ea",
+      "revId": "717b8ac2c4ee638f804dd613e226d03c92874f2c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
