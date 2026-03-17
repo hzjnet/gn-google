@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a42fadd0_6d1b783f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-17T03:07:58Z",
+      "side": 1,
+      "message": "I\u0027ll add the details to the actual CL description (and readme) after we come to a consensus on whether this is the right approach.\n\nTo use the directory, you just run `bazel build @c//build/modules:all_modules` (or substitute this for any other GN target) in a chromium checkout configured to use bazel.\n\nSee https://docs.google.com/document/d/1IZP16oHn0y-x-NbweGSNpQ3nq4l9Q_N4Z5UVUrSWXFY/edit?resourcekey\u003d0-HcIMHblLqJlSU7SnhDkw-Q\u0026tab\u003dt.0 for more details.",
+      "parentUuid": "38091d05_86b5999f",
+      "revId": "717b8ac2c4ee638f804dd613e226d03c92874f2c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d9380916_48b97acc",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
