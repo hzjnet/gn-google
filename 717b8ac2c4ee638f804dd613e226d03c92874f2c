@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9380916_48b97acc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-17T00:48:33Z",
+      "side": 1,
+      "message": "What do you two think about submitting my starlark config here?\n\nI\u0027d like it here because this allows me to keep bazel changes and GN changes in sync, and thus my tests can be of much higher quality, because I can test GN -\u003e bazel build files -\u003e bazel execution, rather than testing GN -\u003e bazel build file and bazel build file -\u003e bazel execution seperately.",
+      "revId": "717b8ac2c4ee638f804dd613e226d03c92874f2c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
