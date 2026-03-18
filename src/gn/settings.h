@@ -52,6 +52,11 @@ class Settings {
     default_toolchain_label_ = default_label;
   }
 
+  // The toolchain object for this settings. This will be null until the
+  // toolchain is loaded.
+  const Toolchain* toolchain() const { return toolchain_; }
+  void set_toolchain(const Toolchain* tc) { toolchain_ = tc; }
+
   // Indicates if this corresponds to the default toolchain.
   bool is_default() const {
     return toolchain_label_ == default_toolchain_label_;
@@ -96,6 +101,7 @@ class Settings {
 
   Label toolchain_label_;
   Label default_toolchain_label_;
+  const Toolchain* toolchain_ = nullptr;
 
   mutable ImportManager import_manager_;
 

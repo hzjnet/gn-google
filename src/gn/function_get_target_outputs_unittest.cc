@@ -105,3 +105,59 @@ TEST_F(GetTargetOutputsTest, ActionForeach) {
   AssertTwoStringsEqual(result, "//out/Debug/file.txt.one",
                         "//out/Debug/file.txt.two");
 }
+
+TEST_F(GetTargetOutputsTest, RustLibrary) {
+  auto target =
+      std::make_unique<Target>(setup_.settings(), GetLabel("//foo/", "bar"));
+  target->set_output_type(Target::RUST_LIBRARY);
+  target->sources().push_back(SourceFile("//foo/main.rs"));
+  target->source_types_used().Set(SourceFile::SOURCE_RS);
+  items_.push_back(std::move(target));
+
+  Err err;
+  Value result = GetTargetOutputs("//foo:bar", &err);
+  ASSERT_FALSE(err.has_error()) << err.message();
+  AssertSingleStringEquals(result, "//out/Debug/obj/foo/libbar.rlib");
+}
+
+TEST_F(GetTargetOutputsTest, RustExecutable) {
+  auto target =
+      std::make_unique<Target>(setup_.settings(), GetLabel("//foo/", "bar"));
+  target->set_output_type(Target::EXECUTABLE);
+  target->sources().push_back(SourceFile("//foo/main.rs"));
+  target->source_types_used().Set(SourceFile::SOURCE_RS);
+  items_.push_back(std::move(target));
+
+  Err err;
+  Value result = GetTargetOutputs("//foo:bar", &err);
+  ASSERT_FALSE(err.has_error()) << err.message();
+  AssertSingleStringEquals(result, "//out/Debug/bar");
+}
+
+TEST_F(GetTargetOutputsTest, CxxExecutable) {
+  auto target =
+      std::make_unique<Target>(setup_.settings(), GetLabel("//foo/", "bar"));
+  target->set_output_type(Target::EXECUTABLE);
+  target->sources().push_back(SourceFile("//foo/main.cc"));
+  target->source_types_used().Set(SourceFile::SOURCE_CPP);
+  items_.push_back(std::move(target));
+
+  Err err;
+  Value result = GetTargetOutputs("//foo:bar", &err);
+  ASSERT_FALSE(err.has_error()) << err.message();
+  AssertSingleStringEquals(result, "//out/Debug/bar");
+}
+
+TEST_F(GetTargetOutputsTest, RustProcMacro) {
+  auto target =
+      std::make_unique<Target>(setup_.settings(), GetLabel("//foo/", "bar"));
+  target->set_output_type(Target::RUST_PROC_MACRO);
+  target->sources().push_back(SourceFile("//foo/main.rs"));
+  target->source_types_used().Set(SourceFile::SOURCE_RS);
+  items_.push_back(std::move(target));
+
+  Err err;
+  Value result = GetTargetOutputs("//foo:bar", &err);
+  ASSERT_FALSE(err.has_error()) << err.message();
+  AssertSingleStringEquals(result, "//out/Debug/obj/foo/libbar.so");
+}

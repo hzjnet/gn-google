@@ -26,10 +26,8 @@ const char kGetTargetOutputs_Help[] =
   defined execution order, and it obviously can't reference targets that are
   defined after the function call).
 
-  Only copy, generated_file, and action targets are supported. The outputs from
-  binary targets will depend on the toolchain definition which won't
-  necessarily have been loaded by the time a given line of code has run, and
-  source sets and groups have no useful output file.
+  Only binary (executable, libraries, etc.), copy, generated_file, and action
+  targets are supported. Source sets and groups have no useful output file.
 
 Return value
 
@@ -44,6 +42,9 @@ Return value
   same result (though with guaranteed absolute file paths), as
   process_file_template will return for those inputs (see "gn help
   process_file_template").
+
+  binary targets: this will return the result of applying the tool's
+  outputs pattern to the target (see "gn help tool").
 
   source sets and groups: this will return a list containing the path of the
   phony target that Ninja completes once all outputs are generated. This
