@@ -679,15 +679,19 @@ DepsIteratorRange Target::GetDeps(DepsIterationType type) const {
 }
 
 std::string Target::GetComputedOutputName() const {
-  DCHECK(toolchain_)
+  const Toolchain* toolchain = toolchain_;
+  if (!toolchain)
+    toolchain = settings()->toolchain();
+  DCHECK(toolchain)
       << "Toolchain must be specified before getting the computed output name.";
 
   const std::string& name =
       output_name_.empty() ? label().name() : output_name_;
 
   std::string result;
-  const Tool* tool = toolchain_->GetToolForTargetFinalOutput(this);
+  const Tool* tool = toolchain->GetToolForTargetFinalOutput(this);
   if (tool) {
+
     // Only add the prefix if the name doesn't already have it and it's not
     // being overridden.
     if (!output_prefix_override_ && !name.starts_with(tool->output_prefix()))
@@ -746,15 +750,27 @@ bool Target::GetOutputsAsSourceFiles(const LocationRange& loc_for_error,
   } else if (IsBinary() && output_type() != Target::SOURCE_SET) {
     // Binary target with normal outputs (source sets have phony targets).
     DCHECK(IsBinary()) << static_cast<int>(output_type());
-    if (!build_complete) {
-      // Can't access the toolchain for a target before the build is complete.
-      // Otherwise it will race with loading and setting the toolchain
-      // definition.
-      *err = Err(loc_for_error, kBuildIncompleteMsg);
-      return false;
+
+    const Toolchain* toolchain = toolchain_;
+    if (!toolchain)
+      toolchain = settings()->toolchain();
+
+    if (!toolchain) {
+      if (!build_complete) {
+        // Can't access the toolchain for a target before the build is complete.
+        // Otherwise it will race with loading and setting the toolchain
+        // definition.
+        *err = Err(loc_for_error, kBuildIncompleteMsg);
+        return false;
+      }
+      DCHECK(toolchain);
     }
 
-    const Tool* tool = toolchain()->GetToolForTargetFinalOutput(this);
+    const Tool* tool = toolchain->GetToolForTargetFinalOutput(this);
+    if (!tool) {
+      *err = Err(loc_for_error, "No tool for target final output.");
+      return false;
+    }
 
     std::vector<OutputFile> output_files;
     SubstitutionWriter::ApplyListToLinkerAsOutputFile(

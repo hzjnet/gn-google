@@ -31,6 +31,7 @@ TestWithScope::TestWithScope()
 
   settings_.set_toolchain_label(toolchain_.label());
   settings_.set_default_toolchain_label(toolchain_.label());
+  settings_.set_toolchain(&toolchain_);
 
   SetupToolchain(&toolchain_);
   scope_.set_item_collector(&items_);

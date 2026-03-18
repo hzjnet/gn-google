@@ -413,6 +413,10 @@ const char* Tool::GetToolTypeForTargetFinalOutput(const Target* target) {
       return CTool::kCToolSolinkModule;
     case Target::STATIC_LIBRARY:
       return CTool::kCToolAlink;
+    case Target::RUST_LIBRARY:
+      return RustTool::kRsToolRlib;
+    case Target::RUST_PROC_MACRO:
+      return RustTool::kRsToolMacro;
     case Target::ACTION:
     case Target::ACTION_FOREACH:
     case Target::BUNDLE_DATA:
