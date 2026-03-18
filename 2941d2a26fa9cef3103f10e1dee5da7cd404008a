@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49b77712_f5bd4e58",
+        "filename": "src/gn/target.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-18T01:55:25Z",
+      "side": 0,
+      "message": "Keep this empty line.",
+      "revId": "2941d2a26fa9cef3103f10e1dee5da7cd404008a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
