@@ -16,6 +16,24 @@
       "message": "Keep this empty line.",
       "revId": "2941d2a26fa9cef3103f10e1dee5da7cd404008a",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d22beb4_9fa4145b",
+        "filename": "src/gn/target.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-18T23:00:12Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "49b77712_f5bd4e58",
+      "revId": "2941d2a26fa9cef3103f10e1dee5da7cd404008a",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
