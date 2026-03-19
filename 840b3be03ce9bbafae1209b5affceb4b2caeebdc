@@ -22,6 +22,30 @@
       },
       "revId": "840b3be03ce9bbafae1209b5affceb4b2caeebdc",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb09d82a_96de920d",
+        "filename": "src/gn/target.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-03-19T02:34:56Z",
+      "side": 1,
+      "message": "No, because we don\u0027t have control over the module names for prebuilt modulemaps. (eg. libc++, builtins, and mac modulemaps).",
+      "parentUuid": "29ad001e_e0ec356a",
+      "range": {
+        "startLine": 436,
+        "startChar": 17,
+        "endLine": 436,
+        "endChar": 38
+      },
+      "revId": "840b3be03ce9bbafae1209b5affceb4b2caeebdc",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
