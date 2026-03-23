@@ -75,6 +75,30 @@
       },
       "revId": "73dde1387b8dc9d33fd0c674da0098bbe3201538",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f39a1389_96c79049",
+        "filename": "src/gn/builder_record.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-03-23T14:43:41Z",
+      "side": 1,
+      "message": "Thanks. Done.",
+      "parentUuid": "62e251a2_2b4b8fca",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 0
+      },
+      "revId": "73dde1387b8dc9d33fd0c674da0098bbe3201538",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
