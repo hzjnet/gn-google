@@ -16,6 +16,24 @@
       "message": "nit: does this happen in practice? Maybe add a comment about when this can happen, or if it\u0027s just defensive, then add a comment saying that.",
       "revId": "73dde1387b8dc9d33fd0c674da0098bbe3201538",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15caac97_1380b803",
+        "filename": "src/gn/builder.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-03-23T14:34:36Z",
+      "side": 1,
+      "message": "Good point. It happened in my attempt at a fix when target resolution was still performed in background threads, which resulted in race conditions where `A --validations--\u003e B` could lead to A and B both being resolved in the background, and whoever finishes first is not deterministic.\n\nI think this is no longer the case now, since now only the checks are performed in the background, which doesn\u0027t affect the order of this call anymore, so I\u0027ll remove it.",
+      "parentUuid": "1f2e0ec6_bff7dcd5",
+      "revId": "73dde1387b8dc9d33fd0c674da0098bbe3201538",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
