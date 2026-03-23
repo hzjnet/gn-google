@@ -18,6 +18,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "09f86fdf_31301f32",
+        "filename": "src/gn/target.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-03-23T14:28:32Z",
+      "side": 1,
+      "message": "You\u0027re right :) Done.",
+      "parentUuid": "579472be_1e53d690",
+      "revId": "a3872c3316526c9bffb1238618e478a5c75eff47",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4ac60dd1_fc871f4b",
@@ -31,6 +49,30 @@
       "writtenOn": "2026-03-23T14:25:15Z",
       "side": 1,
       "message": "Grammar: Missing \"are\". Suggest: \"...gen_deps) are considered final and immutable.\"",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 0
+      },
+      "revId": "a3872c3316526c9bffb1238618e478a5c75eff47",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbd32e75_2b654952",
+        "filename": "src/gn/target.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-03-23T14:28:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ac60dd1_fc871f4b",
       "range": {
         "startLine": 86,
         "startChar": 0,
@@ -82,6 +124,54 @@
         "startChar": 0,
         "endLine": 91,
         "endChar": 0
+      },
+      "revId": "a3872c3316526c9bffb1238618e478a5c75eff47",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcbec5d1_1c0fe4bb",
+        "filename": "src/gn/target.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-03-23T14:28:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4c03b42_ecdcb673",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 0
+      },
+      "revId": "a3872c3316526c9bffb1238618e478a5c75eff47",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b54fe17c_fe48f4b6",
+        "filename": "src/gn/target.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-03-23T14:28:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60cecd6d_975bd4a2",
+      "range": {
+        "startLine": 91,
+        "startChar": 21,
+        "endLine": 91,
+        "endChar": 25
       },
       "revId": "a3872c3316526c9bffb1238618e478a5c75eff47",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
