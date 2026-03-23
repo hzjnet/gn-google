@@ -34,6 +34,24 @@
       "parentUuid": "1f2e0ec6_bff7dcd5",
       "revId": "73dde1387b8dc9d33fd0c674da0098bbe3201538",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "644156fb_09728024",
+        "filename": "src/gn/builder.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1000067
+      },
+      "writtenOn": "2026-03-23T14:35:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15caac97_1380b803",
+      "revId": "73dde1387b8dc9d33fd0c674da0098bbe3201538",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
