@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "579472be_1e53d690",
+        "filename": "src/gn/target.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000055
+      },
+      "writtenOn": "2026-03-23T14:22:30Z",
+      "side": 1,
+      "message": "nit: It\u0027s not obvious why calling one followed by the other would simplify tests... Maybe just remove that part of the comment?",
+      "revId": "a3872c3316526c9bffb1238618e478a5c75eff47",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60cecd6d_975bd4a2",
+        "filename": "src/gn/target.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000055
+      },
+      "writtenOn": "2026-03-23T14:22:30Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 91,
+        "startChar": 21,
+        "endLine": 91,
+        "endChar": 25
+      },
+      "revId": "a3872c3316526c9bffb1238618e478a5c75eff47",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
