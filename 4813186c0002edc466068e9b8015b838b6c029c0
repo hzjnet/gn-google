@@ -16,6 +16,23 @@
       "message": "Btw, I find the debug statements hideous, but they have been invaluable to understand and correct the problem. I can remove them if you prefer, or use some other format if you have some suggestions.",
       "revId": "4813186c0002edc466068e9b8015b838b6c029c0",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23fe10ed_2879905f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000055
+      },
+      "writtenOn": "2026-03-23T14:32:07Z",
+      "side": 1,
+      "message": "Tricky stuff! Thanks for the clear comments in build_record.h.",
+      "revId": "4813186c0002edc466068e9b8015b838b6c029c0",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }

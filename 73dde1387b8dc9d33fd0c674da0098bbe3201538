@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f2e0ec6_bff7dcd5",
+        "filename": "src/gn/builder.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1000055
+      },
+      "writtenOn": "2026-03-23T14:32:07Z",
+      "side": 1,
+      "message": "nit: does this happen in practice? Maybe add a comment about when this can happen, or if it\u0027s just defensive, then add a comment saying that.",
+      "revId": "73dde1387b8dc9d33fd0c674da0098bbe3201538",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
