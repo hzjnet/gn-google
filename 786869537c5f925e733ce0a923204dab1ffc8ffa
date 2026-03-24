@@ -16,6 +16,24 @@
       "message": "Thanks. I confirm that --thread\u003d32 improves gen times for Fuchsia as well on a 96 core machine (24 seems to be the sweet spot for us, but 32 is not too far off and is a definitive improvement)",
       "revId": "786869537c5f925e733ce0a923204dab1ffc8ffa",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7dd3c89_0263e6ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-03-24T11:10:40Z",
+      "side": 1,
+      "message": "Thank you for your confirmation for Fuchsia. Maybe we can re-visit this if we can improve scalability of GN more.",
+      "parentUuid": "d20e4d9e_aaef7bae",
+      "revId": "786869537c5f925e733ce0a923204dab1ffc8ffa",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
