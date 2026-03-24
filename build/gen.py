@@ -971,7 +971,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
       ])
 
 
-  libs.extend(options.link_libs)
+  # libs.extend(options.link_libs)
 
   # we just build static libraries that GN needs
   executables['gn']['libs'].extend(static_libraries.keys())
