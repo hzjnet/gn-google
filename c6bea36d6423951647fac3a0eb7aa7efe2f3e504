@@ -40,6 +40,30 @@
       ],
       "revId": "c6bea36d6423951647fac3a0eb7aa7efe2f3e504",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c89790a_46412320",
+        "filename": "build/gen.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-01T01:10:37Z",
+      "side": 1,
+      "message": "Because -1 is an invalid value the unit tests start failing.",
+      "parentUuid": "8dbf0743_248481e6",
+      "range": {
+        "startLine": 260,
+        "startChar": 10,
+        "endLine": 260,
+        "endChar": 11
+      },
+      "revId": "c6bea36d6423951647fac3a0eb7aa7efe2f3e504",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
