@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dbf0743_248481e6",
+        "filename": "build/gen.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-01T00:53:11Z",
+      "side": 1,
+      "message": "This can be -1? 0 seems still valid value.",
+      "range": {
+        "startLine": 260,
+        "startChar": 10,
+        "endLine": 260,
+        "endChar": 11
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ff1f1778_1326d1ad",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "build/gen.py",
+              "range": {
+                "startLine": 260,
+                "startChar": 0,
+                "endLine": 261,
+                "endChar": 0
+              },
+              "replacement": "    num \u003d -1\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c6bea36d6423951647fac3a0eb7aa7efe2f3e504",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
