@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40fed6b7_9dd57533",
+        "filename": "src/gn/ninja_c_binary_target_writer.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-09T03:33:02Z",
+      "side": 1,
+      "message": "ESCAPE_NINJA_COMMAND incorrectly attempts to escape the parentheses to the module name.",
+      "revId": "34105fbfa8168d7f0d157d8d65e617b36bdfce00",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
