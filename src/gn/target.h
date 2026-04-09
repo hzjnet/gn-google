@@ -63,8 +63,6 @@ class Target : public Item {
   enum ModuleType {
     NO_MODULEMAP,
     EXPLICIT_MODULEMAP,
-    // The target didn't have any public headers, so no modulemap is needed.
-    UNNECESSARY_MODULEMAP,
     GENERATED_TEXTUAL_MODULEMAP,
   };
 

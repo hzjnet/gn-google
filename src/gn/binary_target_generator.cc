@@ -300,13 +300,6 @@ bool BinaryTargetGenerator::FillModuleType() {
     return true;
   }
 
-  if (target_->all_headers_public()
-          ? !target_->source_types_used().Get(SourceFile::SOURCE_H)
-          : target_->public_headers().empty()) {
-    target_->set_module_type(Target::UNNECESSARY_MODULEMAP);
-    return true;
-  }
-
   if (!generate_modulemap_val) {
     return true;
   }
@@ -317,8 +310,15 @@ bool BinaryTargetGenerator::FillModuleType() {
   }
   auto value = generate_modulemap_val->string_value();
   if (value == "textual") {
-    target_->set_module_type(Target::GENERATED_TEXTUAL_MODULEMAP);
-  } else if (value != "none") {
+    // Even if textual was explicitly set, if we're compiling non-c++ code,
+    // we shouldn't generate a modulemap.
+    if (target_->source_types_used().Get(SourceFile::SOURCE_CPP) ||
+        (target_->all_headers_public()
+             ? target_->source_types_used().Get(SourceFile::SOURCE_H)
+             : !target_->public_headers().empty())) {
+      target_->set_module_type(Target::GENERATED_TEXTUAL_MODULEMAP);
+    }
+  } else if (value != "none" && value != "") {
     *err_ = Err(*generate_modulemap_val,
                 "Invalid value for generate_modulemap. Expected \"textual\" or "
                 "\"none\"");
