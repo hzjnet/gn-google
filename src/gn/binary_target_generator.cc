@@ -300,10 +300,11 @@ bool BinaryTargetGenerator::FillModuleType() {
     return true;
   }
 
-  if (target_->all_headers_public()
-          ? !target_->source_types_used().Get(SourceFile::SOURCE_H)
-          : target_->public_headers().empty()) {
-    target_->set_module_type(Target::UNNECESSARY_MODULEMAP);
+  if ((target_->all_headers_public()
+           ? !target_->source_types_used().Get(SourceFile::SOURCE_H)
+           : target_->public_headers().empty()) &&
+      !target_->source_types_used().Get(SourceFile::SOURCE_CPP)) {
+    target_->set_module_type(Target::NO_MODULEMAP);
     return true;
   }
 
