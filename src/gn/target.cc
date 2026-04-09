@@ -1427,3 +1427,16 @@ const SourceFile* Target::modulemap_file() const {
       return nullptr;
   }
 }
+
+const SourceFile* Target::private_modulemap_file() const {
+  if (private_modulemap_file_.is_null() && module_type_ == GENERATED_TEXTUAL_MODULEMAP) {
+    auto public_modulemap = modulemap_file();
+    std::string private_name = public_modulemap->GetName();
+    // foo.modulemap -> foo.private.modulemap
+    private_name.insert(private_name.length() - 10, ".private");
+    private_modulemap_file_ = public_modulemap->GetDir().ResolveRelativeFile(
+        Value(nullptr, private_name), nullptr);
+  }
+  return &private_modulemap_file_;
+}
+
