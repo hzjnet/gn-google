@@ -16,6 +16,24 @@
       "message": "ESCAPE_NINJA_COMMAND incorrectly attempts to escape the parentheses to the module name.",
       "revId": "34105fbfa8168d7f0d157d8d65e617b36bdfce00",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "432d575e_b1a6b2ce",
+        "filename": "src/gn/ninja_c_binary_target_writer.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-09T04:50:36Z",
+      "side": 1,
+      "message": "Is it better to fix ESCAPE_NINJA_COMMAND then?",
+      "parentUuid": "40fed6b7_9dd57533",
+      "revId": "34105fbfa8168d7f0d157d8d65e617b36bdfce00",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
