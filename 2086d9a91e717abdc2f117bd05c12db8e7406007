@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a78bca8a_33822853",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-10T02:47:07Z",
+      "side": 1,
+      "message": "Add bug label for layering check?",
+      "revId": "2086d9a91e717abdc2f117bd05c12db8e7406007",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
