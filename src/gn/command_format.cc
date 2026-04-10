@@ -319,7 +319,38 @@ void Printer::PrintMargin() {
 void Printer::TrimAndPrintToken(const Token& token) {
   std::string trimmed;
   TrimWhitespaceASCII(std::string(token.value()), base::TRIM_ALL, &trimmed);
-  Print(trimmed);
+
+  if (margin() + trimmed.size() <= kMaximumWidth) {
+    Print(trimmed);
+  } else {
+    bool continuation = false;
+    bool have_empty_line = true;
+    std::vector<std::string> split_on_spaces = base::SplitString(
+        trimmed, " ", base::WhitespaceHandling::TRIM_WHITESPACE,
+        base::SplitResult::SPLIT_WANT_NONEMPTY);
+    for (size_t j = 0; j < split_on_spaces.size(); ++j) {
+      if (continuation) {
+        Trim();
+        Print("\n");
+        PrintMargin();
+        Print("# ");
+        continuation = false;
+        have_empty_line = true;
+      } else if (j > 0) {
+        Print(" ");
+      }
+      Print(split_on_spaces[j]);
+      
+      if (split_on_spaces[j] != "#") {
+        have_empty_line = false;
+      }
+
+      if (!have_empty_line && j < split_on_spaces.size() - 1 &&
+          CurrentColumn() + 1 + split_on_spaces[j + 1].size() > kMaximumWidth) {
+        continuation = true;
+      }
+    }
+  }
 }
 
 // Assumes that the margin is set to the indent level where the comments should
@@ -351,20 +382,23 @@ void Printer::PrintTrailingCommentsWrapped(const std::vector<Token>& comments) {
     } else {
       bool continuation = false;
       std::vector<std::string> split_on_spaces = base::SplitString(
-          c.value(), " ", base::WhitespaceHandling::TRIM_WHITESPACE,
+          trimmed, " ", base::WhitespaceHandling::TRIM_WHITESPACE,
           base::SplitResult::SPLIT_WANT_NONEMPTY);
       for (size_t j = 0; j < split_on_spaces.size(); ++j) {
         if (have_empty_line && continuation) {
           Print("# ");
+          have_empty_line = false;
+        } else if (j > 0) {
+          Print(" ");
         }
         Print(split_on_spaces[j]);
-        Print(" ");
+        
         if (split_on_spaces[j] != "#") {
           have_empty_line = false;
         }
-        if (!have_empty_line &&
-            (j < split_on_spaces.size() - 1 &&
-             CurrentColumn() + split_on_spaces[j + 1].size() > kMaximumWidth)) {
+        
+        if (!have_empty_line && j < split_on_spaces.size() - 1 &&
+            CurrentColumn() + 1 + split_on_spaces[j + 1].size() > kMaximumWidth) {
           start_next_line();
           continuation = true;
         }
