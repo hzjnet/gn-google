@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74ece953_861652ea",
+        "filename": "src/gn/target.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 1437,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-10T05:31:41Z",
+      "side": 1,
+      "message": "Better to get size from constant string_view?",
+      "range": {
+        "startLine": 1437,
+        "startChar": 48,
+        "endLine": 1437,
+        "endChar": 50
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "3ca57159_ef03a32b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/target.cc",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "    constexpr std::string_view kModuleMapExt \u003d \".modulemap\";\n"
+            },
+            {
+              "path": "src/gn/target.cc",
+              "range": {
+                "startLine": 1437,
+                "startChar": 0,
+                "endLine": 1438,
+                "endChar": 0
+              },
+              "replacement": "    private_name.insert(private_name.length() - kModuleMapExt.size(),\n                        \".private\");\n"
+            }
+          ]
+        }
+      ],
+      "revId": "cb1dfabfa2563f3d8ea12f27628f8ca23330bb83",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
