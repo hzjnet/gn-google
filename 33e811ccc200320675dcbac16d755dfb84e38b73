@@ -16,6 +16,23 @@
       "message": "I mostly rely on the tests here to verify the behavior. Let me know if you would like me to add any more.",
       "revId": "33e811ccc200320675dcbac16d755dfb84e38b73",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "885791da_e2c0ab30",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001972
+      },
+      "writtenOn": "2026-04-10T23:28:19Z",
+      "side": 1,
+      "message": "I\u0027ve actually found quite a few pathological failures when running this new formatter on e.g. base/ build files, so I\u0027m going to add more tests, tweak the code, and see if I can make it behave better. so hold off for now.",
+      "revId": "33e811ccc200320675dcbac16d755dfb84e38b73",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
