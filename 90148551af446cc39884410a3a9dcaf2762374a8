@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1759f2fe_32eb068a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001972
+      },
+      "writtenOn": "2026-04-10T22:04:47Z",
+      "side": 1,
+      "message": "is there a bug for this? I searched and could not find one, so would you like me to file one? or re-open an old one?",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 9,
+        "endChar": 8
+      },
+      "revId": "90148551af446cc39884410a3a9dcaf2762374a8",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
