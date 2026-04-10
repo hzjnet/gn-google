@@ -34,6 +34,24 @@
       "parentUuid": "40fed6b7_9dd57533",
       "revId": "34105fbfa8168d7f0d157d8d65e617b36bdfce00",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f25be5d_8d964927",
+        "filename": "src/gn/ninja_c_binary_target_writer.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-10T02:09:38Z",
+      "side": 1,
+      "message": "No, ESCAPE_NINJA_COMMAND implemneted correctly.\n\n`cc_module_name \u003d foo` is not a ninja command, however, so it only needs regular ninja escaping.",
+      "parentUuid": "432d575e_b1a6b2ce",
+      "revId": "34105fbfa8168d7f0d157d8d65e617b36bdfce00",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
