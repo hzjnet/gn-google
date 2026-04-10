@@ -50,6 +50,30 @@
       ],
       "revId": "cb1dfabfa2563f3d8ea12f27628f8ca23330bb83",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef073a47_b7dc73bd",
+        "filename": "src/gn/target.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 1437,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-10T06:05:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74ece953_861652ea",
+      "range": {
+        "startLine": 1437,
+        "startChar": 48,
+        "endLine": 1437,
+        "endChar": 50
+      },
+      "revId": "cb1dfabfa2563f3d8ea12f27628f8ca23330bb83",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
