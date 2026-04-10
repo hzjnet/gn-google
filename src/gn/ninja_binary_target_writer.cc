@@ -62,16 +62,18 @@ std::vector<const Target*> ExpandModules(const LabelTargetVector& targets) {
   return modules;
 }
 
-void WriteModuleMapHeaders(std::ostream& out, const SourceDir& out_dir,
-                        const Target::FileList& headers, const Settings* settings) {
-    for (const auto& header : headers) {
-      if (header.GetType() == SourceFile::SOURCE_H) {
-        out << "  textual header \"";
-        out << RebasePath(header.value(), out_dir,
-                          settings->build_settings()->root_path_utf8());
-        out << "\"\n";
-      }
+void WriteModuleMapHeaders(std::ostream& out,
+                           const SourceDir& out_dir,
+                           const Target::FileList& headers,
+                           const Settings* settings) {
+  for (const auto& header : headers) {
+    if (header.GetType() == SourceFile::SOURCE_H) {
+      out << "  textual header \"";
+      out << RebasePath(header.value(), out_dir,
+                        settings->build_settings()->root_path_utf8());
+      out << "\"\n";
     }
+  }
 }
 
 void WriteModuleDeps(std::ostream& out,
