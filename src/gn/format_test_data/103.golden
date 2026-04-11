@@ -1,0 +1,4 @@
+# //components/safe_browsing/content/browser/triggers, which this depends on,
+# depends on :browser.
+# TODO(crbug.com/40770425): Consider folding all of three these together into
+# :browser, along with the other browser process code in

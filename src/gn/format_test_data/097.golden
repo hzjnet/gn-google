@@ -1,0 +1,2 @@
+# problematic for Cronet because of targets like
+#   //third_party/perfetto/src/trace_processor/perfetto_sql/stdlib:stdlib_generated_file
