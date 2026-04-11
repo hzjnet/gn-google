@@ -34,6 +34,9 @@ using FormatTest = TestWithScheduler;
         &expected));                                                        \
     EXPECT_TRUE(commands::FormatStringToString(                             \
         input, commands::TreeDumpMode::kInactive, &out, nullptr));          \
+    if (expected != out) {                                                  \
+      printf("EXPECTED:\n%s\nOUT:\n%s\n", expected.c_str(), out.c_str());   \
+    }                                                                       \
     EXPECT_EQ(expected, out);                                               \
     /* Make sure formatting the output doesn't cause further changes. */    \
     std::string out_again;                                                  \
@@ -138,3 +141,22 @@ FORMAT_TEST(082)
 FORMAT_TEST(083)
 FORMAT_TEST(084)
 FORMAT_TEST(085)
+FORMAT_TEST(086)
+FORMAT_TEST(087)
+FORMAT_TEST(088)
+FORMAT_TEST(089)
+FORMAT_TEST(090)
+FORMAT_TEST(091)
+FORMAT_TEST(092)
+FORMAT_TEST(093)
+FORMAT_TEST(094)
+FORMAT_TEST(095)
+FORMAT_TEST(096)
+FORMAT_TEST(097)
+FORMAT_TEST(098)
+FORMAT_TEST(099)
+FORMAT_TEST(100)
+FORMAT_TEST(101)
+FORMAT_TEST(102)
+FORMAT_TEST(103)
+FORMAT_TEST(104)
