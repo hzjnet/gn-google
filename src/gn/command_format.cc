@@ -158,9 +158,9 @@ class Printer {
   // Add the current margin (as spaces) to the output.
   void PrintMargin();
 
-  void TrimAndPrintToken(const Token& token);
+  void PrintTokensWrapped(const std::vector<Token>& comments);
 
-  void PrintTrailingCommentsWrapped(const std::vector<Token>& comments);
+  
 
   void FlushComments();
 
@@ -316,20 +316,7 @@ void Printer::PrintMargin() {
   output_ += std::string(margin(), ' ');
 }
 
-void Printer::TrimAndPrintToken(const Token& token) {
-  std::string trimmed;
-  TrimWhitespaceASCII(std::string(token.value()), base::TRIM_ALL, &trimmed);
-  Print(trimmed);
-}
-
-// Assumes that the margin is set to the indent level where the comments should
-// be aligned. This doesn't de-wrap, it only wraps. So if a suffix comment
-// causes the line to exceed 80 col it will be wrapped, but the subsequent line
-// would fit on the then-broken line it will not be merged with it. This is
-// partly because it's difficult to implement at this level, but also because
-// it can break hand-authored line breaks where they're starting a new paragraph
-// or statement.
-void Printer::PrintTrailingCommentsWrapped(const std::vector<Token>& comments) {
+void Printer::PrintTokensWrapped(const std::vector<Token>& comments) {
   bool have_empty_line = true;
   auto start_next_line = [this, &have_empty_line]() {
     Trim();
@@ -337,36 +324,154 @@ void Printer::PrintTrailingCommentsWrapped(const std::vector<Token>& comments) {
     PrintMargin();
     have_empty_line = true;
   };
-  for (const auto& c : comments) {
-    if (!have_empty_line) {
-      start_next_line();
-    }
+  
+  struct Paragraph {
+    std::vector<Token> tokens;
+    bool should_reflow = false;
+    bool is_preformatted = false;
+  };
+  std::vector<Paragraph> paragraphs;
+  Paragraph current_paragraph;
 
+  auto flush_paragraph = [&]() {
+    if (!current_paragraph.tokens.empty()) {
+      paragraphs.push_back(current_paragraph);
+      current_paragraph = Paragraph();
+    }
+  };
+
+  bool in_preformatted_block = false;
+
+  for (const auto& c : comments) {
     std::string trimmed;
     TrimWhitespaceASCII(std::string(c.value()), base::TRIM_ALL, &trimmed);
+    
+    bool is_empty = trimmed == "#";
+    if (is_empty) {
+      in_preformatted_block = false;
+    }
 
-    if (margin() + trimmed.size() <= kMaximumWidth) {
-      Print(trimmed);
-      have_empty_line = false;
+    bool is_indented = c.value().length() >= 3 && c.value().substr(0, 3) == "#  ";
+    bool has_url = trimmed.find("http://") != std::string::npos || trimmed.find("https://") != std::string::npos;
+    bool is_list = trimmed.length() >= 4 && trimmed[0] == '#' && trimmed[1] == ' ' && 
+                   (trimmed[2] == '-' || trimmed[2] == '*' || isdigit(trimmed[2])) && trimmed[3] == ' ';
+    bool is_copyright = trimmed.find("Copyright") != std::string::npos || 
+                        trimmed.find("Use of this source code") != std::string::npos || 
+                        trimmed.find("found in the LICENSE file") != std::string::npos;
+    bool is_pragma = trimmed.find("# NOSORT") != std::string::npos || trimmed.find("# KEEPDUPS") != std::string::npos;
+    
+    std::string text_only = trimmed.length() > 1 ? trimmed.substr(1) : "";
+    TrimWhitespaceASCII(text_only, base::TRIM_ALL, &text_only);
+    bool is_single_word = !text_only.empty() && text_only.find(' ') == std::string::npos;
+
+    bool is_attention_marker = 
+        text_only.find("TODO") == 0 ||
+        text_only.find("NOTE") == 0 ||
+        text_only.find("WARNING") == 0 ||
+        text_only.find("FIXME") == 0;
+
+    if (is_attention_marker) {
+      flush_paragraph();
+    }
+
+    bool is_special = is_indented || has_url || is_empty || is_list || is_copyright || is_pragma || is_single_word || in_preformatted_block;
+
+    if (is_special) {
+      flush_paragraph();
+      Paragraph p;
+      p.tokens.push_back(c);
+      p.should_reflow = false;
+      p.is_preformatted = in_preformatted_block || is_single_word || is_indented || has_url || is_list || is_pragma;
+      paragraphs.push_back(p);
     } else {
+      if (margin() + trimmed.size() > kMaximumWidth) {
+        current_paragraph.should_reflow = true;
+      }
+      current_paragraph.tokens.push_back(c);
+    }
+
+    if (trimmed.length() > 0 && trimmed.back() == ':') {
+      in_preformatted_block = true;
+    }
+  }
+  flush_paragraph();
+
+  for (const auto& p : paragraphs) {
+    if (p.should_reflow) {
+      std::vector<std::string> words;
+      for (const auto& t : p.tokens) {
+        std::string trimmed;
+        TrimWhitespaceASCII(std::string(t.value()), base::TRIM_ALL, &trimmed);
+        std::vector<std::string> line_words = base::SplitString(
+            trimmed, " ", base::WhitespaceHandling::TRIM_WHITESPACE,
+            base::SplitResult::SPLIT_WANT_NONEMPTY);
+        if (words.empty()) {
+          words.push_back("#");
+        }
+        for (const auto& w : line_words) {
+          if (w != "#") words.push_back(w);
+        }
+      }
+
+      if (!have_empty_line) start_next_line();
+
       bool continuation = false;
-      std::vector<std::string> split_on_spaces = base::SplitString(
-          c.value(), " ", base::WhitespaceHandling::TRIM_WHITESPACE,
-          base::SplitResult::SPLIT_WANT_NONEMPTY);
-      for (size_t j = 0; j < split_on_spaces.size(); ++j) {
+      for (size_t j = 0; j < words.size(); ++j) {
         if (have_empty_line && continuation) {
           Print("# ");
+          have_empty_line = false;
+        } else if (j > 0) {
+          Print(" ");
         }
-        Print(split_on_spaces[j]);
-        Print(" ");
-        if (split_on_spaces[j] != "#") {
+        Print(words[j]);
+
+        if (words[j] != "#") {
           have_empty_line = false;
         }
-        if (!have_empty_line &&
-            (j < split_on_spaces.size() - 1 &&
-             CurrentColumn() + split_on_spaces[j + 1].size() > kMaximumWidth)) {
+
+        if (!have_empty_line && j < words.size() - 1 &&
+            CurrentColumn() + 1 + words[j + 1].size() > kMaximumWidth) {
           start_next_line();
           continuation = true;
+        }
+      }
+    } else {
+      for (const auto& c : p.tokens) {
+        if (!have_empty_line) {
+          start_next_line();
+        }
+
+        std::string trimmed;
+        TrimWhitespaceASCII(std::string(c.value()), base::TRIM_ALL, &trimmed);
+
+        if (p.is_preformatted || margin() + trimmed.size() <= kMaximumWidth) {
+          Print(trimmed);
+          have_empty_line = false;
+        } else {
+          bool continuation = false;
+          const std::vector<std::string> split_on_spaces = base::SplitString(
+              trimmed, " ", base::WhitespaceHandling::TRIM_WHITESPACE,
+              base::SplitResult::SPLIT_WANT_NONEMPTY);
+          for (size_t j = 0; j < split_on_spaces.size(); ++j) {
+            if (have_empty_line && continuation) {
+              Print("# ");
+              have_empty_line = false;
+            } else if (j > 0) {
+              Print(" ");
+            }
+            Print(split_on_spaces[j]);
+
+            if (split_on_spaces[j] != "#") {
+              have_empty_line = false;
+            }
+
+            if (!have_empty_line && j < split_on_spaces.size() - 1 &&
+                CurrentColumn() + 1 + split_on_spaces[j + 1].size() >
+                    kMaximumWidth) {
+              start_next_line();
+              continuation = true;
+            }
+          }
         }
       }
     }
@@ -378,7 +483,7 @@ void Printer::PrintSuffixComments(const ParseNode* node) {
   if (node->comments() && !node->comments()->suffix().empty()) {
     Print("  ");
     stack_.push_back(IndentState(CurrentColumn(), false, false));
-    PrintTrailingCommentsWrapped(node->comments()->suffix());
+    PrintTokensWrapped(node->comments()->suffix());
     stack_.pop_back();
   }
 }
@@ -389,7 +494,7 @@ void Printer::FlushComments() {
     // Save the margin, and temporarily set it to where the first comment
     // starts so that multiple suffix comments are vertically aligned.
     stack_.push_back(IndentState(CurrentColumn(), false, false));
-    PrintTrailingCommentsWrapped(comments_);
+    PrintTokensWrapped(comments_);
     stack_.pop_back();
     comments_.clear();
   }
@@ -705,8 +810,8 @@ void Printer::Block(const ParseNode* root) {
   const BlockNode* block = root->AsBlock();
 
   if (block->comments()) {
-    for (const auto& c : block->comments()->before()) {
-      TrimAndPrintToken(c);
+    if (!block->comments()->before().empty()) {
+      PrintTokensWrapped(block->comments()->before());
       Newline();
     }
   }
@@ -724,8 +829,8 @@ void Printer::Block(const ParseNode* root) {
       // However, because it's a general expression handler, it doesn't insert
       // the newline itself, which only happens between block statements. So,
       // the after are handled explicitly here.
-      for (const auto& c : stmt->comments()->after()) {
-        TrimAndPrintToken(c);
+      if (!stmt->comments()->after().empty()) {
+        PrintTokensWrapped(stmt->comments()->after());
         Newline();
       }
     }
@@ -744,8 +849,8 @@ void Printer::Block(const ParseNode* root) {
       // then the two comments were originally separate, so keep them that way.
       Newline();
     }
-    for (const auto& c : block->comments()->after()) {
-      TrimAndPrintToken(c);
+    if (!block->comments()->after().empty()) {
+      PrintTokensWrapped(block->comments()->after());
       Newline();
     }
   }
@@ -797,8 +902,8 @@ int Printer::Expr(const ParseNode* root,
         Print("\n");
       // We're printing a line comment, so we need to be at the current margin.
       PrintMargin();
-      for (const auto& c : root->comments()->before()) {
-        TrimAndPrintToken(c);
+      if (!root->comments()->before().empty()) {
+        PrintTokensWrapped(root->comments()->before());
         Newline();
       }
     }
@@ -998,7 +1103,7 @@ int Printer::Expr(const ParseNode* root,
     Print(unaryop->op().value());
     Expr(unaryop->operand(), kPrecedenceUnary, std::string());
   } else if (const BlockCommentNode* block_comment = root->AsBlockComment()) {
-    Print(block_comment->comment().value());
+    PrintTokensWrapped({block_comment->comment()});
   } else if (const EndNode* end = root->AsEnd()) {
     Print(end->value().value());
   } else {
@@ -1076,10 +1181,8 @@ void Printer::Sequence(SequenceStyle style,
     if (end->comments() && !end->comments()->before().empty()) {
       if (list.size() >= 2)
         Newline();
-      for (const auto& c : end->comments()->before()) {
-        Newline();
-        TrimAndPrintToken(c);
-      }
+      Newline();
+      PrintTokensWrapped(end->comments()->before());
     }
 
     stack_.pop_back();
@@ -1239,10 +1342,8 @@ int Printer::FunctionCall(const FunctionCallNode* func_call,
     if (end->comments() && !end->comments()->before().empty()) {
       if (!list.empty())
         Newline();
-      for (const auto& c : end->comments()->before()) {
-        Newline();
-        TrimAndPrintToken(c);
-      }
+      Newline();
+      PrintTokensWrapped(end->comments()->before());
       Newline();
     }
     stack_.pop_back();

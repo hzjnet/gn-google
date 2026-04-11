@@ -1,0 +1,8 @@
+if (is_android) {
+  if (true) {
+    # base_java is a blob of targets that are being consumed by almost every
+    # product and library in Chromium, adding new java modules here means that
+    # all consumers will be impacted (eg: This could have severe consequences as
+    # Cronet can't depend on Guava / AndroidX).
+  }
+}
