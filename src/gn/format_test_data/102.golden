@@ -1,0 +1,6 @@
+if (true) {
+  # you are adding //third_party/android_deps:android_support_*, use the
+  # androidx version of the dep instead.
+  # TODO(b/165810905): Use per-feature -keep rules in R8 once supported, then
+  # this can be removed.
+}
