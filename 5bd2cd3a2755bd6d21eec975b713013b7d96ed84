@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1930face_0e295a80",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T02:44:38Z",
+      "side": 1,
+      "message": "Open question: Do you think it\u0027s worth supporting non-recursive directory scanning? You can simulate non-recursive by just filtering out any files containing a \"/\", and I would guess it to be rather rare? We could also add it after the fact if we wanted",
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
