@@ -257,6 +257,28 @@ base::FilePath FindDotFile(const base::FilePath& current_dir) {
   return FindDotFile(up_one_dir);
 }
 
+std::unique_ptr<SourceFileSet> FillAllowlist(const Value* value,
+                                             const SourceDir& current_dir,
+                                             Err* err) {
+  if (!value)
+    return nullptr;
+
+  if (!value->VerifyTypeIs(Value::LIST, err)) {
+    return nullptr;
+  }
+  auto allowlist = std::make_unique<SourceFileSet>();
+  for (const auto& item : value->list_value()) {
+    if (!item.VerifyTypeIs(Value::STRING, err)) {
+      return nullptr;
+    }
+    allowlist->insert(current_dir.ResolveRelativeFile(item, err));
+    if (err->has_error()) {
+      return nullptr;
+    }
+  }
+  return allowlist;
+}
+
 // Called on any thread. Post the item to the builder on the main thread.
 void ItemDefinedCallback(MsgLoop* task_runner,
                          Builder* builder_call_on_main_thread_only,
@@ -1107,24 +1129,24 @@ bool Setup::FillOtherConfig(const base::CommandLine& cmdline, Err* err) {
     exec_script_allowlist_value =
         dotfile_scope_.GetValue("exec_script_whitelist", true);
   }
-
   if (exec_script_allowlist_value) {
-    // Fill the list of targets to check.
-    if (!exec_script_allowlist_value->VerifyTypeIs(Value::LIST, err)) {
+    build_settings_.set_exec_script_allowlist(
+        FillAllowlist(exec_script_allowlist_value, current_dir, err));
+    if (err->has_error()) {
       return false;
     }
-    std::unique_ptr<SourceFileSet> allowlist =
-        std::make_unique<SourceFileSet>();
-    for (const auto& item : exec_script_allowlist_value->list_value()) {
-      if (!item.VerifyTypeIs(Value::STRING, err)) {
-        return false;
-      }
-      allowlist->insert(current_dir.ResolveRelativeFile(item, err));
-      if (err->has_error()) {
-        return false;
-      }
+  }
+
+  // Fill expand_directory_allowlist.
+  const Value* expand_directory_allowlist_value =
+      dotfile_scope_.GetValue("expand_directory_allowlist", true);
+
+  if (expand_directory_allowlist_value) {
+    build_settings_.set_expand_directory_allowlist(
+        FillAllowlist(expand_directory_allowlist_value, current_dir, err));
+    if (err->has_error()) {
+      return false;
     }
-    build_settings_.set_exec_script_allowlist(std::move(allowlist));
   }
 
   // Fill optional default_args.
