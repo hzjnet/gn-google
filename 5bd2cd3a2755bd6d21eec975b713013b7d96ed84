@@ -125,6 +125,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e32957b_125dcce4",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T07:04:51Z",
+      "side": 1,
+      "message": "Yes",
+      "parentUuid": "9f7958a8_2336099d",
+      "range": {
+        "startLine": 44,
+        "startChar": 30,
+        "endLine": 44,
+        "endChar": 38
+      },
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "38708d88_73400fef",
@@ -369,6 +393,24 @@
       "side": 1,
       "message": "This seems not applied?",
       "parentUuid": "0b90f33b_74653f9e",
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5797e60d_78be5a14",
+        "filename": "src/gn/function_expand_directory_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T07:04:51Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t quite understand what you were saying earlier.\n\nI don\u0027t think this should be in the first block. I checked for consistency, and I think the problem is that the source file shouldn\u0027t have functions.h in its own block. function_toolchain* doesn\u0027t.",
+      "parentUuid": "c24b2b46_e8da485a",
       "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },

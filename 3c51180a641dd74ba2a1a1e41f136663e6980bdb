@@ -134,6 +134,24 @@
       ],
       "revId": "3c51180a641dd74ba2a1a1e41f136663e6980bdb",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "631fa639_c08467ff",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T07:04:51Z",
+      "side": 1,
+      "message": "No, I figured that you can always do filter_include and filter_exclude to achieve that. I\u0027m also intentionally trying to not make a really easy `glob` function to use to prevent people from attempting to use it as their go-to method to write code.",
+      "parentUuid": "ca39c6e3_f9c4c8c6",
+      "revId": "3c51180a641dd74ba2a1a1e41f136663e6980bdb",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
