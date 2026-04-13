@@ -1,0 +1,139 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca39c6e3_f9c4c8c6",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003017
+      },
+      "writtenOn": "2026-04-13T06:30:25Z",
+      "side": 1,
+      "message": "Do you have any plan to specify patterns or extensions?\n\ne.g.\nhttps://source.chromium.org/chromium/chromium/src/+/main:build/config/siso/clang_linux.star;l\u003d64-76;drc\u003ddca02f06abb653cc3670086345a26cca736d6618",
+      "fixSuggestions": [
+        {
+          "fixId": "784239f1_a570980c",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "#include \"base/strings/pattern.h\"\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 32,
+                "startChar": 0,
+                "endLine": 33,
+                "endChar": 0
+              },
+              "replacement": "  expand_directory(directory, recursive, patterns \u003d [])\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "    patterns: An optional list of strings. Each string is a glob pattern\n              (e.g., \"*.cc\", \"*.h\") that the filenames must match.\n              If empty or not provided, all files are included.\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "    cc_files \u003d expand_directory(\"src/data\", false, [\"*.cc\"])\n    source_files \u003d expand_directory(\"src/data\", true, [\"*.cc\", \"*.h\"])\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "                              const std::vector\u003cValue\u003e\u0026 patterns,\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 71,
+                "startChar": 0,
+                "endLine": 77,
+                "endChar": 0
+              },
+              "replacement": "      // Check if the file matches any of the provided patterns.\n      // If no patterns are given, all files match.\n      bool matches \u003d patterns.empty();\n      if (!matches) {\n        std::string filename \u003d FilePathToUTF8(current.BaseName());\n        for (const auto\u0026 pattern_val : patterns) {\n          if (base::MatchPattern(filename, pattern_val.string_value())) {\n            matches \u003d true;\n            break;\n          }\n        }\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 78,
+                "startChar": 0,
+                "endLine": 79,
+                "endChar": 0
+              },
+              "replacement": "\n      if (matches) {\n        std::string rel_path;\n        if (!MakeAbsolutePathRelativeIfPossible(\n                root_path, FilePathToUTF8(current), \u0026rel_path)) {\n          *err \u003d\n              Err(function, \"expand_directory can only be used on source files\");\n          return Value();\n        }\n        files.list_value().emplace_back(function, rel_path);\n      }\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 95,
+                "startChar": 0,
+                "endLine": 96,
+                "endChar": 0
+              },
+              "replacement": "  if (args.size() \u003c 2 || args.size() \u003e 3) {\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 99,
+                "startChar": 0,
+                "endLine": 100,
+                "endChar": 0
+              },
+              "replacement": "            \"expand_directory expects two or three arguments, but got %zu args.\",\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "  std::vector\u003cValue\u003e patterns;\n  if (args.size() \u003d\u003d 3) {\n    if (!args[2].VerifyTypeIs(Value::LIST, err)) {\n      return Value();\n    }\n    patterns \u003d args[2].list_value();\n    for (const auto\u0026 pattern : patterns) {\n      if (!pattern.VerifyTypeIs(Value::STRING, err)) {\n        return Value();\n      }\n    }\n    return Value();\n  }\n\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 148,
+                "startChar": 0,
+                "endLine": 150,
+                "endChar": 0
+              },
+              "replacement": "  Value result \u003d ExpandDirectoryInternal(function, root_path, dir_path,\n                                         recursive, patterns, err);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "3c51180a641dd74ba2a1a1e41f136663e6980bdb",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
