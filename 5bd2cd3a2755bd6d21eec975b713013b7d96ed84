@@ -16,6 +16,216 @@
       "message": "Open question: Do you think it\u0027s worth supporting non-recursive directory scanning? You can simulate non-recursive by just filtering out any files containing a \"/\", and I would guess it to be rather rare? We could also add it after the fact if we wanted",
       "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4a99646_477982db",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-13T05:06:40Z",
+      "side": 1,
+      "message": "I think either is fine as it doesen\u0027t need many code to support both.",
+      "parentUuid": "1930face_0e295a80",
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0267fa7_26aee4f8",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-13T05:06:40Z",
+      "side": 1,
+      "message": "We don\u0027t need to take care of the case where the file is added/removed from this drectory, but gen gen doesn\u0027t re-run case?",
+      "range": {
+        "startLine": 44,
+        "startChar": 30,
+        "endLine": 44,
+        "endChar": 38
+      },
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38708d88_73400fef",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-13T05:06:40Z",
+      "side": 1,
+      "message": "Can we use string_view here?",
+      "range": {
+        "startLine": 50,
+        "startChar": 41,
+        "endLine": 50,
+        "endChar": 47
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "57e3fc3a_3290d9b5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "#include \u003cstring_view\u003e\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 50,
+                "startChar": 0,
+                "endLine": 51,
+                "endChar": 0
+              },
+              "replacement": "                              std::string_view root_path,\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 71,
+                "startChar": 0,
+                "endLine": 72,
+                "endChar": 0
+              },
+              "replacement": "              std::string(root_path), FilePathToUTF8(current), \u0026rel_path)) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5a46e95_330c8d66",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-13T05:06:40Z",
+      "side": 1,
+      "message": "Can we show actual args size?",
+      "range": {
+        "startLine": 95,
+        "startChar": 49,
+        "endLine": 95,
+        "endChar": 62
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "5c7ab79c_167a6c55",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "#include \u003cstring\u003e\n"
+            },
+            {
+              "path": "src/gn/function_expand_directory.cc",
+              "range": {
+                "startLine": 95,
+                "startChar": 0,
+                "endLine": 96,
+                "endChar": 0
+              },
+              "replacement": "               \"expand_directory expects exactly two arguments, but got \" +\n                   std::to_string(args.size()) + \".\");\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c925820f_73b7ab96",
+        "filename": "src/gn/function_expand_directory_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-13T05:06:40Z",
+      "side": 1,
+      "message": "Include this in the second block?",
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42449fbb_467ea176",
+        "filename": "src/gn/function_expand_directory_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-13T05:06:40Z",
+      "side": 1,
+      "message": "Include this in the first block?",
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "929226e1_10d7e818",
+        "filename": "src/gn/function_expand_directory_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-13T05:06:40Z",
+      "side": 1,
+      "message": "Consider adding a test case where the directory being expanded is outside the `build_settings()-\u003eroot_path()`. This will ensure that the \"sysroot outside the checkout\" use case mentioned in the commit message actually works.",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 0
+      },
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
