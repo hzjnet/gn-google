@@ -152,6 +152,24 @@
       "parentUuid": "ca39c6e3_f9c4c8c6",
       "revId": "3c51180a641dd74ba2a1a1e41f136663e6980bdb",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5d6e002_4dd37cef",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003017
+      },
+      "writtenOn": "2026-04-13T07:08:14Z",
+      "side": 1,
+      "message": "Ah, there are `filter_{include, exclude}`. That makes sense.",
+      "parentUuid": "631fa639_c08467ff",
+      "revId": "3c51180a641dd74ba2a1a1e41f136663e6980bdb",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
