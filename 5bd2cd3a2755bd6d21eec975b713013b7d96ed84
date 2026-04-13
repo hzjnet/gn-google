@@ -36,6 +36,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1d9516b_c427062d",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T05:19:33Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "a4a99646_477982db",
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e0267fa7_26aee4f8",
@@ -49,6 +67,30 @@
       "writtenOn": "2026-04-13T05:06:40Z",
       "side": 1,
       "message": "We don\u0027t need to take care of the case where the file is added/removed from this drectory, but gen gen doesn\u0027t re-run case?",
+      "range": {
+        "startLine": 44,
+        "startChar": 30,
+        "endLine": 44,
+        "endChar": 38
+      },
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bca69bda_f0a46141",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T05:19:33Z",
+      "side": 1,
+      "message": "We do need to take care of that. That\u0027s what the `g_scheduler-\u003eAddGenDependency` does.",
+      "parentUuid": "e0267fa7_26aee4f8",
       "range": {
         "startLine": 44,
         "startChar": 30,
@@ -120,6 +162,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8201228_570f9b10",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T05:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38708d88_73400fef",
+      "range": {
+        "startLine": 50,
+        "startChar": 41,
+        "endLine": 50,
+        "endChar": 47
+      },
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b5a46e95_330c8d66",
@@ -171,6 +237,30 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3519da1_051cfa97",
+        "filename": "src/gn/function_expand_directory.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T05:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5a46e95_330c8d66",
+      "range": {
+        "startLine": 95,
+        "startChar": 49,
+        "endLine": 95,
+        "endChar": 62
+      },
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c925820f_73b7ab96",
@@ -184,6 +274,24 @@
       "writtenOn": "2026-04-13T05:06:40Z",
       "side": 1,
       "message": "Include this in the second block?",
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19f7dbc2_3fdbb092",
+        "filename": "src/gn/function_expand_directory_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T05:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c925820f_73b7ab96",
       "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
@@ -205,6 +313,24 @@
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b90f33b_74653f9e",
+        "filename": "src/gn/function_expand_directory_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T05:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42449fbb_467ea176",
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "929226e1_10d7e818",
@@ -218,6 +344,30 @@
       "writtenOn": "2026-04-13T05:06:40Z",
       "side": 1,
       "message": "Consider adding a test case where the directory being expanded is outside the `build_settings()-\u003eroot_path()`. This will ensure that the \"sysroot outside the checkout\" use case mentioned in the commit message actually works.",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 0
+      },
+      "revId": "5bd2cd3a2755bd6d21eec975b713013b7d96ed84",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2031a065_ade44a20",
+        "filename": "src/gn/function_expand_directory_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 3810482
+      },
+      "writtenOn": "2026-04-13T05:19:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "929226e1_10d7e818",
       "range": {
         "startLine": 103,
         "startChar": 0,
