@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "204cb4e2_13bc181e",
+        "filename": "src/gn/json_project_writer_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 851,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-14T08:19:09Z",
+      "side": 1,
+      "message": "Can we initilize this with the value?",
+      "range": {
+        "startLine": 850,
+        "startChar": 0,
+        "endLine": 851,
+        "endChar": 29
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2cf9df54_9266af65",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/json_project_writer_unittest.cc",
+              "range": {
+                "startLine": 295,
+                "startChar": 0,
+                "endLine": 297,
+                "endChar": 0
+              },
+              "replacement": "  std::vector\u003cconst Target*\u003e targets \u003d {\u0026target};\n"
+            }
+          ]
+        }
+      ],
+      "revId": "8372adf3721e11cc85b578ed4ee080cffdd49953",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
