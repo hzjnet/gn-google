@@ -16,6 +16,23 @@
       "message": "Sorry for the delay in reviewing, I was sidetracked by something over the past couple days.",
       "revId": "8c920ae5e1cf5418be57cc815306367910701932",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b380b1bd_029f2343",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000005
+      },
+      "writtenOn": "2026-04-16T18:44:08Z",
+      "side": 1,
+      "message": "Bah, IIRC gn code reviews need two googlers now, and so my vote doesn\u0027t count? \n\ndigit@, can you take a look at this?",
+      "revId": "8c920ae5e1cf5418be57cc815306367910701932",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
