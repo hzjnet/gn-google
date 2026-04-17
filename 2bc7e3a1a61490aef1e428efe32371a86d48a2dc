@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e220637c_f7c8e2f6",
+        "filename": "docs/reference.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-17T04:21:38Z",
+      "side": 1,
+      "message": "This is auto generated file. Could you update around\nhttps://source.chromium.org/gn/gn/+/main:src/gn/command_gen.cc;l\u003d554;drc\u003d83c605e5dcc3db2945291da1760ca9abd6343338\nand generate this file from there?",
+      "revId": "2bc7e3a1a61490aef1e428efe32371a86d48a2dc",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
