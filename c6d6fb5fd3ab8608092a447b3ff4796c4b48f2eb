@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e89a2df7_e5593fdd",
+        "filename": "src/gn/ninja_binary_target_writer.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-17T08:04:51Z",
+      "side": 1,
+      "message": "Better to leave link to reference to use this suffix?",
+      "range": {
+        "startLine": 138,
+        "startChar": 40,
+        "endLine": 138,
+        "endChar": 48
+      },
+      "revId": "c6d6fb5fd3ab8608092a447b3ff4796c4b48f2eb",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
