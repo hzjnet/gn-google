@@ -88,3 +88,75 @@ TEST_F(BinaryTargetGeneratorTest, GeneratedModuleMap) {
   EXPECT_TRUE(target->module_type().test(Target::MODULEMAP_IS_GENERATED));
   EXPECT_TRUE(target->module_type().test(Target::MODULEMAP_IS_TEXTUAL));
 }
+
+TEST_F(BinaryTargetGeneratorTest, AllowCircularIncludesAllowlist) {
+  TestWithScope setup;
+  Scope::ItemVector items_;
+  setup.scope()->set_item_collector(&items_);
+  setup.scope()->set_source_dir(SourceDir("//test/"));
+
+  // Create a dep for foo to reference.
+  Target* dep =
+      new Target(setup.settings(), Label(SourceDir("//test/"), "dep"));
+  dep->set_output_type(Target::SOURCE_SET);
+  dep->visibility().SetPublic();
+  Err err;
+  dep->SetToolchain(setup.toolchain(), &err);
+  dep->OnResolved(&err);
+  items_.push_back(std::unique_ptr<Item>(dep));
+
+  // Case 1: Allowlist not set. Allowed.
+  {
+    TestParseInput input(
+        R"(static_library("foo") {
+             sources = [ "//foo.cc" ]
+             deps = [ ":dep" ]
+             allow_circular_includes_from = [ ":dep" ]
+           })");
+    ASSERT_FALSE(input.has_error());
+
+    Err err;
+    input.parsed()->Execute(setup.scope(), &err);
+    EXPECT_FALSE(err.has_error()) << err.message();
+  }
+
+  // Case 2: Allowlist set, file IN list. Allowed.
+  {
+    auto allowlist = std::make_unique<SourceFileSet>();
+    allowlist->insert(SourceFile("//test"));
+    setup.build_settings()->set_allow_circular_includes_from_allowlist(
+        std::move(allowlist));
+
+    TestParseInput input(
+        R"(static_library("foo2") {
+             sources = [ "//foo.cc" ]
+             deps = [ ":dep" ]
+             allow_circular_includes_from = [ ":dep" ]
+           })");
+    ASSERT_FALSE(input.has_error());
+
+    Err err;
+    input.parsed()->Execute(setup.scope(), &err);
+    EXPECT_FALSE(err.has_error()) << err.message();
+  }
+
+  // Case 3: Allowlist set, file NOT in list. Rejected.
+  {
+    auto allowlist = std::make_unique<SourceFileSet>();
+    allowlist->insert(SourceFile("//other"));
+    setup.build_settings()->set_allow_circular_includes_from_allowlist(
+        std::move(allowlist));
+
+    TestParseInput input(
+        R"(static_library("foo3") {
+             sources = [ "//foo.cc" ]
+             deps = [ ":dep" ]
+             allow_circular_includes_from = [ ":dep" ]
+           })");
+    ASSERT_FALSE(input.has_error());
+
+    Err err;
+    input.parsed()->Execute(setup.scope(), &err);
+    EXPECT_TRUE(err.has_error());
+  }
+}
