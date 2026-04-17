@@ -1,0 +1,185 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f84ac3fa_8a29e803",
+        "filename": "src/gn/binary_target_generator_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-17T03:46:40Z",
+      "side": 1,
+      "message": "EXPECT_TRUE?",
+      "range": {
+        "startLine": 36,
+        "startChar": 2,
+        "endLine": 36,
+        "endChar": 11
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "cf95e2fa_7d47b2df",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/binary_target_generator_unittest.cc",
+              "range": {
+                "startLine": 36,
+                "startChar": 0,
+                "endLine": 37,
+                "endChar": 0
+              },
+              "replacement": "  EXPECT_TRUE(target-\u003emodule_type().none());\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b76cd0ff803086503ff6b823044524b9a1872ce7",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a2c19ad_78fff01b",
+        "filename": "src/gn/ninja_module_writer_util.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-17T03:46:40Z",
+      "side": 1,
+      "message": "Include this in 3rd block?",
+      "revId": "b76cd0ff803086503ff6b823044524b9a1872ce7",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c9d87cb_14ae5fd0",
+        "filename": "src/gn/target.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 1412,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-17T03:46:40Z",
+      "side": 1,
+      "message": "I prefer to drop else if there is early return.",
+      "range": {
+        "startLine": 1412,
+        "startChar": 4,
+        "endLine": 1412,
+        "endChar": 8
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ebca810b_74217d92",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/target.cc",
+              "range": {
+                "startLine": 1412,
+                "startChar": 0,
+                "endLine": 1413,
+                "endChar": 0
+              },
+              "replacement": "  }\n  if (module_type_.any()) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b76cd0ff803086503ff6b823044524b9a1872ce7",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2f98c5c_73151be9",
+        "filename": "src/gn/target.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-17T03:46:40Z",
+      "side": 1,
+      "message": "Why not 3?",
+      "range": {
+        "startLine": 64,
+        "startChar": 33,
+        "endLine": 64,
+        "endChar": 34
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "4621c0f3_c9c79340",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/target.h",
+              "range": {
+                "startLine": 64,
+                "startChar": 0,
+                "endLine": 65,
+                "endChar": 0
+              },
+              "replacement": "  using ModuleType \u003d std::bitset\u003c3\u003e;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b76cd0ff803086503ff6b823044524b9a1872ce7",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ac79853_9f63ad40",
+        "filename": "src/gn/target.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-17T03:46:40Z",
+      "side": 1,
+      "message": "We don\u0027t need this initizaliation now as bitset has default constructor?",
+      "range": {
+        "startLine": 541,
+        "startChar": 26,
+        "endLine": 541,
+        "endChar": 29
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "93b5d0d3_f54972d5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "src/gn/target.h",
+              "range": {
+                "startLine": 541,
+                "startChar": 0,
+                "endLine": 542,
+                "endChar": 0
+              },
+              "replacement": "  ModuleType module_type_;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b76cd0ff803086503ff6b823044524b9a1872ce7",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
