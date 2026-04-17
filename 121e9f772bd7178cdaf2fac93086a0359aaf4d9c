@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f48f7577_d83aa87c",
+        "filename": "docs/reference.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 2615,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-17T04:06:37Z",
+      "side": 1,
+      "message": "Could you update\nhttps://gn.googlesource.com/gn/+/refs/heads/main/docs/reference.md#other-help-topics-gn-file-back-to-top-variables\ntoo?",
+      "revId": "121e9f772bd7178cdaf2fac93086a0359aaf4d9c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    }
+  ]
+}
