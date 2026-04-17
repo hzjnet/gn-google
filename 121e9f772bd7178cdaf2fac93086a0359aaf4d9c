@@ -34,6 +34,24 @@
       "parentUuid": "f48f7577_d83aa87c",
       "revId": "121e9f772bd7178cdaf2fac93086a0359aaf4d9c",
       "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e551f8a4_2cf0a1a7",
+        "filename": "docs/reference.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 2615,
+      "author": {
+        "id": 1000030
+      },
+      "writtenOn": "2026-04-17T04:19:49Z",
+      "side": 1,
+      "message": "I meant to add explanation for expand_directory_allowlist there.",
+      "parentUuid": "83551c97_0a1ee692",
+      "revId": "121e9f772bd7178cdaf2fac93086a0359aaf4d9c",
+      "serverId": "c360c8e5-7aa8-3905-a7a0-810934766dac"
     }
   ]
 }
