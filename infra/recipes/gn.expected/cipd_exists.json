@@ -241,96 +241,10 @@
     ]
   },
   {
-    "cmd": [],
-    "name": "jemalloc.install infra/3pp/tools/autoconf",
-    "~followup_annotations": [
-      "@@@STEP_NEST_LEVEL@1@@@"
-    ]
-  },
-  {
     "cmd": [
-      "vpython3",
-      "-u",
-      "RECIPE_MODULE[recipe_engine::file]/resources/fileutil.py",
-      "--json-output",
-      "/path/to/tmp/json",
-      "ensure-directory",
-      "--mode",
-      "0777",
-      "[START_DIR]/cipd_tool/infra/3pp/tools/autoconf/79821582576f6f08410b2d2f2c0658c2be62aae6ca2df4ab28cc6b4d75002f20"
+      "autoconf"
     ],
     "cwd": "[START_DIR]/jemalloc",
-    "infra_step": true,
-    "luci_context": {
-      "realm": {
-        "name": "infra-internal:ci"
-      },
-      "resultdb": {
-        "current_invocation": {
-          "name": "invocations/build:8945511751514863184",
-          "update_token": "token"
-        },
-        "hostname": "rdbhost"
-      }
-    },
-    "name": "jemalloc.install infra/3pp/tools/autoconf.ensure package directory",
-    "~followup_annotations": [
-      "@@@STEP_NEST_LEVEL@2@@@"
-    ]
-  },
-  {
-    "cmd": [
-      "cipd",
-      "ensure",
-      "-root",
-      "[START_DIR]/cipd_tool/infra/3pp/tools/autoconf/79821582576f6f08410b2d2f2c0658c2be62aae6ca2df4ab28cc6b4d75002f20",
-      "-ensure-file",
-      "infra/3pp/tools/autoconf/${platform} version:3@2.71.chromium.1",
-      "-max-threads",
-      "0",
-      "-json-output",
-      "/path/to/tmp/json"
-    ],
-    "cwd": "[START_DIR]/jemalloc",
-    "infra_step": true,
-    "luci_context": {
-      "realm": {
-        "name": "infra-internal:ci"
-      },
-      "resultdb": {
-        "current_invocation": {
-          "name": "invocations/build:8945511751514863184",
-          "update_token": "token"
-        },
-        "hostname": "rdbhost"
-      }
-    },
-    "name": "jemalloc.install infra/3pp/tools/autoconf.ensure_installed",
-    "~followup_annotations": [
-      "@@@STEP_NEST_LEVEL@2@@@",
-      "@@@STEP_LOG_LINE@json.output@{@@@",
-      "@@@STEP_LOG_LINE@json.output@  \"result\": {@@@",
-      "@@@STEP_LOG_LINE@json.output@    \"\": [@@@",
-      "@@@STEP_LOG_LINE@json.output@      {@@@",
-      "@@@STEP_LOG_LINE@json.output@        \"instance_id\": \"resolved-instance_id-of-version:3@2.71.c\",@@@",
-      "@@@STEP_LOG_LINE@json.output@        \"package\": \"infra/3pp/tools/autoconf/resolved-platform\"@@@",
-      "@@@STEP_LOG_LINE@json.output@      }@@@",
-      "@@@STEP_LOG_LINE@json.output@    ]@@@",
-      "@@@STEP_LOG_LINE@json.output@  }@@@",
-      "@@@STEP_LOG_LINE@json.output@}@@@",
-      "@@@STEP_LOG_END@json.output@@@"
-    ]
-  },
-  {
-    "cmd": [
-      "[START_DIR]/cipd_tool/infra/3pp/tools/autoconf/79821582576f6f08410b2d2f2c0658c2be62aae6ca2df4ab28cc6b4d75002f20/bin/autoconf"
-    ],
-    "cwd": "[START_DIR]/jemalloc",
-    "env_prefixes": {
-      "PATH": [
-        "[START_DIR]/cipd_tool/infra/3pp/tools/autoconf/79821582576f6f08410b2d2f2c0658c2be62aae6ca2df4ab28cc6b4d75002f20/bin"
-      ]
-    },
     "infra_step": true,
     "luci_context": {
       "realm": {
@@ -693,7 +607,9 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out"
+      "[START_DIR]/gn/out",
+      "gn",
+      "gn_unittests"
     ],
     "cwd": "[START_DIR]/gn",
     "env": {
@@ -750,6 +666,100 @@
     ]
   },
   {
+    "cmd": [
+      "[START_DIR]/cipd/ninja",
+      "-C",
+      "[START_DIR]/gn/out",
+      "run_integration_tests"
+    ],
+    "cwd": "[START_DIR]/gn",
+    "env": {
+      "AR": "[START_DIR]/cipd/bin/llvm-ar",
+      "CC": "[START_DIR]/cipd/bin/clang",
+      "CFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot",
+      "CXX": "[START_DIR]/cipd/bin/clang++",
+      "LDFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot -static-libstdc++"
+    },
+    "luci_context": {
+      "realm": {
+        "name": "infra-internal:ci"
+      },
+      "resultdb": {
+        "current_invocation": {
+          "name": "invocations/build:8945511751514863184",
+          "update_token": "token"
+        },
+        "hostname": "rdbhost"
+      }
+    },
+    "name": "debug.linux-amd64.integration tests",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@2@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[START_DIR]/gn/tools/run_formatter.sh",
+      "--diff"
+    ],
+    "cwd": "[START_DIR]/gn",
+    "env": {
+      "AR": "[START_DIR]/cipd/bin/llvm-ar",
+      "CC": "[START_DIR]/cipd/bin/clang",
+      "CFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot",
+      "CLANG_FORMAT": "[START_DIR]/cipd/bin/clang-format",
+      "CXX": "[START_DIR]/cipd/bin/clang++",
+      "LDFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot -static-libstdc++"
+    },
+    "luci_context": {
+      "realm": {
+        "name": "infra-internal:ci"
+      },
+      "resultdb": {
+        "current_invocation": {
+          "name": "invocations/build:8945511751514863184",
+          "update_token": "token"
+        },
+        "hostname": "rdbhost"
+      }
+    },
+    "name": "debug.linux-amd64.Check tools/run_formatter.sh",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@2@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[START_DIR]/gn/tools/update_reference.sh",
+      "--diff"
+    ],
+    "cwd": "[START_DIR]/gn",
+    "env": {
+      "AR": "[START_DIR]/cipd/bin/llvm-ar",
+      "CC": "[START_DIR]/cipd/bin/clang",
+      "CFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot",
+      "CXX": "[START_DIR]/cipd/bin/clang++",
+      "LDFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot -static-libstdc++",
+      "NOBUILD": "1"
+    },
+    "luci_context": {
+      "realm": {
+        "name": "infra-internal:ci"
+      },
+      "resultdb": {
+        "current_invocation": {
+          "name": "invocations/build:8945511751514863184",
+          "update_token": "token"
+        },
+        "hostname": "rdbhost"
+      }
+    },
+    "name": "debug.linux-amd64.Check tools/update_reference.sh",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@2@@@"
+    ]
+  },
+  {
     "cmd": [],
     "name": "release"
   },
@@ -798,7 +808,9 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out"
+      "[START_DIR]/gn/out",
+      "gn",
+      "gn_unittests"
     ],
     "cwd": "[START_DIR]/gn",
     "env": {
@@ -850,6 +862,100 @@
       }
     },
     "name": "release.linux-amd64.test",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@2@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[START_DIR]/cipd/ninja",
+      "-C",
+      "[START_DIR]/gn/out",
+      "run_integration_tests"
+    ],
+    "cwd": "[START_DIR]/gn",
+    "env": {
+      "AR": "[START_DIR]/cipd/bin/llvm-ar",
+      "CC": "[START_DIR]/cipd/bin/clang",
+      "CFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot",
+      "CXX": "[START_DIR]/cipd/bin/clang++",
+      "LDFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot -static-libstdc++"
+    },
+    "luci_context": {
+      "realm": {
+        "name": "infra-internal:ci"
+      },
+      "resultdb": {
+        "current_invocation": {
+          "name": "invocations/build:8945511751514863184",
+          "update_token": "token"
+        },
+        "hostname": "rdbhost"
+      }
+    },
+    "name": "release.linux-amd64.integration tests",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@2@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[START_DIR]/gn/tools/run_formatter.sh",
+      "--diff"
+    ],
+    "cwd": "[START_DIR]/gn",
+    "env": {
+      "AR": "[START_DIR]/cipd/bin/llvm-ar",
+      "CC": "[START_DIR]/cipd/bin/clang",
+      "CFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot",
+      "CLANG_FORMAT": "[START_DIR]/cipd/bin/clang-format",
+      "CXX": "[START_DIR]/cipd/bin/clang++",
+      "LDFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot -static-libstdc++"
+    },
+    "luci_context": {
+      "realm": {
+        "name": "infra-internal:ci"
+      },
+      "resultdb": {
+        "current_invocation": {
+          "name": "invocations/build:8945511751514863184",
+          "update_token": "token"
+        },
+        "hostname": "rdbhost"
+      }
+    },
+    "name": "release.linux-amd64.Check tools/run_formatter.sh",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@2@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[START_DIR]/gn/tools/update_reference.sh",
+      "--diff"
+    ],
+    "cwd": "[START_DIR]/gn",
+    "env": {
+      "AR": "[START_DIR]/cipd/bin/llvm-ar",
+      "CC": "[START_DIR]/cipd/bin/clang",
+      "CFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot",
+      "CXX": "[START_DIR]/cipd/bin/clang++",
+      "LDFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot -static-libstdc++",
+      "NOBUILD": "1"
+    },
+    "luci_context": {
+      "realm": {
+        "name": "infra-internal:ci"
+      },
+      "resultdb": {
+        "current_invocation": {
+          "name": "invocations/build:8945511751514863184",
+          "update_token": "token"
+        },
+        "hostname": "rdbhost"
+      }
+    },
+    "name": "release.linux-amd64.Check tools/update_reference.sh",
     "~followup_annotations": [
       "@@@STEP_NEST_LEVEL@2@@@"
     ]
@@ -1002,7 +1108,9 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out"
+      "[START_DIR]/gn/out",
+      "gn",
+      "gn_unittests"
     ],
     "cwd": "[START_DIR]/gn",
     "env": {
@@ -1177,7 +1285,9 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out"
+      "[START_DIR]/gn/out",
+      "gn",
+      "gn_unittests"
     ],
     "cwd": "[START_DIR]/gn",
     "env": {

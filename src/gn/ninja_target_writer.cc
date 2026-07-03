@@ -4,6 +4,7 @@
 
 #include "gn/ninja_target_writer.h"
 
+#include <algorithm>
 #include <sstream>
 
 #include "base/files/file_util.h"
@@ -453,7 +454,8 @@ void NinjaTargetWriter::WriteRustCompilerVars(const SubstitutionBits& bits,
   }
 }
 
-std::vector<OutputFile> NinjaTargetWriter::WriteInputDepsStampOrPhonyAndGetDep(
+NinjaTargetWriter::InputDeps
+NinjaTargetWriter::WriteInputDepsStampOrPhonyAndGetDep(
     const std::vector<const Target*>& additional_hard_deps,
     size_t num_output_uses) const {
   CHECK(target_->toolchain()) << "Toolchain not set on target "
@@ -519,55 +521,62 @@ std::vector<OutputFile> NinjaTargetWriter::WriteInputDepsStampOrPhonyAndGetDep(
   // toolchains often have more than one dependency, we could consider writing
   // a toolchain-specific phony target and only include the phony here.
   // Note that these are usually empty/small.
+  std::vector<const Target*> toolchain_deps_targets;
   const LabelTargetVector& toolchain_deps = target_->toolchain()->deps();
   for (const auto& toolchain_dep : toolchain_deps) {
     // This could theoretically duplicate dependencies already in the list,
     // but it shouldn't happen in practice, is inconvenient to check for,
     // and only results in harmless redundant dependencies listed.
-    input_deps_targets.push_back(toolchain_dep.ptr);
+    toolchain_deps_targets.push_back(toolchain_dep.ptr);
   }
 
   // ---------
   // Write the outputs.
 
-  if (input_deps_sources.size() + input_deps_targets.size() == 0)
-    return std::vector<OutputFile>();  // No input dependencies.
+  if (input_deps_sources.empty() && input_deps_targets.empty() &&
+      toolchain_deps_targets.empty())
+    return InputDeps{};  // No input dependencies.
 
-  // If we're only generating one input dependency, return it directly instead
-  // of writing a phony target for it.
-  if (input_deps_sources.size() == 1 && input_deps_targets.size() == 0)
-    return std::vector<OutputFile>{
-        OutputFile(settings_->build_settings(), *input_deps_sources[0])};
-  if (input_deps_sources.size() == 0 && input_deps_targets.size() == 1) {
-    const auto& dep = *input_deps_targets[0];
-    if (!dep.has_dependency_output())
-      return std::vector<OutputFile>();
-    return std::vector<OutputFile>{dep.dependency_output()};
-  }
-
-  std::vector<OutputFile> outs;
+  InputDeps deps;
   // File input deps.
   for (const SourceFile* source : input_deps_sources)
-    outs.push_back(OutputFile(settings_->build_settings(), *source));
+    deps.order_only.push_back(OutputFile(settings_->build_settings(), *source));
   // Target input deps. Sort by label so the output is deterministic (otherwise
   // some of the targets will have gone through std::sets which will have
   // sorted them by pointer).
-  std::sort(
-      input_deps_targets.begin(), input_deps_targets.end(),
-      [](const Target* a, const Target* b) { return a->label() < b->label(); });
-  for (auto* dep : input_deps_targets) {
-    if (dep->has_dependency_output())
-      outs.push_back(dep->dependency_output());
-  }
+  auto add_target_deps = [](std::vector<OutputFile>& deps,
+                            std::vector<const Target*>& targets) {
+    std::sort(targets.begin(), targets.end(),
+              [](const Target* a, const Target* b) {
+                return a->label() < b->label();
+              });
+    for (auto* dep : targets) {
+      if (dep->has_dependency_output())
+        deps.push_back(dep->dependency_output());
+    }
+  };
+  add_target_deps(deps.order_only, input_deps_targets);
+  add_target_deps(deps.implicit, toolchain_deps_targets);
 
-  // If there are multiple inputs, but the phony target would be referenced only
-  // once, don't write it but depend on the inputs directly.
-  if (num_output_uses == 1u)
-    return outs;
+  // If we're only generating one input dependency, or if there are no
+  // dependencies, return it directly instead of writing a phony target for it.
+  // Also, if there are multiple inputs, but the phony target would be
+  // referenced only once, don't write it but depend on the inputs directly.
+  if (deps.implicit.size() + deps.order_only.size() <= 1 ||
+      num_output_uses == 1u)
+    return deps;
 
-  // If outs is empty, we don't need stamp or phony target for this.
-  if (outs.empty()) {
-    return outs;
+  // Action targets are special because all of their dependencies are implicit
+  // dependencies. This is because prior to
+  // https://gn-review.googlesource.com/c/gn/+/22000 action targets had an
+  // implicit dependency on inputdeps whereas other target types had an
+  // order-only dependency on inputdeps (which at the time only had implicit
+  // dependencies), and scripts may be depending on that.
+  if (target_->output_type() == Target::ACTION ||
+      target_->output_type() == Target::ACTION_FOREACH) {
+    deps.implicit.insert(deps.implicit.end(), deps.order_only.begin(),
+                         deps.order_only.end());
+    deps.order_only.clear();
   }
 
   OutputFile input_stamp_or_phony;
@@ -577,15 +586,15 @@ std::vector<OutputFile> NinjaTargetWriter::WriteInputDepsStampOrPhonyAndGetDep(
     // as we would return early if there were no inputs.
     input_stamp_or_phony =
         GetBuildDirForTargetAsOutputFile(target_, BuildDirType::PHONY);
-    input_stamp_or_phony.value().append(target_->label().name());
-    input_stamp_or_phony.value().append(".inputdeps");
+    input_stamp_or_phony.append(target_->label().name());
+    input_stamp_or_phony.append(".inputdeps");
     tool = BuiltinTool::kBuiltinToolPhony;
   } else {
     // Make a stamp file.
     input_stamp_or_phony =
         GetBuildDirForTargetAsOutputFile(target_, BuildDirType::OBJ);
-    input_stamp_or_phony.value().append(target_->label().name());
-    input_stamp_or_phony.value().append(".inputdeps.stamp");
+    input_stamp_or_phony.append(target_->label().name());
+    input_stamp_or_phony.append(".inputdeps.stamp");
 
     tool = GetNinjaRulePrefixForToolchain(settings_) +
            GeneralTool::kGeneralToolStamp;
@@ -596,14 +605,37 @@ std::vector<OutputFile> NinjaTargetWriter::WriteInputDepsStampOrPhonyAndGetDep(
   out_ << "build ";
   path_output_.WriteFile(out_, input_stamp_or_phony);
   out_ << ": " << tool;
-  path_output_.WriteFiles(out_, outs);
+  path_output_.WriteFiles(out_, deps.implicit);
+  if (!deps.order_only.empty()) {
+    out_ << " ||";
+    path_output_.WriteFiles(out_, deps.order_only);
+  }
   out_ << "\n";
-  return std::vector<OutputFile>{input_stamp_or_phony};
+
+  InputDeps result;
+  result.implicit.push_back(input_stamp_or_phony);
+  return result;
 }
 
 void NinjaTargetWriter::WriteStampOrPhonyForTarget(
     const std::vector<OutputFile>& files,
     const std::vector<OutputFile>& order_only_deps) {
+  // Add dependency outputs of public_deps to this target's stamp or phony
+  // target to propagate public dependencies transitively. This allows
+  // dependents of this target to implicitly depend on the public_deps without
+  // listing them all directly on their build lines, preventing inflation of
+  // implicit inputs.
+  std::vector<OutputFile> all_files = files;
+  for (const auto& pair : target_->public_deps()) {
+    if (pair.ptr->has_dependency_output() && !pair.ptr->IsDataOnly()) {
+      OutputFile dep_out = pair.ptr->dependency_output();
+      if (std::find(all_files.begin(), all_files.end(), dep_out) ==
+          all_files.end()) {
+        all_files.push_back(dep_out);
+      }
+    }
+  }
+
   // We should have already discerned whether this target is a stamp or a phony.
   // If there's a dependency_output_file, it should be a stamp. Else is a phony
   // or omitted phony (in which case, we don't write it).
@@ -636,12 +668,12 @@ void NinjaTargetWriter::WriteStampOrPhonyForTarget(
   } else {
     // This is the omitted phony case. We should not get here if there were any
     // dependencies, so ensure that none got added.
-    CHECK(files.empty());
+    CHECK(all_files.empty());
     CHECK(order_only_deps.empty());
     return;
   }
 
-  path_output_.WriteFiles(out_, files);
+  path_output_.WriteFiles(out_, all_files);
 
   if (!order_only_deps.empty()) {
     out_ << " ||";

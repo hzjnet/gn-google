@@ -198,15 +198,15 @@ NinjaBinaryTargetWriter::WriteInputsStampOrPhonyAndGetDep(
     CHECK(!inputs.empty());
     stamp_or_phony =
         GetBuildDirForTargetAsOutputFile(target_, BuildDirType::PHONY);
-    stamp_or_phony.value().append(target_->label().name());
-    stamp_or_phony.value().append(".inputs");
+    stamp_or_phony.append(target_->label().name());
+    stamp_or_phony.append(".inputs");
     tool = BuiltinTool::kBuiltinToolPhony;
   } else {
     // Make a stamp target.
     stamp_or_phony =
         GetBuildDirForTargetAsOutputFile(target_, BuildDirType::OBJ);
-    stamp_or_phony.value().append(target_->label().name());
-    stamp_or_phony.value().append(".inputs.stamp");
+    stamp_or_phony.append(target_->label().name());
+    stamp_or_phony.append(".inputs.stamp");
     tool = GetNinjaRulePrefixForToolchain(settings_) +
            GeneralTool::kGeneralToolStamp;
   }
@@ -546,4 +546,14 @@ void NinjaBinaryTargetWriter::WritePool(std::ostream& out) {
         settings_->default_toolchain_label());
     out << std::endl;
   }
+}
+
+std::vector<OutputFile>
+NinjaBinaryTargetWriter::GetOrderOnlyDepsFromNonLinkableDeps(
+    const UniqueVector<const Target*>& non_linkable_deps) const {
+  UniqueVector<OutputFile> outputs_to_write;
+  for (const Target* dep : non_linkable_deps) {
+    outputs_to_write.Append(resolved().GetOrderOnlyDeps(dep));
+  }
+  return outputs_to_write.release();
 }

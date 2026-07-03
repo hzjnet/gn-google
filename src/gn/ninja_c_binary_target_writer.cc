@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "base/strings/string_util.h"
+#include "gn/builtin_tool.h"
 #include "gn/c_substitution_type.h"
 #include "gn/config_values_extractors.h"
 #include "gn/deps_iterator.h"
@@ -103,8 +104,11 @@ void NinjaCBinaryTargetWriter::Run() {
   // that also use PCH files won't have a phony target even though having
   // one would make output ninja file size a bit lower. That's ok, binary
   // targets with a single source are rare.
-  std::vector<OutputFile> order_only_deps = WriteInputDepsStampOrPhonyAndGetDep(
+  NinjaTargetWriter::InputDeps stamp_deps = WriteInputDepsStampOrPhonyAndGetDep(
       std::vector<const Target*>(), num_output_uses);
+  input_deps.insert(input_deps.end(), stamp_deps.implicit.begin(),
+                    stamp_deps.implicit.end());
+  std::vector<OutputFile> order_only_deps = stamp_deps.order_only;
 
   // For GCC builds, the .gch files are not object files, but still need to be
   // added as explicit dependencies below. The .gch output files are placed in
@@ -389,6 +393,19 @@ void NinjaCBinaryTargetWriter::WriteSources(
 
   std::vector<OutputFile> tool_outputs;  // Prevent reallocation in loop.
   std::vector<OutputFile> deps;
+
+  // Collect unique C-family additional outputs from all recursive configs.
+  std::vector<SubstitutionPattern> c_additional_outputs;
+  std::set<std::string> seen_patterns;
+  for (ConfigValuesIterator iter(target_); !iter.done(); iter.Next()) {
+    for (const auto& pattern : iter.cur().c_additional_outputs()) {
+      std::string pattern_str = pattern.AsString();
+      if (seen_patterns.insert(std::move(pattern_str)).second) {
+        c_additional_outputs.push_back(pattern);
+      }
+    }
+  }
+
   for (const auto& source : target_->sources()) {
     DCHECK_NE(source.GetType(), SourceFile::SOURCE_SWIFT);
 
@@ -414,7 +431,7 @@ void NinjaCBinaryTargetWriter::WriteSources(
       const CTool* tool = target_->toolchain()->GetToolAsC(tool_name);
       if (tool->precompiled_header_type() != CTool::PCH_NONE) {
         for (const auto& dep : pch_deps) {
-          const std::string& output_value = dep.value();
+          std::string_view output_value = dep.value();
           size_t extension_offset = FindExtensionOffset(output_value);
           if (extension_offset == std::string::npos)
             continue;
@@ -438,6 +455,24 @@ void NinjaCBinaryTargetWriter::WriteSources(
           deps.push_back(*module_dep.pcm);
       }
 
+      if (tool_name == CTool::kCToolCc || tool_name == CTool::kCToolCxx ||
+          tool_name == CTool::kCToolObjC || tool_name == CTool::kCToolObjCxx) {
+        for (const auto& pattern : c_additional_outputs) {
+          // Use ApplyPatternToCompilerAsOutputFile instead of
+          // ApplyPatternToSourceAsOutputFile to support target-level
+          // substitutions (e.g. {{target_out_dir}}) in addition to source-level
+          // substitutions.
+          OutputFile extra_output =
+              SubstitutionWriter::ApplyPatternToCompilerAsOutputFile(
+                  target_, source, pattern);
+          if (!extra_output.value().empty() &&
+              std::find(tool_outputs.begin(), tool_outputs.end(),
+                        extra_output) == tool_outputs.end()) {
+            tool_outputs.push_back(std::move(extra_output));
+          }
+        }
+      }
+
       WriteCompilerBuildLine({source}, deps, order_only_deps, tool,
                              tool_outputs);
       WritePool(out_);
@@ -449,6 +484,12 @@ void NinjaCBinaryTargetWriter::WriteSources(
       object_files->push_back(tool_outputs[0]);
     } else {
       extra_files->push_back(tool_outputs[0]);
+    }
+
+    // Add additional outputs to extra_files so they are included in the
+    // target's stamp file.
+    for (size_t i = 1; i < tool_outputs.size(); ++i) {
+      extra_files->push_back(tool_outputs[i]);
     }
   }
 
@@ -494,6 +535,12 @@ void NinjaCBinaryTargetWriter::WriteSwiftSources(
 
 void NinjaCBinaryTargetWriter::WriteSourceSetStamp(
     const std::vector<OutputFile>& object_files) {
+  // If the target doesn't have a dependency output, we shouldn't write
+  // anything.
+  if (!target_->has_dependency_output()) {
+    return;
+  }
+
   // The stamp rule for source sets is generally not used, since targets that
   // depend on this will reference the object files directly. However, writing
   // this rule allows the user to type the name of the target and get a build
@@ -505,14 +552,48 @@ void NinjaCBinaryTargetWriter::WriteSourceSetStamp(
   // instead.
   DCHECK(classified_deps.extra_object_files.empty());
 
-  std::vector<OutputFile> order_only_deps;
-  for (auto* dep : classified_deps.non_linkable_deps) {
-    if (dep->has_dependency_output()) {
-      order_only_deps.push_back(dep->dependency_output());
+  std::vector<OutputFile> order_only_deps =
+      GetOrderOnlyDepsFromNonLinkableDeps(classified_deps.non_linkable_deps);
+
+  // 1. Link-only phony target (.linkdeps) containing only object files.
+  std::vector<OutputFile> link_files;
+  const BuildSettings* build_settings = settings_->build_settings();
+  for (const auto& file : object_files) {
+    if (file.AsSourceFile(build_settings).IsObjectType()) {
+      link_files.push_back(file);
     }
   }
 
-  WriteStampOrPhonyForTarget(object_files, order_only_deps);
+  OutputFile link_phony = target_->dependency_output();
+  link_phony.append(".linkdeps");
+
+  out_ << "build ";
+  path_output_.WriteFile(out_, link_phony);
+  out_ << ": " << BuiltinTool::kBuiltinToolPhony;
+  path_output_.WriteFiles(out_, link_files);
+  if (!order_only_deps.empty()) {
+    out_ << " ||";
+    path_output_.WriteFiles(out_, order_only_deps);
+  }
+  out_ << std::endl;
+
+  // 2. Default phony target containing all files (including additional
+  // outputs). Depend on the .link target to avoid duplicating object files.
+  out_ << "build ";
+  path_output_.WriteFile(out_, target_->dependency_output());
+  out_ << ": " << BuiltinTool::kBuiltinToolPhony;
+  out_ << " ";
+  path_output_.WriteFile(out_, link_phony);
+
+  // Collect non-object files (additional outputs) to add here.
+  std::vector<OutputFile> non_object_files;
+  for (const auto& file : object_files) {
+    if (!file.AsSourceFile(build_settings).IsObjectType()) {
+      non_object_files.push_back(file);
+    }
+  }
+  path_output_.WriteFiles(out_, non_object_files);
+  out_ << std::endl;
 }
 
 void NinjaCBinaryTargetWriter::WriteLinkerStuff(
@@ -719,29 +800,28 @@ void NinjaCBinaryTargetWriter::WriteLibsList(
 
 void NinjaCBinaryTargetWriter::WriteOrderOnlyDependencies(
     const UniqueVector<const Target*>& non_linkable_deps) {
-  if (!non_linkable_deps.empty()) {
-    out_ << " ||";
+  std::vector<OutputFile> outputs_to_write =
+      GetOrderOnlyDepsFromNonLinkableDeps(non_linkable_deps);
 
-    // Non-linkable targets.
-    for (auto* non_linkable_dep : non_linkable_deps) {
-      if (non_linkable_dep->has_dependency_output()) {
-        out_ << " ";
-        path_output_.WriteFile(out_, non_linkable_dep->dependency_output());
-      }
+  if (!outputs_to_write.empty()) {
+    out_ << " ||";
+    for (const auto& output : outputs_to_write) {
+      out_ << " ";
+      path_output_.WriteFile(out_, output);
     }
   }
 }
 
 bool NinjaCBinaryTargetWriter::CheckForDuplicateObjectFiles(
     const std::vector<OutputFile>& files) const {
-  std::set<std::string> set;
+  std::set<std::string_view> set;
   for (const auto& file : files) {
     if (!set.insert(file.value()).second) {
       Err err(
           target_->defined_from(), "Duplicate object file",
           "The target " + target_->label().GetUserVisibleName(false) +
               "\ngenerates two object files with the same name:\n  " +
-              file.value() +
+              std::string(file.value()) +
               "\n"
               "\n"
               "It could be you accidentally have a file listed twice in the\n"

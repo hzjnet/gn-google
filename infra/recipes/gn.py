@@ -263,12 +263,27 @@ def RunSteps(api, repository):
                      ['python3', '-u', src_dir.join('build', 'gen.py')] + args)
 
             # Windows requires the environment modifications when building too.
-            api.step('build',
-                     [cipd_dir.join('ninja'), '-C',
-                      src_dir.join('out')])
+            ninja_cmd = [cipd_dir.join('ninja'), '-C', src_dir.join('out')]
+            exe_suffix = '.exe' if target.is_win else ''
+            api.step('build', ninja_cmd + [
+              f'gn{exe_suffix}',
+              f'gn_unittests{exe_suffix}',
+            ])
 
             if target.is_host:
               api.step('test', [src_dir.join('out', 'gn_unittests')])
+              api.step(
+                  'integration tests', ninja_cmd + ['run_integration_tests']
+              )
+
+              if api.platform.is_linux:
+                with api.context(env={'CLANG_FORMAT': cipd_dir.join('bin', 'clang-format')}):
+                  api.step('Check tools/run_formatter.sh',
+                           [src_dir.join('tools', 'run_formatter.sh'), '--diff'])
+                # We've already built gn, so tell update_reference not to rebuild it.
+                with api.context(env={'NOBUILD': '1'}):
+                  api.step('Check tools/update_reference.sh',
+                          [src_dir.join('tools', 'update_reference.sh'), '--diff'])
 
             if config['name'] != 'release':
               continue

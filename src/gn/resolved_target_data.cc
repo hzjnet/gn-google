@@ -8,20 +8,22 @@
 
 ResolvedTargetData::TargetInfo* ResolvedTargetData::GetTargetInfo(
     const Target* target) const {
+  size_t shard_idx = GetShardIndex(target);
+  Shard& shard = shards_[shard_idx];
   {
-    std::shared_lock<std::shared_mutex> lock(map_mutex_);
-    size_t index = targets_.IndexOf(target);
+    std::shared_lock<std::shared_mutex> lock(shard.mutex);
+    size_t index = shard.targets.IndexOf(target);
     if (index != UniqueVector<const Target*>::kIndexNone) {
-      return infos_[index].get();
+      return shard.infos[index].get();
     }
   }
 
-  std::unique_lock<std::shared_mutex> lock(map_mutex_);
-  auto ret = targets_.PushBackWithIndex(target);
+  std::unique_lock<std::shared_mutex> lock(shard.mutex);
+  auto ret = shard.targets.PushBackWithIndex(target);
   if (ret.first) {
-    infos_.push_back(std::make_unique<TargetInfo>(target));
+    shard.infos.push_back(std::make_unique<TargetInfo>(target));
   }
-  return infos_[ret.second].get();
+  return shard.infos[ret.second].get();
 }
 
 void ResolvedTargetData::ComputeLibInfo(TargetInfo* info) const {
@@ -177,7 +179,8 @@ void ResolvedTargetData::ComputeInheritedLibsFor(
       // inherited.
       const TargetInfo* dep_info = GetTargetInheritedLibs(dep);
       for (const auto& pair : dep_info->inherited_libs) {
-        if (pair.target()->IsFinal())
+        if (pair.target()->IsFinal() ||
+            pair.target()->output_type() == Target::RUST_LIBRARY)
           inherited_libraries->Append(pair.target(),
                                       is_public && pair.is_public());
       }
@@ -309,4 +312,29 @@ void ResolvedTargetData::ComputeSwiftValues(TargetInfo* info) const {
         modules.release(), public_modules.release());
   }
   info->has_swift_values = true;
+}
+
+void ResolvedTargetData::ComputeOrderOnlyDeps(TargetInfo* info) const {
+  UniqueVector<OutputFile> all_order_only_deps;
+  const Target* target = info->target;
+
+  if (target->output_type() == Target::GROUP) {
+    auto add_deps = [&](base::span<const Target*> deps) {
+      for (const Target* dep : deps) {
+        const TargetInfo* dep_info = GetTargetOrderOnlyDeps(dep);
+        all_order_only_deps.Append(dep_info->order_only_deps);
+      }
+    };
+    add_deps(info->deps.public_deps());
+    add_deps(info->deps.private_deps());
+    add_deps(info->deps.data_deps());
+  } else if (target->has_dependency_output()) {
+    OutputFile dep_output = target->dependency_output();
+    if (target->output_type() == Target::SOURCE_SET) {
+      dep_output.append(".linkdeps");
+    }
+    all_order_only_deps.push_back(dep_output);
+  }
+
+  info->order_only_deps = all_order_only_deps.release();
 }

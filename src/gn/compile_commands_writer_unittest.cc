@@ -77,13 +77,13 @@ TEST_F(CompileCommandsTest, SourceSet) {
         "  {\r\n"
         "    \"file\": \"../../foo/input1.cc\",\r\n"
         "    \"directory\": \"out/Debug\",\r\n"
-        "    \"command\": \"c++ ../../foo/input1.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input1.cc      -o  "
         "obj/foo/bar.input1.o\"\r\n"
         "  },\r\n"
         "  {\r\n"
         "    \"file\": \"../../foo/input2.cc\",\r\n"
         "    \"directory\": \"out/Debug\",\r\n"
-        "    \"command\": \"c++ ../../foo/input2.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input2.cc      -o  "
         "obj/foo/bar.input2.o\"\r\n"
         "  }\r\n"
         "]\r\n";
@@ -93,13 +93,13 @@ TEST_F(CompileCommandsTest, SourceSet) {
         "  {\n"
         "    \"file\": \"../../foo/input1.cc\",\n"
         "    \"directory\": \"out/Debug\",\n"
-        "    \"command\": \"c++ ../../foo/input1.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input1.cc      -o  "
         "obj/foo/bar.input1.o\"\n"
         "  },\n"
         "  {\n"
         "    \"file\": \"../../foo/input2.cc\",\n"
         "    \"directory\": \"out/Debug\",\n"
-        "    \"command\": \"c++ ../../foo/input2.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input2.cc      -o  "
         "obj/foo/bar.input2.o\"\n"
         "  }\n"
         "]\n";
@@ -126,19 +126,19 @@ TEST_F(CompileCommandsTest, SourceSet) {
         "  {\r\n"
         "    \"file\": \"../../foo/input1.cc\",\r\n"
         "    \"directory\": \"out/Debug\",\r\n"
-        "    \"command\": \"c++ ../../foo/input1.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input1.cc      -o  "
         "obj/foo/bar.input1.o\"\r\n"
         "  },\r\n"
         "  {\r\n"
         "    \"file\": \"../../foo/input2.cc\",\r\n"
         "    \"directory\": \"out/Debug\",\r\n"
-        "    \"command\": \"c++ ../../foo/input2.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input2.cc      -o  "
         "obj/foo/bar.input2.o\"\r\n"
         "  },\r\n"
         "  {\r\n"
         "    \"file\": \"../../foo/input3.cc\",\r\n"
         "    \"directory\": \"out/Debug\",\r\n"
-        "    \"command\": \"c++ ../../foo/input3.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input3.cc      -o  "
         "obj/foo/libshlib.input3.o\"\r\n"
         "  }\r\n"
         "]\r\n";
@@ -148,19 +148,19 @@ TEST_F(CompileCommandsTest, SourceSet) {
         "  {\n"
         "    \"file\": \"../../foo/input1.cc\",\n"
         "    \"directory\": \"out/Debug\",\n"
-        "    \"command\": \"c++ ../../foo/input1.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input1.cc      -o  "
         "obj/foo/bar.input1.o\"\n"
         "  },\n"
         "  {\n"
         "    \"file\": \"../../foo/input2.cc\",\n"
         "    \"directory\": \"out/Debug\",\n"
-        "    \"command\": \"c++ ../../foo/input2.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input2.cc      -o  "
         "obj/foo/bar.input2.o\"\n"
         "  },\n"
         "  {\n"
         "    \"file\": \"../../foo/input3.cc\",\n"
         "    \"directory\": \"out/Debug\",\n"
-        "    \"command\": \"c++ ../../foo/input3.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input3.cc      -o  "
         "obj/foo/libshlib.input3.o\"\n"
         "  }\n"
         "]\n";
@@ -187,25 +187,25 @@ TEST_F(CompileCommandsTest, SourceSet) {
         "  {\r\n"
         "    \"file\": \"../../foo/input1.cc\",\r\n"
         "    \"directory\": \"out/Debug\",\r\n"
-        "    \"command\": \"c++ ../../foo/input1.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input1.cc      -o  "
         "obj/foo/bar.input1.o\"\r\n"
         "  },\r\n"
         "  {\r\n"
         "    \"file\": \"../../foo/input2.cc\",\r\n"
         "    \"directory\": \"out/Debug\",\r\n"
-        "    \"command\": \"c++ ../../foo/input2.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input2.cc      -o  "
         "obj/foo/bar.input2.o\"\r\n"
         "  },\r\n"
         "  {\r\n"
         "    \"file\": \"../../foo/input3.cc\",\r\n"
         "    \"directory\": \"out/Debug\",\r\n"
-        "    \"command\": \"c++ ../../foo/input3.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input3.cc      -o  "
         "obj/foo/libshlib.input3.o\"\r\n"
         "  },\r\n"
         "  {\r\n"
         "    \"file\": \"../../foo/input4.cc\",\r\n"
         "    \"directory\": \"out/Debug\",\r\n"
-        "    \"command\": \"c++ ../../foo/input4.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input4.cc      -o  "
         "obj/foo/libstlib.input4.o\"\r\n"
         "  }\r\n"
         "]\r\n";
@@ -215,25 +215,25 @@ TEST_F(CompileCommandsTest, SourceSet) {
         "  {\n"
         "    \"file\": \"../../foo/input1.cc\",\n"
         "    \"directory\": \"out/Debug\",\n"
-        "    \"command\": \"c++ ../../foo/input1.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input1.cc      -o  "
         "obj/foo/bar.input1.o\"\n"
         "  },\n"
         "  {\n"
         "    \"file\": \"../../foo/input2.cc\",\n"
         "    \"directory\": \"out/Debug\",\n"
-        "    \"command\": \"c++ ../../foo/input2.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input2.cc      -o  "
         "obj/foo/bar.input2.o\"\n"
         "  },\n"
         "  {\n"
         "    \"file\": \"../../foo/input3.cc\",\n"
         "    \"directory\": \"out/Debug\",\n"
-        "    \"command\": \"c++ ../../foo/input3.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input3.cc      -o  "
         "obj/foo/libshlib.input3.o\"\n"
         "  },\n"
         "  {\n"
         "    \"file\": \"../../foo/input4.cc\",\n"
         "    \"directory\": \"out/Debug\",\n"
-        "    \"command\": \"c++ ../../foo/input4.cc     -o  "
+        "    \"command\": \"c++ ../../foo/input4.cc      -o  "
         "obj/foo/libstlib.input4.o\"\n"
         "  }\n"
         "]\n";
@@ -712,7 +712,7 @@ TEST_F(CompileCommandsTest, ModuleMap) {
       "  }\n"
       "]\n";
 #endif
-  EXPECT_EQ(expected, out) << expected << "\n" << out;
+  EXPECT_EQ(expected, out);
 }
 
 TEST_F(CompileCommandsTest, CollectTargets) {
@@ -776,7 +776,7 @@ TEST_F(CompileCommandsTest, CollectTargets) {
   const std::string source_root("/home/me/build/");
   LabelPattern wildcard_pattern = LabelPattern::GetPattern(
       SourceDir(), source_root, Value(nullptr, "//*"), &err);
-  ASSERT_FALSE(err.has_error());
+  ASSERT_SUCCESS(err);
   std::vector<const Target*> output = CompileCommandsWriter::CollectTargets(
       build_settings(), targets, std::vector<LabelPattern>{wildcard_pattern},
       std::nullopt, &err);
@@ -791,7 +791,7 @@ TEST_F(CompileCommandsTest, CollectTargets) {
   // Collect all deps of "//foo/*".
   LabelPattern foo_wildcard = LabelPattern::GetPattern(
       SourceDir(), source_root, Value(nullptr, "//foo/*"), &err);
-  ASSERT_FALSE(err.has_error());
+  ASSERT_SUCCESS(err);
   output = CompileCommandsWriter::CollectTargets(
       build_settings(), targets, std::vector<LabelPattern>{foo_wildcard},
       std::nullopt, &err);
@@ -838,7 +838,7 @@ TEST_F(CompileCommandsTest, CollectTargets) {
   // union.
   LabelPattern foo_bar2 = LabelPattern::GetPattern(
       SourceDir(), source_root, Value(nullptr, "//foo:bar2"), &err);
-  ASSERT_FALSE(err.has_error());
+  ASSERT_SUCCESS(err);
   output = CompileCommandsWriter::CollectTargets(
       build_settings(), targets, std::vector<LabelPattern>{foo_bar2},
       std::string("bar1"), &err);

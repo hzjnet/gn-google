@@ -172,7 +172,10 @@ void AddTarget(const BuildSettings* build_settings,
   }
 
   auto compiler_args = ExtractCompilerArgs(target);
-  auto compiler_target = FindArgValue("--target", compiler_args);
+  auto compiler_target = FindArgValueAfterPrefix("--target=", compiler_args);
+  if (!compiler_target.has_value()) {
+    compiler_target = FindArgValue("--target", compiler_args);
+  }
   auto crate_deps = GetRustDeps(target);
 
   // Add all dependencies of this crate, before this crate.
@@ -189,8 +192,7 @@ void AddTarget(const BuildSettings* build_settings,
   SourceFile crate_root = target->rust_values().crate_root();
   std::string crate_label = target->label().GetUserVisibleName(false);
 
-  auto edition =
-      FindArgValueAfterPrefix(std::string("--edition="), compiler_args);
+  auto edition = FindArgValueAfterPrefix("--edition=", compiler_args);
   if (!edition.has_value()) {
     edition = FindArgValue("--edition", compiler_args);
   }
@@ -228,8 +230,7 @@ void AddTarget(const BuildSettings* build_settings,
   if (compiler_target.has_value())
     crate.SetCompilerTarget(compiler_target.value());
 
-  ConfigList cfgs =
-      FindAllArgValuesAfterPrefix(std::string("--cfg="), compiler_args);
+  ConfigList cfgs = FindAllArgValuesAfterPrefix("--cfg=", compiler_args);
 
   crate.AddConfigItem("test");
   crate.AddConfigItem("debug_assertions");

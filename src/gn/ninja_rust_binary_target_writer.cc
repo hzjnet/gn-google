@@ -5,6 +5,7 @@
 #include "gn/ninja_rust_binary_target_writer.h"
 
 #include <sstream>
+#include <unordered_set>
 
 #include "base/strings/string_util.h"
 #include "gn/deps_iterator.h"
@@ -125,8 +126,9 @@ void NinjaRustBinaryTargetWriter::Run() {
   // Ninja to make sure the inputs are up to date before compiling this source,
   // but changes in the inputs deps won't cause the file to be recompiled. See
   // the comment on NinjaCBinaryTargetWriter::Run for more detailed explanation.
-  std::vector<OutputFile> order_only_deps = WriteInputDepsStampOrPhonyAndGetDep(
+  NinjaTargetWriter::InputDeps stamp_deps = WriteInputDepsStampOrPhonyAndGetDep(
       std::vector<const Target*>(), num_output_uses);
+  std::vector<OutputFile> order_only_deps = stamp_deps.order_only;
   std::copy(input_deps.begin(), input_deps.end(),
             std::back_inserter(order_only_deps));
 
@@ -135,6 +137,7 @@ void NinjaRustBinaryTargetWriter::Run() {
   // -Ldependency. Also assemble a list of extra (i.e. implicit) deps
   // for ninja dependency tracking.
   UniqueVector<OutputFile> implicit_deps;
+  implicit_deps.Append(stamp_deps.implicit.begin(), stamp_deps.implicit.end());
   AppendSourcesAndInputsToImplicitDeps(&implicit_deps);
   implicit_deps.Append(classified_deps.extra_object_files.begin(),
                        classified_deps.extra_object_files.end());
@@ -168,9 +171,13 @@ void NinjaRustBinaryTargetWriter::Run() {
           non_linkable_dep->output_type() != Target::SOURCE_SET) {
         rustdeps.push_back(non_linkable_dep->dependency_output());
       }
-      order_only_deps.push_back(non_linkable_dep->dependency_output());
     }
   }
+
+  std::vector<OutputFile> group_order_only_deps =
+      GetOrderOnlyDepsFromNonLinkableDeps(classified_deps.non_linkable_deps);
+  order_only_deps.insert(order_only_deps.end(), group_order_only_deps.begin(),
+                         group_order_only_deps.end());
   for (const auto* linkable_dep : classified_deps.linkable_deps) {
     // Rust cdylibs are treated as non-Rust dependencies for linking purposes.
     if (linkable_dep->source_types_used().RustSourceUsed() &&
@@ -210,6 +217,58 @@ void NinjaRustBinaryTargetWriter::Run() {
       // current crate needs an implicit dependency on `dep` so it will be
       // rebuilt if `dep` changes.
       if (has_direct_access) {
+        implicit_deps.push_back(dep->dependency_output_file());
+      }
+    }
+  }
+
+  // rustc only links rlibs reachable through the Rust crate graph (via
+  // --extern / -Ldependency). Rust libraries reachable only through a non-Rust
+  // (C++) dependency are otherwise dropped from a rustc-driven link, which
+  // breaks cxx bridges whose Rust half lives behind a C++ target (e.g. //base's
+  // rust_logger or serde_json_lenient). The C++ linker path handles this via
+  // the "rlibs" ninja variable (see NinjaCBinaryTargetWriter); mirror it here
+  // by linking those rlibs directly as archives through the linker. Crates
+  // already covered by the crate graph above are skipped to avoid linking them
+  // twice.
+  if (target_->IsFinal()) {
+    // Compute the set of rlibs rustc links by itself: the crates passed to
+    // --extern (those with direct access), plus everything reachable from them
+    // by following Rust crate dependencies (rustc resolves these through crate
+    // metadata). A Rust library is NOT in this set if it can only be reached
+    // through a non-Rust (C++) dependency, since the C++ boundary breaks the
+    // crate graph.
+    std::unordered_set<const Target*> linked_by_rustc;
+    std::vector<const Target*> work;
+    for (const auto& crate : transitive_crates) {
+      if (crate.has_direct_access)
+        work.push_back(crate.target);
+    }
+    while (!work.empty()) {
+      const Target* crate = work.back();
+      work.pop_back();
+      if (!linked_by_rustc.insert(crate).second)
+        continue;
+      for (const auto& pair : crate->GetDeps(Target::DEPS_LINKED)) {
+        // Groups are flattened into the crate graph, so rustc links rlibs
+        // reachable through them; treat groups as transparent in this walk so
+        // those rlibs aren't passed to the linker a second time below.
+        if (pair.ptr->output_type() == Target::GROUP ||
+            (pair.ptr->source_types_used().RustSourceUsed() &&
+             RustValues::IsRustLibrary(pair.ptr)))
+          work.push_back(pair.ptr);
+      }
+    }
+    // Link any Rust library in the transitive closure that rustc won't link
+    // itself directly as an archive, mirroring the "rlibs" handling in
+    // NinjaCBinaryTargetWriter. This is what lets cxx bridges whose Rust half
+    // sits behind a C++ target (e.g. //base's rust_logger) resolve.
+    for (const auto& inherited : resolved().GetInheritedLibraries(target_)) {
+      const Target* dep = inherited.target();
+      if (dep->output_type() == Target::RUST_LIBRARY &&
+          !linked_by_rustc.contains(dep)) {
+        CHECK(dep->has_dependency_output_file());
+        nonrustdeps.push_back(dep->dependency_output_file());
         implicit_deps.push_back(dep->dependency_output_file());
       }
     }

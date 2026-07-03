@@ -5,6 +5,7 @@
 #ifndef TOOLS_GN_COMMANDS_H_
 #define TOOLS_GN_COMMANDS_H_
 
+#include <functional>
 #include <map>
 #include <set>
 #include <string>
@@ -12,6 +13,7 @@
 #include <vector>
 
 #include "base/values.h"
+#include "gn/standard_out.h"
 #include "gn/target.h"
 #include "gn/unique_vector.h"
 
@@ -97,6 +99,20 @@ extern const char kRefs[];
 extern const char kRefs_HelpShort[];
 extern const char kRefs_Help[];
 int RunRefs(const std::vector<std::string>& args);
+
+extern const char kSuggest[];
+extern const char kSuggest_HelpShort[];
+extern const char kSuggest_Help[];
+int RunSuggest(const std::vector<std::string>& args);
+
+using OutputStringFunc =
+    std::function<void(std::string_view, TextDecoration, HtmlEscaping)>;
+bool OutputSuggestions(const std::vector<const Target*>& all_targets,
+                       const BuildSettings* build_settings,
+                       const Label& default_toolchain,
+                       std::string_view includer_name,
+                       std::string_view included_name,
+                       OutputStringFunc output_fn);
 
 extern const char kCleanStale[];
 extern const char kCleanStale_HelpShort[];
@@ -256,6 +272,22 @@ bool PrepareForRegeneration(const BuildSettings* settings);
 const Target* ResolveTargetFromCommandLineString(
     Setup* setup,
     const std::string& label_string);
+
+enum class ApiScope {
+  kPublic,
+  kPrivate,
+  kOutput,
+};
+
+// Resolves an input to a list of targets for suggestion.
+// Specifically also decides whether it resolves to the public or private API
+// of the target.
+std::pair<std::vector<std::pair<const Target*, ApiScope>>, bool>
+ResolveSuggestionToTarget(const BuildSettings* build_settings,
+                          const std::vector<const Target*>& all_targets,
+                          const Label& current_toolchain,
+                          std::string_view input,
+                          const Target* includer = nullptr);
 
 // Resolves a vector of command line inputs and figures out the full set of
 // things they resolve to.

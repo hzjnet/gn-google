@@ -12,6 +12,7 @@
 #include "base/files/file_util.h"
 #include "base/json/json_reader.h"
 #include "base/json/json_writer.h"
+#include "base/strings/string_number_conversions.h"
 #include "base/strings/string_split.h"
 #include "base/strings/string_util.h"
 #include "gn/commands.h"
@@ -33,6 +34,8 @@
 
 namespace commands {
 
+const size_t kDefaultFormatWidth = 80;
+
 const char kSwitchDryRun[] = "dry-run";
 const char kSwitchDumpTree[] = "dump-tree";
 const char kSwitchReadTree[] = "read-tree";
@@ -43,7 +46,7 @@ const char kSwitchTreeTypeText[] = "text";
 const char kFormat[] = "format";
 const char kFormat_HelpShort[] = "format: Format .gn files.";
 const char kFormat_Help[] =
-    R"(gn format [--dump-tree] (--stdin | <list of build_files...>)
+    R"(gn format [--dump-tree] [--format-width=WIDTH] (--stdin | <list of build_files...>)
 
   Formats .gn file to a standard format.
 
@@ -65,6 +68,10 @@ Arguments
       - Exit code 0: successful format, matches on disk.
       - Exit code 1: general failure (parse error, etc.)
       - Exit code 2: successful format, but differs from on disk.
+
+  --format-width=WIDTH
+      Override the default format width. WIDTH must be a strictly positive
+      integer.
 
   --dump-tree[=( text | json )]
       Dumps the parse tree to stdout and does not update the file or print
@@ -91,7 +98,6 @@ Examples
 namespace {
 
 const int kIndentSize = 2;
-const int kMaximumWidth = 80;
 
 const int kPenaltyLineBreak = 500;
 const int kPenaltyHorizontalSeparation = 100;
@@ -130,7 +136,7 @@ bool IsSourcesList(std::string_view ident) {
 
 class Printer {
  public:
-  Printer();
+  Printer(size_t format_width);
   ~Printer();
 
   void Block(const ParseNode* file);
@@ -158,9 +164,7 @@ class Printer {
   // Add the current margin (as spaces) to the output.
   void PrintMargin();
 
-  void TrimAndPrintToken(const Token& token);
-
-  void PrintTrailingCommentsWrapped(const std::vector<Token>& comments);
+  void PrintTokensWrapped(const std::vector<Token>& comments);
 
   void FlushComments();
 
@@ -249,11 +253,12 @@ class Printer {
   bool ListWillBeMultiline(const std::vector<std::unique_ptr<PARSENODE>>& list,
                            const ParseNode* end);
 
+  size_t format_width_ = kDefaultFormatWidth;
   std::string output_;           // Output buffer.
   std::vector<Token> comments_;  // Pending end-of-line comments.
   int margin() const { return stack_.back().margin; }
 
-  int penalty_depth_;
+  int penalty_depth_ = 0;
   int GetPenaltyForLineBreak() const {
     return penalty_depth_ * kPenaltyLineBreak;
   }
@@ -287,7 +292,7 @@ class Printer {
   Printer& operator=(const Printer&) = delete;
 };
 
-Printer::Printer() : penalty_depth_(0) {
+Printer::Printer(size_t format_width) : format_width_(format_width) {
   output_.reserve(100 << 10);
   precedence_["="] = kPrecedenceAssign;
   precedence_["+="] = kPrecedenceAssign;
@@ -316,20 +321,7 @@ void Printer::PrintMargin() {
   output_ += std::string(margin(), ' ');
 }
 
-void Printer::TrimAndPrintToken(const Token& token) {
-  std::string trimmed;
-  TrimWhitespaceASCII(std::string(token.value()), base::TRIM_ALL, &trimmed);
-  Print(trimmed);
-}
-
-// Assumes that the margin is set to the indent level where the comments should
-// be aligned. This doesn't de-wrap, it only wraps. So if a suffix comment
-// causes the line to exceed 80 col it will be wrapped, but the subsequent line
-// would fit on the then-broken line it will not be merged with it. This is
-// partly because it's difficult to implement at this level, but also because
-// it can break hand-authored line breaks where they're starting a new paragraph
-// or statement.
-void Printer::PrintTrailingCommentsWrapped(const std::vector<Token>& comments) {
+void Printer::PrintTokensWrapped(const std::vector<Token>& comments) {
   bool have_empty_line = true;
   auto start_next_line = [this, &have_empty_line]() {
     Trim();
@@ -337,37 +329,157 @@ void Printer::PrintTrailingCommentsWrapped(const std::vector<Token>& comments) {
     PrintMargin();
     have_empty_line = true;
   };
-  for (const auto& c : comments) {
-    if (!have_empty_line) {
-      start_next_line();
-    }
 
+  // Group consecutive comment lines into paragraphs. A paragraph is reflowed
+  // if any line exceeds the maximum width. Special lines (e.g. URLs, lists,
+  // preformatted text) are kept in their own paragraphs and never reflowed.
+  struct Paragraph {
+    std::vector<Token> tokens;
+    bool should_reflow = false;
+    bool is_preformatted = false;
+  };
+  std::vector<Paragraph> paragraphs;
+  Paragraph current_paragraph;
+
+  auto flush_paragraph = [&]() {
+    if (!current_paragraph.tokens.empty()) {
+      paragraphs.push_back(current_paragraph);
+      current_paragraph = Paragraph();
+    }
+  };
+
+  bool in_preformatted_block = false;
+
+  for (const auto& c : comments) {
     std::string trimmed;
     TrimWhitespaceASCII(std::string(c.value()), base::TRIM_ALL, &trimmed);
 
-    if (margin() + trimmed.size() <= kMaximumWidth) {
-      Print(trimmed);
-      have_empty_line = false;
+    bool is_empty = trimmed == "#";
+    if (is_empty) {
+      in_preformatted_block = false;
+    }
+
+    bool is_indented = c.value().starts_with("#  ");
+    bool has_url = trimmed.find("http://") != std::string::npos ||
+                   trimmed.find("https://") != std::string::npos;
+    bool is_list = false;
+    if (trimmed.starts_with("# ") && trimmed.length() >= 4) {
+      if (trimmed[2] == '-' || trimmed[2] == '*') {
+        is_list = trimmed[3] == ' ';
+      } else if (isdigit(trimmed[2])) {
+        size_t i = 3;
+        while (i < trimmed.length() && isdigit(trimmed[i]))
+          i++;
+        if (i < trimmed.length() && trimmed[i] == '.')
+          i++;
+        is_list = i < trimmed.length() && trimmed[i] == ' ';
+      }
+    }
+    bool is_pragma = trimmed.find("# NOSORT") != std::string::npos ||
+                     trimmed.find("# KEEPDUPS") != std::string::npos;
+
+    std::string text_only = trimmed.length() > 1 ? trimmed.substr(1) : "";
+    TrimWhitespaceASCII(text_only, base::TRIM_ALL, &text_only);
+
+    // A single word (e.g. a long file path) should not be joined with other
+    // lines, as it often represents a vertical list of items.
+    bool is_single_word = !text_only.empty() &&
+                          text_only.find(' ') == std::string::npos &&
+                          (text_only.find('/') != std::string::npos ||
+                           text_only.find(':') != std::string::npos);
+
+    // Attention markers start a new paragraph to ensure they remain visible.
+    bool is_attention_marker =
+        text_only.starts_with("TODO") || text_only.starts_with("NOTE") ||
+        text_only.starts_with("WARNING") || text_only.starts_with("FIXME");
+
+    if (is_attention_marker) {
+      flush_paragraph();
+    }
+
+    bool is_special = is_indented || has_url || is_empty || is_list ||
+                      is_pragma || is_single_word || in_preformatted_block;
+
+    if (is_special) {
+      flush_paragraph();
+      Paragraph p;
+      p.tokens.push_back(c);
+      p.should_reflow = false;
+      p.is_preformatted = in_preformatted_block || is_single_word ||
+                          is_indented || has_url || is_list || is_pragma;
+      paragraphs.push_back(p);
     } else {
+      if (margin() + trimmed.size() > format_width_) {
+        current_paragraph.should_reflow = true;
+      }
+      current_paragraph.tokens.push_back(c);
+    }
+
+    // If a line ends with a colon, treat subsequent lines as preformatted
+    // until an empty comment line is encountered.
+    if (trimmed.ends_with(':')) {
+      in_preformatted_block = true;
+    }
+  }
+  flush_paragraph();
+
+  for (const auto& p : paragraphs) {
+    if (p.should_reflow) {
+      // Combine all tokens in the paragraph into a single list of words.
+      std::vector<std::string> words;
+      for (const auto& t : p.tokens) {
+        std::string trimmed;
+        TrimWhitespaceASCII(std::string(t.value()), base::TRIM_ALL, &trimmed);
+        std::vector<std::string> line_words = base::SplitString(
+            trimmed, " ", base::WhitespaceHandling::TRIM_WHITESPACE,
+            base::SplitResult::SPLIT_WANT_NONEMPTY);
+        if (words.empty()) {
+          words.push_back("#");
+        }
+        for (const auto& w : line_words) {
+          if (w != "#")
+            words.push_back(w);
+        }
+      }
+
+      if (!have_empty_line)
+        start_next_line();
+
+      // Output words, wrapping to the next line when the maximum width is
+      // reached.
       bool continuation = false;
-      std::vector<std::string> split_on_spaces = base::SplitString(
-          c.value(), " ", base::WhitespaceHandling::TRIM_WHITESPACE,
-          base::SplitResult::SPLIT_WANT_NONEMPTY);
-      for (size_t j = 0; j < split_on_spaces.size(); ++j) {
+      for (size_t j = 0; j < words.size(); ++j) {
         if (have_empty_line && continuation) {
           Print("# ");
+          have_empty_line = false;
+        } else if (j > 0) {
+          Print(" ");
         }
-        Print(split_on_spaces[j]);
-        Print(" ");
-        if (split_on_spaces[j] != "#") {
+        Print(words[j]);
+
+        if (words[j] != "#") {
           have_empty_line = false;
         }
-        if (!have_empty_line &&
-            (j < split_on_spaces.size() - 1 &&
-             CurrentColumn() + split_on_spaces[j + 1].size() > kMaximumWidth)) {
+
+        if (!have_empty_line && j < words.size() - 1 &&
+            CurrentColumn() + 1 + words[j + 1].size() > format_width_) {
           start_next_line();
           continuation = true;
         }
+      }
+    } else {
+      // For paragraphs that do not require reflowing (e.g. special lines or
+      // paragraphs where all lines fit within the maximum width), output them
+      // exactly as authored.
+      for (const auto& c : p.tokens) {
+        if (!have_empty_line) {
+          start_next_line();
+        }
+
+        std::string trimmed;
+        TrimWhitespaceASCII(std::string(c.value()), base::TRIM_ALL, &trimmed);
+        Print(trimmed);
+        have_empty_line = false;
       }
     }
   }
@@ -378,7 +490,7 @@ void Printer::PrintSuffixComments(const ParseNode* node) {
   if (node->comments() && !node->comments()->suffix().empty()) {
     Print("  ");
     stack_.push_back(IndentState(CurrentColumn(), false, false));
-    PrintTrailingCommentsWrapped(node->comments()->suffix());
+    PrintTokensWrapped(node->comments()->suffix());
     stack_.pop_back();
   }
 }
@@ -389,7 +501,7 @@ void Printer::FlushComments() {
     // Save the margin, and temporarily set it to where the first comment
     // starts so that multiple suffix comments are vertically aligned.
     stack_.push_back(IndentState(CurrentColumn(), false, false));
-    PrintTrailingCommentsWrapped(comments_);
+    PrintTokensWrapped(comments_);
     stack_.pop_back();
     comments_.clear();
   }
@@ -705,8 +817,8 @@ void Printer::Block(const ParseNode* root) {
   const BlockNode* block = root->AsBlock();
 
   if (block->comments()) {
-    for (const auto& c : block->comments()->before()) {
-      TrimAndPrintToken(c);
+    if (!block->comments()->before().empty()) {
+      PrintTokensWrapped(block->comments()->before());
       Newline();
     }
   }
@@ -724,8 +836,8 @@ void Printer::Block(const ParseNode* root) {
       // However, because it's a general expression handler, it doesn't insert
       // the newline itself, which only happens between block statements. So,
       // the after are handled explicitly here.
-      for (const auto& c : stmt->comments()->after()) {
-        TrimAndPrintToken(c);
+      if (!stmt->comments()->after().empty()) {
+        PrintTokensWrapped(stmt->comments()->after());
         Newline();
       }
     }
@@ -744,8 +856,8 @@ void Printer::Block(const ParseNode* root) {
       // then the two comments were originally separate, so keep them that way.
       Newline();
     }
-    for (const auto& c : block->comments()->after()) {
-      TrimAndPrintToken(c);
+    if (!block->comments()->after().empty()) {
+      PrintTokensWrapped(block->comments()->after());
       Newline();
     }
   }
@@ -757,8 +869,8 @@ int Printer::AssessPenalty(const std::string& output) {
       output, "\n", base::KEEP_WHITESPACE, base::SPLIT_WANT_ALL);
   penalty += static_cast<int>(lines.size() - 1) * GetPenaltyForLineBreak();
   for (const auto& line : lines) {
-    if (line.size() > kMaximumWidth)
-      penalty += static_cast<int>(line.size() - kMaximumWidth) * kPenaltyExcess;
+    if (line.size() > format_width_)
+      penalty += static_cast<int>(line.size() - format_width_) * kPenaltyExcess;
   }
   return penalty;
 }
@@ -768,7 +880,7 @@ bool Printer::ExceedsMaximumWidth(const std::string& output) {
                                             base::SPLIT_WANT_ALL)) {
     std::string_view trimmed =
         TrimString(line, " ", base::TrimPositions::TRIM_TRAILING);
-    if (trimmed.size() > kMaximumWidth) {
+    if (trimmed.size() > format_width_) {
       return true;
     }
   }
@@ -797,8 +909,8 @@ int Printer::Expr(const ParseNode* root,
         Print("\n");
       // We're printing a line comment, so we need to be at the current margin.
       PrintMargin();
-      for (const auto& c : root->comments()->before()) {
-        TrimAndPrintToken(c);
+      if (!root->comments()->before().empty()) {
+        PrintTokensWrapped(root->comments()->before());
         Newline();
       }
     }
@@ -875,7 +987,7 @@ int Printer::Expr(const ParseNode* root,
     stack_.push_back(IndentState(indent_column,
                                  stack_.back().continuation_requires_indent,
                                  binop->op().value() == "||"));
-    Printer sub_left;
+    Printer sub_left(format_width_);
     InitializeSub(&sub_left);
     sub_left.Expr(binop->left(), prec_left,
                   std::string(" ") + std::string(binop->op().value()));
@@ -887,7 +999,7 @@ int Printer::Expr(const ParseNode* root,
               std::back_inserter(comments_));
 
     // Single line.
-    Printer sub1;
+    Printer sub1(format_width_);
     InitializeSub(&sub1);
     sub1.Print(" ");
     int penalty_current_line = sub1.Expr(binop->right(), prec_right, at_end);
@@ -902,7 +1014,7 @@ int Printer::Expr(const ParseNode* root,
     }
 
     // Break after operator.
-    Printer sub2;
+    Printer sub2(format_width_);
     InitializeSub(&sub2);
     sub2.Newline();
     int penalty_next_line = sub2.Expr(binop->right(), prec_right, at_end);
@@ -913,7 +1025,7 @@ int Printer::Expr(const ParseNode* root,
     // Force a list on the RHS that would normally be a single line into
     // multiline.
     bool tried_rhs_multiline = false;
-    Printer sub3;
+    Printer sub3(format_width_);
     InitializeSub(&sub3);
     int penalty_multiline_rhs_list = std::numeric_limits<int>::max();
     const ListNode* rhs_list = binop->right()->AsList();
@@ -998,7 +1110,7 @@ int Printer::Expr(const ParseNode* root,
     Print(unaryop->op().value());
     Expr(unaryop->operand(), kPrecedenceUnary, std::string());
   } else if (const BlockCommentNode* block_comment = root->AsBlockComment()) {
-    Print(block_comment->comment().value());
+    PrintTokensWrapped({block_comment->comment()});
   } else if (const EndNode* end = root->AsEnd()) {
     Print(end->value().value());
   } else {
@@ -1076,10 +1188,8 @@ void Printer::Sequence(SequenceStyle style,
     if (end->comments() && !end->comments()->before().empty()) {
       if (list.size() >= 2)
         Newline();
-      for (const auto& c : end->comments()->before()) {
-        Newline();
-        TrimAndPrintToken(c);
-      }
+      Newline();
+      PrintTokensWrapped(end->comments()->before());
     }
 
     stack_.pop_back();
@@ -1135,7 +1245,7 @@ int Printer::FunctionCall(const FunctionCallNode* func_call,
       list.size() != 1 || !list[0]->AsBinaryOp();
 
   // 1: Same line.
-  Printer sub1;
+  Printer sub1(format_width_);
   InitializeSub(&sub1);
   sub1.stack_.push_back(
       IndentState(CurrentColumn(), continuation_requires_indent, false));
@@ -1153,7 +1263,7 @@ int Printer::FunctionCall(const FunctionCallNode* func_call,
       (CountLines(sub1.String()) - 1) * kPenaltyBrokenLineOnOneLiner;
 
   // 2: Starting on same line, broken at commas.
-  Printer sub2;
+  Printer sub2(format_width_);
   InitializeSub(&sub2);
   sub2.stack_.push_back(
       IndentState(CurrentColumn(), continuation_requires_indent, false));
@@ -1170,7 +1280,7 @@ int Printer::FunctionCall(const FunctionCallNode* func_call,
   penalty_multiline_start_same_line += AssessPenalty(sub2.String());
 
   // 3: Starting on next line, broken at commas.
-  Printer sub3;
+  Printer sub3(format_width_);
   InitializeSub(&sub3);
   sub3.stack_.push_back(IndentState(margin() + kIndentSize * 2,
                                     continuation_requires_indent, false));
@@ -1239,10 +1349,8 @@ int Printer::FunctionCall(const FunctionCallNode* func_call,
     if (end->comments() && !end->comments()->before().empty()) {
       if (!list.empty())
         Newline();
-      for (const auto& c : end->comments()->before()) {
-        Newline();
-        TrimAndPrintToken(c);
-      }
+      Newline();
+      PrintTokensWrapped(end->comments()->before());
       Newline();
     }
     stack_.pop_back();
@@ -1301,6 +1409,7 @@ bool Printer::ListWillBeMultiline(
 
 void DoFormat(const ParseNode* root,
               TreeDumpMode dump_tree,
+              size_t format_width,
               std::string* output,
               std::string* dump_output) {
   if (dump_tree == TreeDumpMode::kPlainText) {
@@ -1314,23 +1423,26 @@ void DoFormat(const ParseNode* root,
     *dump_output = os;
   }
 
-  Printer pr;
+  Printer pr(format_width);
   pr.Block(root);
   *output = pr.String();
 }
 
 }  // namespace
 
-bool FormatJsonToString(const std::string& json, std::string* output) {
+bool FormatJsonToString(const std::string& json,
+                        size_t format_width,
+                        std::string* output) {
   base::JSONReader reader;
   std::unique_ptr<base::Value> json_root = reader.Read(json);
   std::unique_ptr<ParseNode> root = ParseNode::BuildFromJSON(*json_root);
-  DoFormat(root.get(), TreeDumpMode::kInactive, output, nullptr);
+  DoFormat(root.get(), TreeDumpMode::kInactive, format_width, output, nullptr);
   return true;
 }
 
 bool FormatStringToString(const std::string& input,
                           TreeDumpMode dump_tree,
+                          size_t maximum_width,
                           std::string* output,
                           std::string* dump_output) {
   SourceFile source_file;
@@ -1352,7 +1464,7 @@ bool FormatStringToString(const std::string& input,
     return false;
   }
 
-  DoFormat(parse_node.get(), dump_tree, output, dump_output);
+  DoFormat(parse_node.get(), dump_tree, maximum_width, output, dump_output);
   return true;
 }
 
@@ -1363,13 +1475,12 @@ int RunFormat(const std::vector<std::string>& args) {
   _setmode(_fileno(stderr), _O_BINARY);
 #endif
 
-  bool dry_run =
-      base::CommandLine::ForCurrentProcess()->HasSwitch(kSwitchDryRun);
+  const base::CommandLine* cmdline = base::CommandLine::ForCurrentProcess();
+
+  bool dry_run = cmdline->HasSwitch(kSwitchDryRun);
   TreeDumpMode dump_tree = TreeDumpMode::kInactive;
-  if (base::CommandLine::ForCurrentProcess()->HasSwitch(kSwitchDumpTree)) {
-    std::string tree_type =
-        base::CommandLine::ForCurrentProcess()->GetSwitchValueString(
-            kSwitchDumpTree);
+  if (cmdline->HasSwitch(kSwitchDumpTree)) {
+    std::string tree_type = cmdline->GetSwitchValueString(kSwitchDumpTree);
     if (tree_type == kSwitchTreeTypeJSON) {
       dump_tree = TreeDumpMode::kJSON;
     } else if (tree_type.empty() || tree_type == kSwitchTreeTypeText) {
@@ -1384,16 +1495,29 @@ int RunFormat(const std::vector<std::string>& args) {
       return 1;
     }
   }
-  bool from_stdin =
-      base::CommandLine::ForCurrentProcess()->HasSwitch(kSwitchStdin);
+  bool from_stdin = cmdline->HasSwitch(kSwitchStdin);
 
   if (dry_run) {
     // --dry-run only works with an actual file to compare to.
     from_stdin = false;
   }
 
-  bool quiet =
-      base::CommandLine::ForCurrentProcess()->HasSwitch(switches::kQuiet);
+  bool quiet = cmdline->HasSwitch(switches::kQuiet);
+
+  size_t format_width = kDefaultFormatWidth;
+  if (cmdline->HasSwitch(switches::kFormatWidth)) {
+    const std::string format_width_str =
+        cmdline->GetSwitchValueString(switches::kFormatWidth);
+    int format_width_int = 0;
+    if (!base::StringToInt(
+            cmdline->GetSwitchValueString(switches::kFormatWidth),
+            &format_width_int) ||
+        format_width_int <= 0) {
+      Err(Location(), "Invalid --format-width value: " + format_width_str);
+      return 1;
+    }
+    format_width = static_cast<size_t>(format_width_int);
+  }
 
   if (from_stdin) {
     if (args.size() != 0) {
@@ -1401,10 +1525,13 @@ int RunFormat(const std::vector<std::string>& args) {
           .PrintToStdout();
       return 1;
     }
+
     std::string input = ReadStdin();
     std::string output;
     std::string dump_output;
-    if (!FormatStringToString(input, dump_tree, &output, &dump_output))
+
+    if (!FormatStringToString(input, dump_tree, format_width, &output,
+                              &dump_output))
       return 1;
     printf("%s", dump_output.c_str());
     printf("%s", output.c_str());
@@ -1421,10 +1548,8 @@ int RunFormat(const std::vector<std::string>& args) {
   SourceDir source_dir =
       SourceDirForCurrentDirectory(setup.build_settings().root_path());
 
-  if (base::CommandLine::ForCurrentProcess()->HasSwitch(kSwitchReadTree)) {
-    std::string tree_type =
-        base::CommandLine::ForCurrentProcess()->GetSwitchValueString(
-            kSwitchReadTree);
+  if (cmdline->HasSwitch(kSwitchReadTree)) {
+    std::string tree_type = cmdline->GetSwitchValueString(kSwitchReadTree);
     if (tree_type != kSwitchTreeTypeJSON) {
       Err(Location(), "Only json supported for read-tree.\n").PrintToStdout();
       return 1;
@@ -1445,7 +1570,7 @@ int RunFormat(const std::vector<std::string>& args) {
     }
     base::FilePath to_format = setup.build_settings().GetFullPath(file);
     std::string output;
-    FormatJsonToString(ReadStdin(), &output);
+    FormatJsonToString(ReadStdin(), format_width, &output);
     if (base::WriteFile(to_format, output.data(),
                         static_cast<int>(output.size())) == -1) {
       Err(Location(), std::string("Failed to write output to \"") +
@@ -1484,8 +1609,8 @@ int RunFormat(const std::vector<std::string>& args) {
 
     std::string output_string;
     std::string dump_output_string;
-    if (!FormatStringToString(original_contents, dump_tree, &output_string,
-                              &dump_output_string)) {
+    if (!FormatStringToString(original_contents, dump_tree, format_width,
+                              &output_string, &dump_output_string)) {
       exit_code = 1;
       continue;
     }

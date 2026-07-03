@@ -120,7 +120,7 @@ TEST_F(JSONWriter, ActionWithResponseFile) {
             "command": "cp {{source}} {{output}}"
          },
          "cxx": {
-            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} -o {{output}}",
+            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} {{module_deps}} -o {{output}}",
             "command_launcher": "launcher",
             "framework_dir_switch": "-F",
             "framework_switch": "-framework ",
@@ -130,7 +130,7 @@ TEST_F(JSONWriter, ActionWithResponseFile) {
             "weak_framework_switch": "-weak_framework "
          },
          "cxx_module": {
-            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} -o {{output}}",
+            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} {{module_deps_no_self}} -o {{output}}",
             "framework_dir_switch": "-F",
             "framework_switch": "-framework ",
             "lib_dir_switch": "-L",
@@ -274,7 +274,7 @@ TEST_F(JSONWriter, ActionWithResponseFile) {
    }
 }
 )_";
-  EXPECT_EQ(expected_json, out) << out;
+  EXPECT_EQ(expected_json, out);
 }
 
 TEST_F(JSONWriter, RustTarget) {
@@ -360,7 +360,7 @@ TEST_F(JSONWriter, RustTarget) {
             "command": "cp {{source}} {{output}}"
          },
          "cxx": {
-            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} -o {{output}}",
+            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} {{module_deps}} -o {{output}}",
             "command_launcher": "launcher",
             "framework_dir_switch": "-F",
             "framework_switch": "-framework ",
@@ -370,7 +370,7 @@ TEST_F(JSONWriter, RustTarget) {
             "weak_framework_switch": "-weak_framework "
          },
          "cxx_module": {
-            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} -o {{output}}",
+            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} {{module_deps_no_self}} -o {{output}}",
             "framework_dir_switch": "-F",
             "framework_switch": "-framework ",
             "lib_dir_switch": "-L",
@@ -514,7 +514,7 @@ TEST_F(JSONWriter, RustTarget) {
    }
 }
 )_";
-  EXPECT_EQ(expected_json, out) << out;
+  EXPECT_EQ(expected_json, out);
 }
 
 TEST_F(JSONWriter, ForEachWithResponseFile) {
@@ -624,7 +624,7 @@ TEST_F(JSONWriter, ForEachWithResponseFile) {
             "command": "cp {{source}} {{output}}"
          },
          "cxx": {
-            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} -o {{output}}",
+            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} {{module_deps}} -o {{output}}",
             "command_launcher": "launcher",
             "framework_dir_switch": "-F",
             "framework_switch": "-framework ",
@@ -634,7 +634,7 @@ TEST_F(JSONWriter, ForEachWithResponseFile) {
             "weak_framework_switch": "-weak_framework "
          },
          "cxx_module": {
-            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} -o {{output}}",
+            "command": "c++ {{source}} {{cflags}} {{cflags_cc}} {{defines}} {{include_dirs}} {{module_deps_no_self}} -o {{output}}",
             "framework_dir_switch": "-F",
             "framework_switch": "-framework ",
             "lib_dir_switch": "-L",
@@ -778,7 +778,7 @@ TEST_F(JSONWriter, ForEachWithResponseFile) {
    }
 }
 )_";
-  EXPECT_EQ(expected_json, out) << out;
+  EXPECT_EQ(expected_json, out);
 }
 
 TEST_F(JSONWriter, FilterTargetsWithDataDeps) {
@@ -834,4 +834,49 @@ TEST_F(JSONWriter, FilterTargetsWithDataDeps) {
   EXPECT_GT(labels_all.count(Label(SourceDir("//foo/"), "a")), 0u);
   EXPECT_GT(labels_all.count(Label(SourceDir("//foo/"), "b")), 0u);
   EXPECT_GT(labels_all.count(Label(SourceDir("//foo/"), "c")), 0u);
+}
+
+TEST_F(JSONWriter, GroupWithData) {
+  Err err;
+  TestWithScope setup;
+
+  Target target(setup.settings(), Label(SourceDir("//foo/"), "docs"));
+  target.set_output_type(Target::GROUP);
+  target.data().push_back("README.md");
+  target.data().push_back("docs/help.txt");
+  target.SetToolchain(setup.toolchain());
+  ASSERT_TRUE(target.OnResolved(&err));
+
+  std::vector<const Target*> targets = {&target};
+  std::string out =
+      JSONProjectWriter::RenderJSON(setup.build_settings(), targets);
+#if defined(OS_WIN)
+  base::ReplaceSubstringsAfterOffset(&out, 0, "\r\n", "\n");
+#endif
+  const char expected_json[] =
+      R"_({
+   "build_settings": {
+      "build_dir": "//out/Debug/",
+      "default_toolchain": "//toolchain:default",
+      "gen_input_files": [  ],
+      "root_path": ""
+   },
+   "targets": {
+      "//foo:docs()": {
+         "data": [ "README.md", "docs/help.txt" ],
+         "deps": [  ],
+         "metadata": {
+
+         },
+         "public": "*",
+         "testonly": false,
+         "toolchain": "",
+         "type": "group",
+         "visibility": [  ]
+      }
+   },
+   "toolchains": {
+)_";
+
+  EXPECT_TRUE(out.starts_with(expected_json)) << out;
 }

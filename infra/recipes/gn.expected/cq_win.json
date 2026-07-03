@@ -203,7 +203,7 @@
       "-root",
       "[CACHE]\\windows_sdk",
       "-ensure-file",
-      "chrome_internal/third_party/sdk/windows uploaded:2024-01-11",
+      "chrome_internal/third_party/sdk/windows uploaded:2026-05-06",
       "-max-threads",
       "0",
       "-json-output",
@@ -228,7 +228,7 @@
       "@@@STEP_LOG_LINE@json.output@  \"result\": {@@@",
       "@@@STEP_LOG_LINE@json.output@    \"\": [@@@",
       "@@@STEP_LOG_LINE@json.output@      {@@@",
-      "@@@STEP_LOG_LINE@json.output@        \"instance_id\": \"resolved-instance_id-of-uploaded:2024-01\",@@@",
+      "@@@STEP_LOG_LINE@json.output@        \"instance_id\": \"resolved-instance_id-of-uploaded:2026-05\",@@@",
       "@@@STEP_LOG_LINE@json.output@        \"package\": \"chrome_internal/third_party/sdk/windows\"@@@",
       "@@@STEP_LOG_LINE@json.output@      }@@@",
       "@@@STEP_LOG_LINE@json.output@    ]@@@",
@@ -330,7 +330,9 @@
     "cmd": [
       "[START_DIR]\\cipd\\ninja",
       "-C",
-      "[START_DIR]\\gn\\out"
+      "[START_DIR]\\gn\\out",
+      "gn.exe",
+      "gn_unittests.exe"
     ],
     "cwd": "[START_DIR]\\gn",
     "env": {
@@ -389,6 +391,39 @@
     ]
   },
   {
+    "cmd": [
+      "[START_DIR]\\cipd\\ninja",
+      "-C",
+      "[START_DIR]\\gn\\out",
+      "run_integration_tests"
+    ],
+    "cwd": "[START_DIR]\\gn",
+    "env": {
+      "VSINSTALLDIR": "[CACHE]\\windows_sdk\\.\\"
+    },
+    "env_prefixes": {
+      "PATH": [
+        "[CACHE]\\windows_sdk\\Windows Kits\\10\\bin\\10.0.19041.0\\x64"
+      ]
+    },
+    "luci_context": {
+      "realm": {
+        "name": "gn:try"
+      },
+      "resultdb": {
+        "current_invocation": {
+          "name": "invocations/build:8945511751514863184",
+          "update_token": "token"
+        },
+        "hostname": "rdbhost"
+      }
+    },
+    "name": "debug.windows-amd64.integration tests",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@2@@@"
+    ]
+  },
+  {
     "cmd": [],
     "name": "release"
   },
@@ -437,7 +472,9 @@
     "cmd": [
       "[START_DIR]\\cipd\\ninja",
       "-C",
-      "[START_DIR]\\gn\\out"
+      "[START_DIR]\\gn\\out",
+      "gn.exe",
+      "gn_unittests.exe"
     ],
     "cwd": "[START_DIR]\\gn",
     "env": {
@@ -491,6 +528,39 @@
       }
     },
     "name": "release.windows-amd64.test",
+    "~followup_annotations": [
+      "@@@STEP_NEST_LEVEL@2@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[START_DIR]\\cipd\\ninja",
+      "-C",
+      "[START_DIR]\\gn\\out",
+      "run_integration_tests"
+    ],
+    "cwd": "[START_DIR]\\gn",
+    "env": {
+      "VSINSTALLDIR": "[CACHE]\\windows_sdk\\.\\"
+    },
+    "env_prefixes": {
+      "PATH": [
+        "[CACHE]\\windows_sdk\\Windows Kits\\10\\bin\\10.0.19041.0\\x64"
+      ]
+    },
+    "luci_context": {
+      "realm": {
+        "name": "gn:try"
+      },
+      "resultdb": {
+        "current_invocation": {
+          "name": "invocations/build:8945511751514863184",
+          "update_token": "token"
+        },
+        "hostname": "rdbhost"
+      }
+    },
+    "name": "release.windows-amd64.integration tests",
     "~followup_annotations": [
       "@@@STEP_NEST_LEVEL@2@@@"
     ]

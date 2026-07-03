@@ -13,13 +13,9 @@ import shlex
 import subprocess
 import sys
 
-# IMPORTANT: This script is also executed as python2 on
-# GN's CI builders.
+from ninja_file import NinjaFile, escape_path_ninja
 
-try:  # py3
-  from shlex import quote as shell_quote
-except ImportError:  # py2
-  from pipes import quote as shell_quote
+assert sys.version_info >= (3, 9, 0)
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(SCRIPT_DIR)
@@ -103,6 +99,11 @@ class Platform(object):
   def is_serenity(self):
     return self._platform == 'serenity'
 
+  @property
+  def exe_suffix(self):
+    return '.exe' if self.is_windows() else ''
+
+
 class ArgumentsList:
   """Helper class to accumulate ArgumentParser argument definitions
   and be able to regenerate a corresponding command-line to be
@@ -152,7 +153,7 @@ class ArgumentsList:
     if platform.system() == "Windows":
       return ' '.join(result)
     else:
-      return ' '.join(shell_quote(item) for item in result)
+      return ' '.join(shlex.quote(item) for item in result)
 
 
 def main(argv):
@@ -286,7 +287,11 @@ def WriteGenericNinja(path, static_libraries, executables,
                       cxx, ar, ld, platform, host, options,
                       args_list, cflags=[], ldflags=[],
                       libflags=[], include_dirs=[], solibs=[]):
+  # Generate integration tests using NinjaFile
+  build_dir = os.path.dirname(path)
+  ninja = NinjaFile(platform, REPO_ROOT, build_dir)
   args = args_list.gen_command_line_args(options)
+
   if args:
     args = " " + args
 
@@ -304,7 +309,6 @@ def WriteGenericNinja(path, static_libraries, executables,
     '  depfile = build.ninja.d',
     '',
   ]
-
 
   template_filename = os.path.join(SCRIPT_DIR, {
       'msvc': 'build_win.ninja.template',
@@ -339,14 +343,13 @@ def WriteGenericNinja(path, static_libraries, executables,
     library_ext = '.a'
     object_ext = '.o'
 
-  def escape_path_ninja(path):
-    return path.replace('$ ', '$$ ').replace(' ', '$ ').replace(':', '$:')
-
   def src_to_obj(path):
     return escape_path_ninja('%s' % os.path.splitext(path)[0] + object_ext)
 
   def library_to_a(library):
-    return '%s%s' % (library, library_ext)
+    if platform.is_msvc():
+      return '%s%s' % (library, library_ext)
+    return 'lib%s%s' % (library, library_ext)
 
   ninja_lines = []
   def build_source(src_file, settings):
@@ -370,7 +373,6 @@ def WriteGenericNinja(path, static_libraries, executables,
         ' '.join([src_to_obj(src_file) for src_file in settings['sources']])))
     ninja_lines.append('  libflags = %s' % ' '.join(libflags))
 
-
   for executable, settings in executables.items():
     for src_file in settings['sources']:
       build_source(src_file, settings)
@@ -388,17 +390,33 @@ def WriteGenericNinja(path, static_libraries, executables,
 
   ninja_lines.append('')  # Make sure the file ends with a newline.
 
+  ninja.Phony(
+      'run_tests',
+      inputs=[
+          ninja.RunBinary(
+              'run_gn_unittests',
+              inputs=['gn_unittests' + platform.exe_suffix],
+              args='--quiet',
+          ),
+          ninja.Phony(
+              'run_integration_tests', inputs=[ninja.IntegrationTest('simple')]
+          ),
+      ],
+  )
+
   with open(path, 'w') as f:
     f.write('\n'.join(ninja_header_lines))
     f.write(ninja_template)
     f.write('\n'.join(ninja_lines))
+    f.write(ninja.write_ninja())
 
-  build_dir = os.path.dirname(path)
+  depfile_deps = [
+      os.path.relpath(os.path.join(SCRIPT_DIR, 'gen.py'), build_dir),
+      os.path.relpath(template_filename, build_dir),
+      os.path.relpath(os.path.join(SCRIPT_DIR, 'ninja_file.py'), build_dir),
+  ] + [str(path) for path in ninja.regen_triggers]
   with open(path + '.d', 'w') as f:
-    f.write('build.ninja: ' +
-            os.path.relpath(os.path.join(SCRIPT_DIR, 'gen.py'),
-                            build_dir) + ' ' +
-            os.path.relpath(template_filename, build_dir) + '\n')
+    f.write('build.ninja: ' + ' '.join(depfile_deps) + '\n')
 
   if options.generate_compilation_database:
     with open(os.path.join(REPO_ROOT, 'compile_commands.json'), 'w') as f:
@@ -429,6 +447,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
   libflags = os.environ.get('LIBFLAGS', '').split()
   include_dirs = [
       os.path.relpath(os.path.join(REPO_ROOT, 'src'), os.path.dirname(path)),
+      os.path.relpath(os.path.join(REPO_ROOT, 'src/gn/starlark/vendor/cxx/include'), os.path.dirname(path)),
       '.',
   ]
   if platform.is_zos():
@@ -509,7 +528,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
         '-Wextra-semi',
         '-Wundef',
 
-        '-std=c++20'
+        '-std=c++23'
     ])
 
     if is_gcc(cxx):
@@ -519,6 +538,9 @@ def WriteGNNinja(path, platform, host, options, args_list):
     # flags not supported by gcc/g++.
     else:
       cflags.extend(['-Wrange-loop-analysis', '-Wextra-semi-stmt'])
+      # We use "extern C" to communicate with rust, not C. So it doesn't matter
+      # if the return type is an invalid C type.
+      cflags.append('-Wno-return-type-c-linkage')
 
     if platform.is_linux() or platform.is_mingw() or platform.is_msys():
       ldflags.append('-Wl,--as-needed')
@@ -602,12 +624,16 @@ def WriteGNNinja(path, platform, host, options, args_list):
         '/wd4099',
         '/wd4100',
         '/wd4127',
+        '/wd4190',
         '/wd4244',
         '/wd4267',
         '/wd4505',
         '/wd4838',
         '/wd4996',
-        '/std:c++20',
+        '/std:c++23preview',
+        # Enable __cplusplus macro to report the correct C++ standard version,
+        # otherwise it defaults to C++98.
+        '/Zc:__cplusplus',
         '/GR-',
         '/D_HAS_EXCEPTIONS=0',
     ])
@@ -618,205 +644,218 @@ def WriteGNNinja(path, platform, host, options, args_list):
                     f'/MANIFESTINPUT:{win_manifest}'])
 
   static_libraries = {
-      'base': {'sources': [
-        'src/base/command_line.cc',
-        'src/base/environment.cc',
-        'src/base/files/file.cc',
-        'src/base/files/file_enumerator.cc',
-        'src/base/files/file_path.cc',
-        'src/base/files/file_path_constants.cc',
-        'src/base/files/file_util.cc',
-        'src/base/files/scoped_file.cc',
-        'src/base/files/scoped_temp_dir.cc',
-        'src/base/json/json_parser.cc',
-        'src/base/json/json_reader.cc',
-        'src/base/json/json_writer.cc',
-        'src/base/json/string_escape.cc',
-        'src/base/logging.cc',
-        'src/base/md5.cc',
-        'src/base/memory/ref_counted.cc',
-        'src/base/memory/weak_ptr.cc',
-        'src/base/sha1.cc',
-        'src/base/sha2.cc',
-        'src/base/strings/string_number_conversions.cc',
-        'src/base/strings/string_split.cc',
-        'src/base/strings/string_util.cc',
-        'src/base/strings/string_util_constants.cc',
-        'src/base/strings/stringprintf.cc',
-        'src/base/strings/utf_string_conversion_utils.cc',
-        'src/base/strings/utf_string_conversions.cc',
-        'src/base/timer/elapsed_timer.cc',
-        'src/base/value_iterators.cc',
-        'src/base/values.cc',
-      ]},
-      'gn_lib': {'sources': [
-        'src/gn/action_target_generator.cc',
-        'src/gn/action_values.cc',
-        'src/gn/analyzer.cc',
-        'src/gn/args.cc',
-        'src/gn/binary_target_generator.cc',
-        'src/gn/build_settings.cc',
-        'src/gn/builder.cc',
-        'src/gn/builder_record.cc',
-        'src/gn/bundle_data.cc',
-        'src/gn/bundle_data_target_generator.cc',
-        'src/gn/bundle_file_rule.cc',
-        'src/gn/builtin_tool.cc',
-        'src/gn/c_include_iterator.cc',
-        'src/gn/c_substitution_type.cc',
-        'src/gn/c_tool.cc',
-        'src/gn/command_analyze.cc',
-        'src/gn/command_args.cc',
-        'src/gn/command_check.cc',
-        'src/gn/command_clean.cc',
-        'src/gn/command_clean_stale.cc',
-        'src/gn/command_desc.cc',
-        'src/gn/command_format.cc',
-        'src/gn/command_gen.cc',
-        'src/gn/command_help.cc',
-        'src/gn/command_ls.cc',
-        'src/gn/command_meta.cc',
-        'src/gn/command_outputs.cc',
-        'src/gn/command_path.cc',
-        'src/gn/command_refs.cc',
-        'src/gn/commands.cc',
-        'src/gn/compile_commands_writer.cc',
-        'src/gn/rust_project_writer.cc',
-        'src/gn/config.cc',
-        'src/gn/config_values.cc',
-        'src/gn/config_values_extractors.cc',
-        'src/gn/config_values_generator.cc',
-        'src/gn/copy_target_generator.cc',
-        'src/gn/create_bundle_target_generator.cc',
-        'src/gn/deps_iterator.cc',
-        'src/gn/desc_builder.cc',
-        'src/gn/eclipse_writer.cc',
-        'src/gn/err.cc',
-        'src/gn/escape.cc',
-        'src/gn/exec_process.cc',
-        'src/gn/filesystem_utils.cc',
-        'src/gn/file_writer.cc',
-        'src/gn/frameworks_utils.cc',
-        'src/gn/function_exec_script.cc',
-        'src/gn/function_expand_directory.cc',
-        'src/gn/function_filter.cc',
-        'src/gn/function_filter_labels.cc',
-        'src/gn/function_foreach.cc',
-        'src/gn/function_forward_variables_from.cc',
-        'src/gn/function_get_label_info.cc',
-        'src/gn/function_get_path_info.cc',
-        'src/gn/function_get_target_outputs.cc',
-        'src/gn/function_label_matches.cc',
-        'src/gn/function_len.cc',
-        'src/gn/function_path_exists.cc',
-        'src/gn/function_process_file_template.cc',
-        'src/gn/function_read_file.cc',
-        'src/gn/function_rebase_path.cc',
-        'src/gn/function_set_default_toolchain.cc',
-        'src/gn/function_set_defaults.cc',
-        'src/gn/function_template.cc',
-        'src/gn/function_toolchain.cc',
-        'src/gn/function_write_file.cc',
-        'src/gn/functions.cc',
-        'src/gn/functions_target.cc',
-        'src/gn/general_tool.cc',
-        'src/gn/generated_file_target_generator.cc',
-        'src/gn/group_target_generator.cc',
-        'src/gn/header_checker.cc',
-        'src/gn/import_manager.cc',
-        'src/gn/input_conversion.cc',
-        'src/gn/input_file.cc',
-        'src/gn/input_file_manager.cc',
-        'src/gn/invoke_python.cc',
-        'src/gn/item.cc',
-        'src/gn/json_project_writer.cc',
-        'src/gn/label.cc',
-        'src/gn/label_pattern.cc',
-        'src/gn/lib_file.cc',
-        'src/gn/loader.cc',
-        'src/gn/location.cc',
-        'src/gn/metadata.cc',
-        'src/gn/metadata_walk.cc',
-        'src/gn/ninja_action_target_writer.cc',
-        'src/gn/ninja_binary_target_writer.cc',
-        'src/gn/ninja_build_writer.cc',
-        'src/gn/ninja_bundle_data_target_writer.cc',
-        'src/gn/ninja_c_binary_target_writer.cc',
-        'src/gn/ninja_copy_target_writer.cc',
-        'src/gn/ninja_create_bundle_target_writer.cc',
-        'src/gn/ninja_generated_file_target_writer.cc',
-        'src/gn/ninja_group_target_writer.cc',
-        'src/gn/ninja_module_writer_util.cc',
-        'src/gn/ninja_outputs_writer.cc',
-        'src/gn/ninja_rust_binary_target_writer.cc',
-        'src/gn/ninja_target_command_util.cc',
-        'src/gn/ninja_target_writer.cc',
-        'src/gn/ninja_toolchain_writer.cc',
-        'src/gn/ninja_tools.cc',
-        'src/gn/ninja_utils.cc',
-        'src/gn/ninja_writer.cc',
-        'src/gn/operators.cc',
-        'src/gn/output_conversion.cc',
-        'src/gn/output_file.cc',
-        'src/gn/parse_node_value_adapter.cc',
-        'src/gn/parse_tree.cc',
-        'src/gn/parser.cc',
-        'src/gn/path_output.cc',
-        'src/gn/pattern.cc',
-        'src/gn/pool.cc',
-        'src/gn/qt_creator_writer.cc',
-        'src/gn/resolved_target_data.cc',
-        'src/gn/runtime_deps.cc',
-        'src/gn/rust_substitution_type.cc',
-        'src/gn/rust_tool.cc',
-        'src/gn/rust_values.cc',
-        'src/gn/rust_values_generator.cc',
-        'src/gn/rust_variables.cc',
-        'src/gn/scheduler.cc',
-        'src/gn/scope.cc',
-        'src/gn/scope_per_file_provider.cc',
-        'src/gn/settings.cc',
-        'src/gn/setup.cc',
-        'src/gn/source_dir.cc',
-        'src/gn/source_file.cc',
-        'src/gn/standard_out.cc',
-        'src/gn/string_atom.cc',
-        'src/gn/string_output_buffer.cc',
-        'src/gn/string_utils.cc',
-        'src/gn/substitution_list.cc',
-        'src/gn/substitution_pattern.cc',
-        'src/gn/substitution_type.cc',
-        'src/gn/substitution_writer.cc',
-        'src/gn/swift_values.cc',
-        'src/gn/swift_values_generator.cc',
-        'src/gn/swift_variables.cc',
-        'src/gn/switches.cc',
-        'src/gn/target.cc',
-        'src/gn/target_generator.cc',
-        'src/gn/template.cc',
-        'src/gn/token.cc',
-        'src/gn/tokenizer.cc',
-        'src/gn/tool.cc',
-        'src/gn/toolchain.cc',
-        'src/gn/trace.cc',
-        'src/gn/value.cc',
-        'src/gn/value_extractors.cc',
-        'src/gn/variables.cc',
-        'src/gn/version.cc',
-        'src/gn/visibility.cc',
-        'src/gn/visual_studio_utils.cc',
-        'src/gn/visual_studio_writer.cc',
-        'src/gn/xcode_object.cc',
-        'src/gn/xcode_writer.cc',
-        'src/gn/xml_element_writer.cc',
-        'src/util/atomic_write.cc',
-        'src/util/exe_path.cc',
-        'src/util/msg_loop.cc',
-        'src/util/semaphore.cc',
-        'src/util/sys_info.cc',
-        'src/util/ticks.cc',
-        'src/util/worker_pool.cc',
-      ]},
+      'base': {
+          'sources': [
+              'src/base/command_line.cc',
+              'src/base/environment.cc',
+              'src/base/files/file.cc',
+              'src/base/files/file_enumerator.cc',
+              'src/base/files/file_path.cc',
+              'src/base/files/file_path_constants.cc',
+              'src/base/files/file_util.cc',
+              'src/base/files/scoped_file.cc',
+              'src/base/files/scoped_temp_dir.cc',
+              'src/base/json/json_parser.cc',
+              'src/base/json/json_reader.cc',
+              'src/base/json/json_writer.cc',
+              'src/base/json/string_escape.cc',
+              'src/base/logging.cc',
+              'src/base/md5.cc',
+              'src/base/memory/ref_counted.cc',
+              'src/base/memory/weak_ptr.cc',
+              'src/base/sha1.cc',
+              'src/base/sha2.cc',
+              'src/base/strings/string_number_conversions.cc',
+              'src/base/strings/string_split.cc',
+              'src/base/strings/string_util.cc',
+              'src/base/strings/string_util_constants.cc',
+              'src/base/strings/stringprintf.cc',
+              'src/base/strings/utf_string_conversion_utils.cc',
+              'src/base/strings/utf_string_conversions.cc',
+              'src/base/timer/elapsed_timer.cc',
+              'src/base/value_iterators.cc',
+              'src/base/values.cc',
+          ]
+      },
+      'string_atom': {
+          'sources': [
+              'src/gn/string_atom.cc',
+              'src/gn/ffi/intern_string.cc',
+          ]
+      },
+      'gn_lib': {
+          'sources': [
+              'src/gn/action_target_generator.cc',
+              'src/gn/action_values.cc',
+              'src/gn/analyzer.cc',
+              'src/gn/args.cc',
+              'src/gn/binary_target_generator.cc',
+              'src/gn/build_settings.cc',
+              'src/gn/builder.cc',
+              'src/gn/builder_record.cc',
+              'src/gn/bundle_data.cc',
+              'src/gn/bundle_data_target_generator.cc',
+              'src/gn/bundle_file_rule.cc',
+              'src/gn/builtin_tool.cc',
+              'src/gn/c_include_iterator.cc',
+              'src/gn/c_substitution_type.cc',
+              'src/gn/c_tool.cc',
+              'src/gn/command_analyze.cc',
+              'src/gn/command_args.cc',
+              'src/gn/command_check.cc',
+              'src/gn/command_clean.cc',
+              'src/gn/command_clean_stale.cc',
+              'src/gn/command_desc.cc',
+              'src/gn/command_format.cc',
+              'src/gn/command_gen.cc',
+              'src/gn/command_help.cc',
+              'src/gn/command_ls.cc',
+              'src/gn/command_meta.cc',
+              'src/gn/command_outputs.cc',
+              'src/gn/command_path.cc',
+              'src/gn/command_refs.cc',
+              'src/gn/command_suggest.cc',
+              'src/gn/commands.cc',
+              'src/gn/compile_commands_writer.cc',
+              'src/gn/rust_project_writer.cc',
+              'src/gn/config.cc',
+              'src/gn/config_values.cc',
+              'src/gn/config_values_extractors.cc',
+              'src/gn/config_values_generator.cc',
+              'src/gn/copy_target_generator.cc',
+              'src/gn/create_bundle_target_generator.cc',
+              'src/gn/deps_iterator.cc',
+              'src/gn/desc_builder.cc',
+              'src/gn/eclipse_writer.cc',
+              'src/gn/err.cc',
+              'src/gn/escape.cc',
+              'src/gn/exec_process.cc',
+              'src/gn/ffi/label.cc',
+              'src/gn/ffi/output_file.cc',
+              'src/gn/ffi/settings.cc',
+              'src/gn/filesystem_utils.cc',
+              'src/gn/file_writer.cc',
+              'src/gn/frameworks_utils.cc',
+              'src/gn/function_exec_script.cc',
+              'src/gn/function_expand_directory.cc',
+              'src/gn/function_filter.cc',
+              'src/gn/function_filter_labels.cc',
+              'src/gn/function_foreach.cc',
+              'src/gn/function_forward_variables_from.cc',
+              'src/gn/function_get_label_info.cc',
+              'src/gn/function_get_path_info.cc',
+              'src/gn/function_get_target_outputs.cc',
+              'src/gn/function_label_matches.cc',
+              'src/gn/function_len.cc',
+              'src/gn/function_path_exists.cc',
+              'src/gn/function_process_file_template.cc',
+              'src/gn/function_read_file.cc',
+              'src/gn/function_rebase_path.cc',
+              'src/gn/function_set_default_toolchain.cc',
+              'src/gn/function_set_defaults.cc',
+              'src/gn/function_template.cc',
+              'src/gn/function_toolchain.cc',
+              'src/gn/function_write_file.cc',
+              'src/gn/functions.cc',
+              'src/gn/functions_target.cc',
+              'src/gn/general_tool.cc',
+              'src/gn/generated_file_target_generator.cc',
+              'src/gn/group_target_generator.cc',
+              'src/gn/header_checker.cc',
+              'src/gn/import_manager.cc',
+              'src/gn/input_conversion.cc',
+              'src/gn/input_file.cc',
+              'src/gn/input_file_manager.cc',
+              'src/gn/invoke_python.cc',
+              'src/gn/item.cc',
+              'src/gn/json_project_writer.cc',
+              'src/gn/label.cc',
+              'src/gn/label_pattern.cc',
+              'src/gn/lib_file.cc',
+              'src/gn/loader.cc',
+              'src/gn/location.cc',
+              'src/gn/metadata.cc',
+              'src/gn/metadata_walk.cc',
+              'src/gn/ninja_action_target_writer.cc',
+              'src/gn/ninja_binary_target_writer.cc',
+              'src/gn/ninja_build_writer.cc',
+              'src/gn/ninja_bundle_data_target_writer.cc',
+              'src/gn/ninja_c_binary_target_writer.cc',
+              'src/gn/ninja_copy_target_writer.cc',
+              'src/gn/ninja_create_bundle_target_writer.cc',
+              'src/gn/ninja_generated_file_target_writer.cc',
+              'src/gn/ninja_group_target_writer.cc',
+              'src/gn/ninja_module_writer_util.cc',
+              'src/gn/ninja_outputs_writer.cc',
+              'src/gn/ninja_rust_binary_target_writer.cc',
+              'src/gn/ninja_target_command_util.cc',
+              'src/gn/ninja_target_writer.cc',
+              'src/gn/ninja_toolchain_writer.cc',
+              'src/gn/ninja_tools.cc',
+              'src/gn/ninja_utils.cc',
+              'src/gn/ninja_writer.cc',
+              'src/gn/operators.cc',
+              'src/gn/output_conversion.cc',
+              'src/gn/output_file.cc',
+              'src/gn/parse_node_value_adapter.cc',
+              'src/gn/parse_tree.cc',
+              'src/gn/parser.cc',
+              'src/gn/path_output.cc',
+              'src/gn/pattern.cc',
+              'src/gn/pool.cc',
+              'src/gn/qt_creator_writer.cc',
+              'src/gn/resolved_target_data.cc',
+              'src/gn/runtime_deps.cc',
+              'src/gn/rust_substitution_type.cc',
+              'src/gn/rust_tool.cc',
+              'src/gn/rust_values.cc',
+              'src/gn/rust_values_generator.cc',
+              'src/gn/rust_variables.cc',
+              'src/gn/scheduler.cc',
+              'src/gn/scope.cc',
+              'src/gn/scope_per_file_provider.cc',
+              'src/gn/settings.cc',
+              'src/gn/setup.cc',
+              'src/gn/source_dir.cc',
+              'src/gn/source_file.cc',
+              'src/gn/standard_out.cc',
+              'src/gn/string_output_buffer.cc',
+              'src/gn/string_utils.cc',
+              'src/gn/substitution_list.cc',
+              'src/gn/substitution_pattern.cc',
+              'src/gn/substitution_type.cc',
+              'src/gn/substitution_writer.cc',
+              'src/gn/swift_values.cc',
+              'src/gn/swift_values_generator.cc',
+              'src/gn/swift_variables.cc',
+              'src/gn/switches.cc',
+              'src/gn/target.cc',
+              'src/gn/target_generator.cc',
+              'src/gn/template.cc',
+              'src/gn/token.cc',
+              'src/gn/tokenizer.cc',
+              'src/gn/tool.cc',
+              'src/gn/toolchain.cc',
+              'src/gn/trace.cc',
+              'src/gn/value.cc',
+              'src/gn/value_extractors.cc',
+              'src/gn/variables.cc',
+              'src/gn/version.cc',
+              'src/gn/visibility.cc',
+              'src/gn/visual_studio_utils.cc',
+              'src/gn/visual_studio_writer.cc',
+              'src/gn/xcode_object.cc',
+              'src/gn/xcode_writer.cc',
+              'src/gn/xml_element_writer.cc',
+              'src/util/atomic_write.cc',
+              'src/util/exe_path.cc',
+              'src/util/msg_loop.cc',
+              'src/util/semaphore.cc',
+              'src/util/sys_info.cc',
+              'src/util/ticks.cc',
+              'src/util/worker_pool.cc',
+          ]
+      },
   }
 
   executables = {
@@ -833,6 +872,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
         'src/gn/bundle_data_unittest.cc',
         'src/gn/c_include_iterator_unittest.cc',
         'src/gn/command_format_unittest.cc',
+        'src/gn/command_suggest_unittest.cc',
         'src/gn/commands_unittest.cc',
         'src/gn/compile_commands_writer_unittest.cc',
         'src/gn/config_unittest.cc',
@@ -906,6 +946,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
         'src/gn/string_output_buffer_unittest.cc',
         'src/gn/string_utils_unittest.cc',
         'src/gn/substitution_pattern_unittest.cc',
+        'src/gn/substitution_type_unittest.cc',
         'src/gn/substitution_writer_unittest.cc',
         'src/gn/target_public_pair_unittest.cc',
         'src/gn/target_unittest.cc',
@@ -931,6 +972,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
   if platform.is_posix() or platform.is_zos():
     static_libraries['base']['sources'].extend([
         'src/base/files/file_enumerator_posix.cc',
+        'src/base/files/file_path_posix.cc',
         'src/base/files/file_posix.cc',
         'src/base/files/file_util_posix.cc',
         'src/base/posix/file_descriptor_shuffle.cc',
@@ -943,6 +985,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
   if platform.is_windows():
     static_libraries['base']['sources'].extend([
         'src/base/files/file_enumerator_win.cc',
+        'src/base/files/file_path_win.cc',
         'src/base/files/file_util_win.cc',
         'src/base/files/file_win.cc',
         'src/base/win/registry.cc',
@@ -978,7 +1021,6 @@ def WriteGNNinja(path, platform, host, options, args_list):
           '-lws2_32',
           '-lshlwapi',
       ])
-
 
   libs.extend(options.link_libs)
 

@@ -65,6 +65,18 @@ const char kDotfile_Help[] =
   use a different file.
 )";
 
+const char kEnumerateFilesWithGit[] = "enumerate-files-with-git";
+const char kEnumerateFilesWithGit_HelpShort[] =
+    "--enumerate-files-with-git: Use git to list files.";
+const char kEnumerateFilesWithGit_Help[] =
+    R"(--enumerate-files-with-git: Use git to list files.
+
+  Make the Xcode project writer use `git ls-files` to find source files,
+  instead of a much slower recursive file system walk. This will collect
+  both tracked and untracked files. This is significantly faster for large
+  repositories.
+)";
+
 const char kErrorLimit[] = "error-limit";
 const char kErrorLimit_HelpShort[] =
     "--error-limit: Limit the number of errors or warnings to print.";
@@ -98,6 +110,17 @@ const char kFailOnUnusedArgs_Help[] =
   flags between the invoker of the build and the build files represents a
   critical mismatch that should be immediately fixed. Such users can set this
   flag to force GN to fail in that case.
+)";
+
+const char kFormatWidth[] = "format-width";
+const char kFormatWidth_HelpShort[] =
+    "--format-width: Set the formatting width (default is 80)";
+
+const char kFormatWidth_Help[] =
+    R"("--format-width: Set the formatting width,
+
+  Override the format width (default is 80) used by the 'format'
+  command. This takes a strictly positive integer decimal value.
 )";
 
 const char kMarkdown[] = "markdown";
@@ -344,8 +367,10 @@ const SwitchInfoMap& GetSwitches() {
     INSERT_VARIABLE(Args)
     INSERT_VARIABLE(Color)
     INSERT_VARIABLE(Dotfile)
+    INSERT_VARIABLE(EnumerateFilesWithGit)
     INSERT_VARIABLE(ErrorLimit)
     INSERT_VARIABLE(FailOnUnusedArgs)
+    INSERT_VARIABLE(FormatWidth)
     INSERT_VARIABLE(Markdown)
     INSERT_VARIABLE(NinjaExecutable)
     INSERT_VARIABLE(NoColor)

@@ -62,6 +62,24 @@ BuilderRecord::ItemType BuilderRecord::TypeOfItem(const Item* item) {
   return ITEM_UNKNOWN;
 }
 
+#if DEBUG_BUILDER_RECORD
+// static
+const char* BuilderRecord::ToDebugCString(RecordState state) {
+  switch (state) {
+    case STATE_INIT:
+      return "INIT";
+    case STATE_DEFINED:
+      return "DEFINED";
+    case STATE_RESOLVED:
+      return "RESOLVED";
+    case STATE_FINALIZED:
+      return "FINALIZED";
+    default:
+      return "<<<<UNKNOWN STATE>>>>>>";
+  }
+}
+#endif  // DEBUG_BUILDER_RECORD
+
 void BuilderRecord::SetDefined(std::unique_ptr<Item> item) {
   DCHECK(state_ == STATE_INIT);
   state_ = STATE_DEFINED;
@@ -71,24 +89,31 @@ void BuilderRecord::SetDefined(std::unique_ptr<Item> item) {
 void BuilderRecord::AddDep(BuilderRecord* dep) {
   DCHECK(state_ == STATE_DEFINED);
   all_deps_.add(dep);
+  WaitInfo* info = nullptr;
   if (!dep->is_resolved()) {
     // This cannot be resolved yet if any of its standard dependencies is not
     // resolved.
-    if (dep->waiting_on_resolution_.add(this)) {
+    if (!info)
+      info = &dep->waiting_map_[this];
+    if (!info->wait_resolved) {
+      info->wait_resolved = true;
       unresolved_count_++;
-      DEBUG_BUILDER_RECORD_LOG("-- AddDep waiting_on_resolution %s -> %s\n",
-                               dep->ToDebugString().c_str(),
-                               this->ToDebugString().c_str());
+      DEBUG_BUILDER_RECORD_LOG("-- AddDep %s -wait_resolved-> %s\n",
+                               this->ToDebugString().c_str(),
+                               dep->ToDebugString().c_str());
     }
   }
   if (!dep->is_finalized()) {
     // Finalization of the current record is blocked until the
     // dependency is finalized.
-    if (dep->waiting_on_finalization_.add(this)) {
+    if (!info)
+      info = &dep->waiting_map_[this];
+    if (!info->wait_finalized) {
+      info->wait_finalized = true;
       unfinalized_count_++;
-      DEBUG_BUILDER_RECORD_LOG("-- AddDep waiting_on_finalization %s -> %s\n",
-                               dep->ToDebugString().c_str(),
-                               this->ToDebugString().c_str());
+      DEBUG_BUILDER_RECORD_LOG("-- AddDep %s -wait_finalized-> %s\n",
+                               this->ToDebugString().c_str(),
+                               dep->ToDebugString().c_str());
     }
   }
 }
@@ -109,35 +134,83 @@ void BuilderRecord::AddValidationDep(BuilderRecord* dep) {
   //    where we might write the ninja file before the validation output path
   //    is computed.
   all_deps_.add(dep);
+  WaitInfo* info = nullptr;
   if (!dep->is_defined()) {
     // The record cannot be resolved yet if any of its validation dependencies
     // is not defined.
-    if (dep->waiting_on_validation_definition_.add(this)) {
+    if (!info)
+      info = &dep->waiting_map_[this];
+    if (!info->wait_validation_defined) {
+      info->wait_validation_defined = true;
       unresolved_count_++;
       DEBUG_BUILDER_RECORD_LOG(
-          "-- AddValidationDep waiting_on_validation_definition %s -> %s\n",
-          dep->ToDebugString().c_str(), this->ToDebugString().c_str());
+          "-- AddValidationDep %s -wait_validation_defined-> %s\n",
+          this->ToDebugString().c_str(), dep->ToDebugString().c_str());
     }
   }
   if (!dep->is_resolved()) {
     // This record cannot be finalized if any of its validation deps is not
     // resolved.
-    if (dep->waiting_on_validation_resolution_.add(this)) {
+    if (!info)
+      info = &dep->waiting_map_[this];
+    if (!info->wait_validation_resolved) {
+      info->wait_validation_resolved = true;
       unfinalized_count_++;
       DEBUG_BUILDER_RECORD_LOG(
-          "-- AddValidationDep waiting_on_validation_resolution %s -> %s\n",
-          dep->ToDebugString().c_str(), this->ToDebugString().c_str());
+          "-- AddValidationDep %s -wait_validation_resolved-> %s\n",
+          this->ToDebugString().c_str(), dep->ToDebugString().c_str());
     }
   }
 }
 
-bool BuilderRecord::OnDefinedValidationDep(const BuilderRecord* dep) {
-  DCHECK(all_deps_.contains(const_cast<BuilderRecord*>(dep)));
-  DCHECK(unresolved_count_ > 0);
-  bool result = (--unresolved_count_ == 0);
-  DEBUG_BUILDER_RECORD_LOG("-- OnDefinedValidationDep %s -> %s result=%d\n",
-                           dep->ToDebugString().c_str(),
-                           this->ToDebugString().c_str(), result);
+bool BuilderRecord::OnDepStateChange(BuilderRecord* dep,
+                                     RecordState from_state,
+                                     RecordState to_state,
+                                     BuilderRecord::WaitInfo& info) {
+  bool result = false;
+
+  DCHECK(all_deps_.contains(dep));
+
+  DEBUG_BUILDER_RECORD_LOG(
+      "-- OnDepStateChange %s -> %s (%s->%s)\n", this->ToDebugString().c_str(),
+      dep->ToDebugString().c_str(), ToDebugCString(from_state),
+      ToDebugCString(to_state));
+  if (to_state >= STATE_DEFINED && info.wait_validation_defined) {
+    info.wait_validation_defined = false;
+    DCHECK(state_ < STATE_RESOLVED);
+    DCHECK(unresolved_count_ > 0);
+    if (--unresolved_count_ == 0) {
+      DEBUG_BUILDER_RECORD_LOG("    CAN RESOLVE (validation)\n");
+      result = true;
+    }
+  }
+  if (to_state >= STATE_RESOLVED && info.wait_resolved) {
+    info.wait_resolved = false;
+    DCHECK(state_ < STATE_RESOLVED);
+    DCHECK(unresolved_count_ > 0);
+    if (--unresolved_count_ == 0) {
+      DEBUG_BUILDER_RECORD_LOG("    CAN RESOLVE\n");
+      result = true;
+    }
+  }
+  if (to_state >= STATE_RESOLVED && info.wait_validation_resolved) {
+    info.wait_validation_resolved = false;
+    DCHECK(state_ < STATE_FINALIZED);
+    DCHECK(unfinalized_count_ > 0);
+    if (--unfinalized_count_ == 0) {
+      DEBUG_BUILDER_RECORD_LOG("    CAN FINALIZE (validation)\n");
+      result = true;
+    }
+  }
+  if (to_state >= STATE_FINALIZED && info.wait_finalized) {
+    info.wait_finalized = false;
+    DCHECK(state_ < STATE_FINALIZED);
+    DCHECK(unfinalized_count_ > 0);
+    if (--unfinalized_count_ == 0) {
+      DEBUG_BUILDER_RECORD_LOG("    CAN FINALIZE\n");
+      result = true;
+    }
+  }
   return result;
 }
 
@@ -146,51 +219,23 @@ void BuilderRecord::SetResolved() {
   state_ = STATE_RESOLVED;
 }
 
-bool BuilderRecord::OnResolvedDep(const BuilderRecord* dep) {
-  DCHECK(all_deps_.contains(const_cast<BuilderRecord*>(dep)));
-  DCHECK(unresolved_count_ > 0);
-  bool result = (--unresolved_count_ == 0);
-  DEBUG_BUILDER_RECORD_LOG("-- OnResolvedDep %s -> %s result=%d\n",
-                           dep->ToDebugString().c_str(),
-                           this->ToDebugString().c_str(), result);
-  return result;
-}
-
-bool BuilderRecord::OnResolvedValidationDep(const BuilderRecord* dep) {
-  DCHECK(all_deps_.contains(const_cast<BuilderRecord*>(dep)));
-  DCHECK(unfinalized_count_ > 0);
-  bool result = (--unfinalized_count_ == 0);
-  DEBUG_BUILDER_RECORD_LOG("-- OnResolvedValidationDep %s -> %s result=%d\n",
-                           dep->ToDebugString().c_str(),
-                           this->ToDebugString().c_str(), result);
-  return result;
-}
-
 void BuilderRecord::SetFinalized() {
   DCHECK(can_finalize());
   state_ = STATE_FINALIZED;
-}
-
-bool BuilderRecord::OnFinalizedDep(const BuilderRecord* dep) {
-  DCHECK(all_deps_.contains(const_cast<BuilderRecord*>(dep)));
-  DCHECK(unfinalized_count_ > 0);
-  bool result = (--unfinalized_count_ == 0);
-  DEBUG_BUILDER_RECORD_LOG("-- OnFinalizedDep %s -> %s result=%d\n",
-                           dep->ToDebugString().c_str(),
-                           this->ToDebugString().c_str(), result);
-  return result;
 }
 
 std::vector<const BuilderRecord*> BuilderRecord::GetSortedUnresolvedDeps()
     const {
   std::vector<const BuilderRecord*> result;
   for (auto it = all_deps_.begin(); it.valid(); ++it) {
-    BuilderRecord* dep = *it;
-    if (dep->waiting_on_resolution_.contains(
-            const_cast<BuilderRecord*>(this)) ||
-        dep->waiting_on_validation_definition_.contains(
-            const_cast<BuilderRecord*>(this)))
+    const BuilderRecord* dep = *it;
+    auto wait_it = dep->waiting_map_.find(this);
+    if (wait_it == dep->waiting_map_.end())
+      continue;
+    if (wait_it->second.wait_resolved ||
+        wait_it->second.wait_validation_defined) {
       result.push_back(dep);
+    }
   }
   std::sort(result.begin(), result.end(), LabelCompare);
   return result;

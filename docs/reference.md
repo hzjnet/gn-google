@@ -19,6 +19,7 @@
     *   [outputs: Which files a source/target make.](#cmd_outputs)
     *   [path: Find paths between two targets.](#cmd_path)
     *   [refs: Find stuff referencing a target or file.](#cmd_refs)
+    *   [suggest: Suggest fixes to build graph based on includes.](#cmd_suggest)
 *   [Target declarations](#targets)
     *   [action: Declare a target that runs a script a single time.](#func_action)
     *   [action_foreach: Declare a target that runs a script over a set of files.](#func_action_foreach)
@@ -107,6 +108,7 @@
     *   [bundle_executable_dir: Expansion of {{bundle_executable_dir}} in create_bundle](#var_bundle_executable_dir)
     *   [bundle_resources_dir: Expansion of {{bundle_resources_dir}} in create_bundle.](#var_bundle_resources_dir)
     *   [bundle_root_dir: Expansion of {{bundle_root_dir}} in create_bundle.](#var_bundle_root_dir)
+    *   [c_additional_outputs: [string list] Additional outputs for the compiler.](#var_c_additional_outputs)
     *   [cflags: [string list] Flags passed to all C compiler variants.](#var_cflags)
     *   [cflags_c: [string list] Flags passed to the C compiler.](#var_cflags_c)
     *   [cflags_cc: [string list] Flags passed to the C++ compiler.](#var_cflags_cc)
@@ -697,7 +699,7 @@
       Shows defines set for the //base:base target, annotated by where
       each one was set from.
 ```
-### <a name="cmd_format"></a>**gn format [\--dump-tree] (\--stdin | &lt;list of build_files...&gt;)**&nbsp;[Back to Top](#gn-reference)
+### <a name="cmd_format"></a>**gn format [\--dump-tree] [\--format-width=WIDTH] (\--stdin | &lt;list of build_files...&gt;)**&nbsp;[Back to Top](#gn-reference)
 
 ```
   Formats .gn file to a standard format.
@@ -722,6 +724,10 @@
       - Exit code 0: successful format, matches on disk.
       - Exit code 1: general failure (parse error, etc.)
       - Exit code 2: successful format, but differs from on disk.
+
+  --format-width=WIDTH
+      Override the default format width. WIDTH must be a strictly positive
+      integer.
 
   --dump-tree[=( text | json )]
       Dumps the parse tree to stdout and does not update the file or print
@@ -1392,6 +1398,24 @@
           --all --as=output
       Display the executable file names of all test executables
       potentially affected by a change to the given file.
+```
+### <a name="cmd_suggest"></a>**suggest**: Suggest fixes to build graph based on includes.&nbsp;[Back to Top](#gn-reference)
+
+```
+  gn suggest <out_dir> includer1=included1 includer2=included2...
+
+  Where each includer or included is either:
+  * A label
+  * A module name (usually the same as the label)
+  * A file path relative to the build directory
+  * An absolute file path (eg. "//foo/bar.txt")
+  * A file path relative to the include directories of the includer target (treated as a #include)
+
+  Eg. gn suggest out_dir path/to/target.cc=foo/bar.h
+
+  Will print a suggestion like:
+  Request: path/to/target.cc wants to depend on foo/bar.h
+  Suggestion: add deps = [ "//foo:bar" ] to "//path/to:target" (defined in //path/to/BUILD.gn:1234)
 ```
 ## <a name="targets"></a>Target declarations
 
@@ -3187,7 +3211,8 @@
 
 ```
   Prints all arguments to the console separated by spaces. A newline is
-  automatically appended to the end.
+  automatically appended to the end. In quiet mode (-q command-line parameter)
+  the output will be buffered and only printed if there is a fatal error.
 
   This function is intended for debugging. Note that build files are run in
   parallel so you may get interleaved prints. A buildfile may also be executed
@@ -5331,6 +5356,25 @@
     bundle_executable_dir = "${bundle_contents_dir}/MacOS"
   }
 ```
+### <a name="var_c_additional_outputs"></a>**c_additional_outputs**: [string list] Additional outputs for the compiler.&nbsp;[Back to Top](#gn-reference)
+
+```
+  A list of substitution expressions that will be evaluated in the context
+  of the compiler tool (e.g. "cc") and added to its outputs when this config
+  is applied to a target.
+
+  This is useful for tools that produce side-artifacts like .dwo files
+  when specific flags (like -gsplit-dwarf) are used.
+
+  "c_additional_outputs" are applied to all invocations of the C, C++,
+  Objective C, and Objective C++ compilers.
+
+  Example:
+    config("split_dwarf") {
+      cflags = [ "-gsplit-dwarf" ]
+      c_additional_outputs = [ "{{source_out_dir}}/{{source_name_part}}.dwo" ]
+    }
+```
 ### <a name="var_cflags"></a>**cflags***: Flags passed to the C compiler.&nbsp;[Back to Top](#gn-reference)
 
 ```
@@ -6793,6 +6837,12 @@
     - If the current target is a shared library, other shared libraries that it
       publicly depends on (directly or indirectly) are propagated up the
       dependency tree to dependents for linking.
+
+    - For non-binary targets (like actions, groups, etc.), their dependency
+      outputs (stamp or phony targets) will transitively depend on the
+      dependency outputs of their public_deps. This ensures that dependents
+      of the current target will also implicitly depend on the outputs of the
+      public_deps.
 
   See also "gn help public_configs".
 ```
@@ -8546,8 +8596,10 @@
     *   --args: Specifies build arguments overrides.
     *   --color: Force colored output.
     *   --dotfile: Override the name of the ".gn" file.
+    *   --enumerate-files-with-git: Use git to list files.
     *   --error-limit: Limit the number of errors or warnings to print.
     *   --fail-on-unused-args: Treat unused build args as fatal errors.
+    *   --format-width: Set the formatting width (default is 80)
     *   --markdown: Write help output in the Markdown format.
     *   --ninja-executable: Set the Ninja executable.
     *   --nocolor: Force non-colored output.
@@ -8563,4 +8615,3 @@
     *   -v: Verbose logging.
     *   --version: Prints the GN version number and exits.
 ```
-
