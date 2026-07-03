@@ -15,8 +15,9 @@ jobs:
 
       - name: Sync upstream
         run: |
+          git config user.name "hzjnet"
+          git config user.email "hzjnet@users.noreply.github.com"
           git remote add upstream https://gn.googlesource.com/gn.git || true
           git fetch upstream
-          git checkout origin/master
           git merge upstream/master --no-edit
-          git push origin origin/master:master
+          git push origin master
