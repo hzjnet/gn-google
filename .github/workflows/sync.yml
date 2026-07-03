@@ -1,7 +1,7 @@
 name: Sync from Google
 on:
   schedule:
-    - cron: "0 2 * * 1"
+    - cron: '0 2 * * 1'
   workflow_dispatch:
 
 jobs:
@@ -10,12 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: master
           fetch-depth: 0
 
       - name: Sync upstream
         run: |
           git remote add upstream https://gn.googlesource.com/gn.git || true
           git fetch upstream
-          git checkout master
+          git checkout origin/master
           git merge upstream/master --no-edit
-          git push origin master
+          git push origin origin/master:master
