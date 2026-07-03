@@ -14,9 +14,12 @@ jobs:
           fetch-depth: 0
 
       - name: Sync upstream
+        env:
+          GITHUB_TOKEN: ${{ secrets.SYNC_TOKEN }}
         run: |
           git config user.name "hzjnet"
           git config user.email "hzjnet@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/hzjnet/gn-google.git
           git remote add upstream https://gn.googlesource.com/gn.git || true
           git fetch upstream
           git merge upstream/master --no-edit
