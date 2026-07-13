@@ -647,3 +647,68 @@ TEST(NinjaTargetWriter, PhonyPropagation) {
         stream.str());
   }
 }
+
+TEST(NinjaTargetWriter, PublicInputs) {
+  TestWithScope setup;
+  Err err;
+
+  // Action A has public_inputs.
+  Target a(setup.settings(), Label(SourceDir("//foo/"), "a"));
+  a.set_output_type(Target::ACTION);
+  a.visibility().SetPublic();
+  a.SetToolchain(setup.toolchain());
+  a.action_values().set_script(SourceFile("//foo/script.py"));
+  a.public_inputs().push_back(SourceFile("//foo/a.in"));
+
+  // Action B depends on A.
+  Target b(setup.settings(), Label(SourceDir("//foo/"), "b"));
+  b.set_output_type(Target::ACTION);
+  b.visibility().SetPublic();
+  b.SetToolchain(setup.toolchain());
+  b.action_values().set_script(SourceFile("//foo/script.py"));
+  b.private_deps().push_back(LabelTargetPair(&a));
+
+  ASSERT_TRUE(a.OnResolved(&err));
+  ASSERT_TRUE(b.OnResolved(&err));
+
+  // 1. Verify A's public_inputs phony/stamp target is written.
+  {
+    std::ostringstream stream;
+    ResolvedTargetData resolved;
+    TestingNinjaTargetWriter::WritePublicInputsStampOrPhony(&a, &resolved,
+                                                            stream);
+    EXPECT_EQ("build phony/foo/a.public_inputs: phony ../../foo/a.in\n\n",
+              stream.str());
+  }
+
+  // 2. Verify B's input deps. It should depend on A's public_inputs.
+  {
+    std::ostringstream stream;
+    TestingNinjaTargetWriter writer(&b, setup.toolchain(), stream);
+    auto dep = writer.WriteInputDepsStampOrPhonyAndGetDep(
+        std::vector<const Target*>(), 10u);
+
+    ASSERT_EQ(1u, dep.implicit.size());
+    EXPECT_EQ("phony/foo/b.inputdeps", dep.implicit[0].value());
+
+    std::string out = stream.str();
+    EXPECT_TRUE(out.find("phony/foo/a.public_inputs") != std::string::npos)
+        << out;
+    EXPECT_TRUE(out.find("../../foo/a.in") == std::string::npos) << out;
+  }
+
+  // 3. Verify A's own action build definition includes its public_inputs.
+  {
+    std::ostringstream stream;
+    // B's target needs output defined, let's configure A as well
+    a.action_values().outputs() =
+        SubstitutionList::MakeForTest("//out/Debug/a.out");
+    NinjaActionTargetWriter writer(&a, stream);
+    writer.Run();
+    std::string out = stream.str();
+    // out should contain "phony/foo/a.public_inputs" as an input dependency
+    // instead of "../../foo/a.in".
+    EXPECT_TRUE(out.contains("phony/foo/a.public_inputs")) << out;
+    EXPECT_FALSE(out.contains("../../foo/a.in")) << out;
+  }
+}

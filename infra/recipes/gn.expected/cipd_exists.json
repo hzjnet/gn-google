@@ -576,7 +576,9 @@
       "[START_DIR]/gn/build/gen.py",
       "-d",
       "--use-asan",
-      "--use-ubsan"
+      "--use-ubsan",
+      "--out-path",
+      "[START_DIR]/gn/out/Default"
     ],
     "cwd": "[START_DIR]/gn",
     "env": {
@@ -607,7 +609,7 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out",
+      "[START_DIR]/gn/out/Default",
       "gn",
       "gn_unittests"
     ],
@@ -638,7 +640,7 @@
   },
   {
     "cmd": [
-      "[START_DIR]/gn/out/gn_unittests"
+      "[START_DIR]/gn/out/Default/gn_unittests"
     ],
     "cwd": "[START_DIR]/gn",
     "env": {
@@ -669,7 +671,7 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out",
+      "[START_DIR]/gn/out/Default",
       "run_integration_tests"
     ],
     "cwd": "[START_DIR]/gn",
@@ -740,6 +742,7 @@
       "CFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot",
       "CXX": "[START_DIR]/cipd/bin/clang++",
       "LDFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot -static-libstdc++",
+      "NINJA_OUT_DIR": "[START_DIR]/gn/out/Default",
       "NOBUILD": "1"
     },
     "luci_context": {
@@ -777,6 +780,8 @@
       "[START_DIR]/gn/build/gen.py",
       "--use-lto",
       "--use-icf",
+      "--out-path",
+      "[START_DIR]/gn/out/Default",
       "--link-lib=[START_DIR]/jemalloc/build-linux-amd64/lib/libjemalloc.a"
     ],
     "cwd": "[START_DIR]/gn",
@@ -808,7 +813,7 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out",
+      "[START_DIR]/gn/out/Default",
       "gn",
       "gn_unittests"
     ],
@@ -839,7 +844,7 @@
   },
   {
     "cmd": [
-      "[START_DIR]/gn/out/gn_unittests"
+      "[START_DIR]/gn/out/Default/gn_unittests"
     ],
     "cwd": "[START_DIR]/gn",
     "env": {
@@ -870,7 +875,7 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out",
+      "[START_DIR]/gn/out/Default",
       "run_integration_tests"
     ],
     "cwd": "[START_DIR]/gn",
@@ -941,6 +946,7 @@
       "CFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot",
       "CXX": "[START_DIR]/cipd/bin/clang++",
       "LDFLAGS": "--target=x86_64-linux-gnu --sysroot=[START_DIR]/cipd/sysroot -static-libstdc++",
+      "NINJA_OUT_DIR": "[START_DIR]/gn/out/Default",
       "NOBUILD": "1"
     },
     "luci_context": {
@@ -972,7 +978,7 @@
       "cipd",
       "pkg-build",
       "-pkg-def",
-      "{\"data\": [{\"file\": \"gn\"}, {\"version_file\": \".versions/gn.cipd_version\"}], \"install_mode\": \"copy\", \"package\": \"gn/gn/linux-amd64\", \"root\": \"[START_DIR]/gn/out\"}",
+      "{\"data\": [{\"file\": \"gn\"}, {\"version_file\": \".versions/gn.cipd_version\"}], \"install_mode\": \"copy\", \"package\": \"gn/gn/linux-amd64\", \"root\": \"[START_DIR]/gn/out/Default\"}",
       "-out",
       "[CLEANUP]/gn.cipd",
       "-hash-algo",
@@ -1077,6 +1083,8 @@
       "[START_DIR]/gn/build/gen.py",
       "--use-lto",
       "--use-icf",
+      "--out-path",
+      "[START_DIR]/gn/out/Default",
       "--link-lib=[START_DIR]/jemalloc/build-linux-arm64/lib/libjemalloc.a"
     ],
     "cwd": "[START_DIR]/gn",
@@ -1108,7 +1116,7 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out",
+      "[START_DIR]/gn/out/Default",
       "gn",
       "gn_unittests"
     ],
@@ -1149,7 +1157,7 @@
       "cipd",
       "pkg-build",
       "-pkg-def",
-      "{\"data\": [{\"file\": \"gn\"}, {\"version_file\": \".versions/gn.cipd_version\"}], \"install_mode\": \"copy\", \"package\": \"gn/gn/linux-arm64\", \"root\": \"[START_DIR]/gn/out\"}",
+      "{\"data\": [{\"file\": \"gn\"}, {\"version_file\": \".versions/gn.cipd_version\"}], \"install_mode\": \"copy\", \"package\": \"gn/gn/linux-arm64\", \"root\": \"[START_DIR]/gn/out/Default\"}",
       "-out",
       "[CLEANUP]/gn.cipd",
       "-hash-algo",
@@ -1254,6 +1262,8 @@
       "[START_DIR]/gn/build/gen.py",
       "--use-lto",
       "--use-icf",
+      "--out-path",
+      "[START_DIR]/gn/out/Default",
       "--link-lib=[START_DIR]/jemalloc/build-linux-riscv64/lib/libjemalloc.a"
     ],
     "cwd": "[START_DIR]/gn",
@@ -1285,7 +1295,7 @@
     "cmd": [
       "[START_DIR]/cipd/ninja",
       "-C",
-      "[START_DIR]/gn/out",
+      "[START_DIR]/gn/out/Default",
       "gn",
       "gn_unittests"
     ],
@@ -1326,7 +1336,7 @@
       "cipd",
       "pkg-build",
       "-pkg-def",
-      "{\"data\": [{\"file\": \"gn\"}, {\"version_file\": \".versions/gn.cipd_version\"}], \"install_mode\": \"copy\", \"package\": \"gn/gn/linux-riscv64\", \"root\": \"[START_DIR]/gn/out\"}",
+      "{\"data\": [{\"file\": \"gn\"}, {\"version_file\": \".versions/gn.cipd_version\"}], \"install_mode\": \"copy\", \"package\": \"gn/gn/linux-riscv64\", \"root\": \"[START_DIR]/gn/out/Default\"}",
       "-out",
       "[CLEANUP]/gn.cipd",
       "-hash-algo",
