@@ -32,13 +32,8 @@ const char* GetPCHLangSuffixForToolType(const char* name) {
 OutputFile GetWindowsPCHFile(const Target* target, const char* tool_name) {
   // Use "obj/{dir}/{target_name}_{lang}.pch" which ends up
   // looking like "obj/chrome/browser/browser_cc.pch"
-  OutputFile ret = GetBuildDirForTargetAsOutputFile(target, BuildDirType::OBJ);
-  ret.append(target->label().name());
-  ret.append("_");
-  ret.append(GetPCHLangSuffixForToolType(tool_name));
-  ret.append(".pch");
-
-  return ret;
+  return GetOutputFile(*target, BuildDirType::OBJ, target->label().name(), "_",
+                       GetPCHLangSuffixForToolType(tool_name), ".pch");
 }
 
 void WriteOneFlag(RecursiveWriterConfig config,
@@ -151,8 +146,9 @@ void GetPCHOutputFiles(const Target* target,
       NOTREACHED() << "No outputs for no PCH type.";
       break;
   }
-  output_value.resize(extension_offset);
-  output_value.append(output_extension);
+  std::string path(output_value.value().substr(0, extension_offset));
+  path.append(output_extension);
+  output_value = OutputFile(std::move(path));
 }
 
 std::string GetGCCPCHOutputExtension(const char* tool_name) {
